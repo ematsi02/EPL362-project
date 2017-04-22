@@ -20,13 +20,19 @@ public class PsychiatryClient {
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         
-        out.append("ime o client kai stelnw ston Server");
-        
-        String messageFromServer = in.readLine();
+        out.println("ime o client kai stelnw ston Server");
+        String messageFromServer=null;
+        if((messageFromServer = in.readLine())!=null){
 	    System.out.println("Message from server : " + messageFromServer);
+        }
 	    socket.close();
 	   
     }
+	public static void main(String[] args) throws IOException {
+		PsychiatryClient c= new PsychiatryClient();
+		c.connectToServer();
+		
+	}
 	// Testing for github
 	//new comment for test
 	
