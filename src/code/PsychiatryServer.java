@@ -1,5 +1,6 @@
 package code;
 
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
@@ -14,9 +15,14 @@ public class PsychiatryServer {
 		try {
 			while (true) {
 				Socket socket = listener.accept();//accept request
+				System.out.println("connected");
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter outToClient = new PrintWriter(socket.getOutputStream(), true);
 				try {
+					
+					String messageFromClient = inFromClient.readLine();
+				    System.out.println("Message from client : " + messageFromClient);
+				    outToClient.append("ime o Server kai stelnw ston Client");
 					// edw prepei na grapsoume ton kwdika
 				} finally {
 					socket.close();
