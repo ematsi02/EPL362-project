@@ -1,4 +1,5 @@
 package code;
+
 import java.net.Socket;
 import java.io.IOException;
 import java.io.BufferedReader;
@@ -18,9 +19,14 @@ public class PsychiatryClient {
         in = new BufferedReader(
                 new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
-
+        
+        out.append("ime o client kai stelnw ston Server");
+        
+        String messageFromServer = in.readLine();
+	    System.out.println("Message from server : " + messageFromServer);
+	    socket.close();
+	   
     }
-
 	// Testing for github
 	//new comment for test
 	
