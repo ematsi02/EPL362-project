@@ -1,6 +1,5 @@
 package code;
 
-
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class PsychiatryServer {
 					
 					String messageFromClient = inFromClient.readLine();
 				    System.out.println("Message from client : " + messageFromClient);
-				    outToClient.append("ime o Server kai stelnw ston Client");
+				    outToClient.println("ime o Server kai stelnw ston Client");
 					// edw prepei na grapsoume ton kwdika
 				} finally {
 					socket.close();
@@ -35,5 +34,4 @@ public class PsychiatryServer {
 	}
 
 }
-
 
