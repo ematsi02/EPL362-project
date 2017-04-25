@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 14, 2017 at 07:45 PM
+-- Generation Time: Apr 25, 2017 at 12:00 PM
 -- Server version: 5.1.73
 -- PHP Version: 5.3.3
 
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `ClinicalStaff` (
-  `ClinicalStaffID` int(11) NOT NULL AUTO_INCREMENT,
+  `ClinicalStaffID` varchar(50) COLLATE utf8_bin NOT NULL,
   `Password` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT 'Password',
   `StaffType` enum('Doctor','Nurse','Health Visitor') COLLATE utf8_bin NOT NULL DEFAULT 'Nurse',
   `Name` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Name',
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `ClinicalStaff` (
   `Email` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Email',
   `Address` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Address',
   PRIMARY KEY (`ClinicalStaffID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS `ClinicalStaff` (
 --
 
 CREATE TABLE IF NOT EXISTS `Consultation` (
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
-  `ClinicalStaffID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
+  `ClinicalStaffID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `Subject` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Subject',
   `Date` date NOT NULL,
   `Attended` tinyint(1) NOT NULL DEFAULT '0',
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `Consultation` (
 --
 
 CREATE TABLE IF NOT EXISTS `Incident` (
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `IncidentType` enum('Accidental Treatment Incident','Deliberate Incident','Threat') COLLATE utf8_bin NOT NULL DEFAULT 'Accidental Treatment Incident',
   `ShortDescription` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Short Description',
   `Description` varchar(500) COLLATE utf8_bin NOT NULL DEFAULT 'Description',
@@ -88,11 +88,11 @@ CREATE TABLE IF NOT EXISTS `Incident` (
 --
 
 CREATE TABLE IF NOT EXISTS `InformRelatives` (
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `Subject` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Subject',
   `Message` varchar(50) COLLATE utf8_bin NOT NULL DEFAULT 'Message',
   `Informed` tinyint(1) NOT NULL DEFAULT '0',
-  `ClinicalStaffID` int(11) NOT NULL COMMENT 'Foreign Key'
+  `ClinicalStaffID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -123,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `Medication` (
 --
 
 CREATE TABLE IF NOT EXISTS `MedicationReaction` (
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `MedicationID` int(11) NOT NULL COMMENT 'Foreign Key',
   `ReactionType` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Allergy',
   `Description` varchar(300) COLLATE utf8_bin NOT NULL DEFAULT 'Medical Reaction Description'
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `MedicationReaction` (
 --
 
 CREATE TABLE IF NOT EXISTS `Patient` (
-  `PatientID` int(11) NOT NULL AUTO_INCREMENT,
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL,
   `Password` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT 'Password',
   `Name` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Name',
   `Surname` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Surname',
@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `Patient` (
   `ChangedByPatient` tinyint(1) NOT NULL DEFAULT '0',
   `DeadReadOnly` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`PatientID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `Patient` (
 
 CREATE TABLE IF NOT EXISTS `Relative` (
   `RelativeID` int(11) NOT NULL AUTO_INCREMENT,
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `Name` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Name',
   `Surname` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Surname',
   `Phone` int(11) NOT NULL DEFAULT '0',
@@ -189,16 +189,16 @@ CREATE TABLE IF NOT EXISTS `Relative` (
 --
 
 CREATE TABLE IF NOT EXISTS `SimpleStaff` (
-  `SimpleStaffID` int(11) NOT NULL AUTO_INCREMENT,
+  `SimpleStaffID` varchar(50) COLLATE utf8_bin NOT NULL,
   `Password` varchar(8) COLLATE utf8_bin NOT NULL DEFAULT 'Password',
-  `StaffType` enum('Reception','Medical Record','Management') COLLATE utf8_bin NOT NULL DEFAULT 'Medical Record',
+  `StaffType` enum('Receptionist','Medical Records Staff') COLLATE utf8_bin NOT NULL,
   `Name` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Name',
   `Surname` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'Surname',
   `Phone` int(11) NOT NULL DEFAULT '0',
   `Email` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Email',
   `Address` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Address',
   PRIMARY KEY (`SimpleStaffID`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- --------------------------------------------------------
 
@@ -208,11 +208,11 @@ CREATE TABLE IF NOT EXISTS `SimpleStaff` (
 
 CREATE TABLE IF NOT EXISTS `Treatment` (
   `TreatmentID` int(11) NOT NULL AUTO_INCREMENT,
-  `PatientID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `PatientID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   `StartDate` date NOT NULL,
   `EndDate` date DEFAULT NULL,
   `Description` varchar(300) COLLATE utf8_bin NOT NULL DEFAULT 'Treatment Description',
-  `ClinicalStaffID` int(11) NOT NULL COMMENT 'Foreign Key',
+  `ClinicalStaffID` varchar(50) COLLATE utf8_bin NOT NULL COMMENT 'Foreign Key',
   PRIMARY KEY (`TreatmentID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
@@ -235,7 +235,8 @@ CREATE TABLE IF NOT EXISTS `TreatmentMedication` (
   `MedicationID` int(11) NOT NULL COMMENT 'Foreign Key',
   `Dose` int(11) NOT NULL DEFAULT '0',
   `DoseDescription` varchar(120) COLLATE utf8_bin NOT NULL DEFAULT 'Dose Description',
-  `OverruledWarning` tinyint(1) NOT NULL DEFAULT '0'
+  `OverruledWarning` tinyint(1) NOT NULL DEFAULT '0',
+  `WarningMessage` varchar(150) COLLATE utf8_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
