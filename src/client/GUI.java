@@ -1,4 +1,4 @@
-package gui;
+package client;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -25,14 +25,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import server.JDBC;
+
 public class GUI extends JFrame implements ActionListener {
 	BufferedImage image;
-	MyPanel contentPane = new MyPanel();
-	JDBC SADB;
+	public MyPanel contentPane = new MyPanel();
+	public JDBC SADB;
 	String usernameGUI = "";
 	String roleGUI = "";
 
-	GUI() {
+	public GUI() {
 		BufferedImage image;
 		try {
 			image = ImageIO.read(getClass().getResource("/health.png"));
@@ -281,7 +283,7 @@ public class GUI extends JFrame implements ActionListener {
 		} 
 	}
 
-	private class MyPanel extends JPanel {
+	 class MyPanel extends JPanel {
 		private BufferedImage image;
 
 		public MyPanel() {
@@ -304,7 +306,7 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	}
 
-	private JPanel loginForm() {
+	 JPanel loginForm() {
 		String[] roles = { "Doctor", "Nurse", "Health Visitor", "Receptionist", "Medical Records Staff", "Patient" };
 		JPanel loginpanel = new JPanel();
 		JLabel lblusername = new JLabel("Username");
@@ -413,7 +415,7 @@ public class GUI extends JFrame implements ActionListener {
 		return m;
 	}
 
-	private JPanel signupForm() {
+	 JPanel signupForm() {
 		String[] roles = { "Doctor", "Nurse", "Health Visitor", "Receptionist", "Medical Records Staff" };
 		JPanel signuppanel = new JPanel();
 		JLabel lblmessage = new JLabel("Don't have an account? Sign up now!");
@@ -947,7 +949,7 @@ public class GUI extends JFrame implements ActionListener {
 		return menuBar;
 	}
 
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		GUI frame = new GUI();
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.contentPane.setLayout(null);
@@ -964,7 +966,9 @@ public class GUI extends JFrame implements ActionListener {
 		}
 		System.out.println("WELCOME TO Regional Health Authority JDBC program ! \n\n");
 	}
-}
+	
+	*/
+	}
 
 /*
  * try { if (!SADB.conn.isClosed()) { System.out.print(
