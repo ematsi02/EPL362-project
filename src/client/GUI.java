@@ -306,8 +306,8 @@ public class GUI extends JFrame implements ActionListener {
 		}
 	}
 
-	JPanel loginForm() {
-		String[] roles = { "Doctor", "Nurse", "Health Visitor", "Receptionist", "Medical Records Staff", "Patient" };
+	private JPanel loginForm() {
+		String[] roles = { "Staff", "Patient" };
 		JPanel loginpanel = new JPanel();
 		JLabel lblusername = new JLabel("Username");
 		lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -327,7 +327,7 @@ public class GUI extends JFrame implements ActionListener {
 							role.getSelectedItem().toString());
 					if (rs.next()) {
 						usernameGUI = username.getText();
-						roleGUI = role.getSelectedItem().toString();
+						roleGUI = rs.getString("StaffType");
 						getContentPane().removeAll();
 						if (roleGUI.equals("Doctor") || roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor"))
 							setJMenuBar(menuForClinicalStaff());
@@ -380,7 +380,7 @@ public class GUI extends JFrame implements ActionListener {
 				try {
 					ResultSet rs = SADB.login(usernameGUI, oldpassword.getText(), roleGUI);
 					if (rs.next()) {
-						SADB.changepassword(usernameGUI, newpassword.getText(), roleGUI);
+						SADB.changepassword(usernameGUI, oldpassword.getText(), newpassword.getText(), roleGUI);
 						getContentPane().removeAll();
 						JLabel message = new JLabel("You have successfully changed your password!");
 						message.setFont(new Font("Arial", Font.BOLD, 14));
@@ -415,7 +415,7 @@ public class GUI extends JFrame implements ActionListener {
 		return m;
 	}
 
-	JPanel signupForm() {
+	private JPanel signupForm() {
 		String[] roles = { "Doctor", "Nurse", "Health Visitor", "Receptionist", "Medical Records Staff" };
 		JPanel signuppanel = new JPanel();
 		JLabel lblmessage = new JLabel("Don't have an account? Sign up now!");
@@ -449,7 +449,7 @@ public class GUI extends JFrame implements ActionListener {
 		signup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.checksignup(username.getText(), role.getSelectedItem().toString());
+					ResultSet rs = SADB.checksignup(username.getText());
 					if (!rs.next()) {
 						SADB.signup(username.getText(), password.getText(), name.getText(), surname.getText(),
 								role.getSelectedItem().toString(), Integer.parseInt(phone.getText()), email.getText(),
@@ -502,36 +502,6 @@ public class GUI extends JFrame implements ActionListener {
 		signuppanel.setBounds(320, 280, 300, 270);
 		signuppanel.setOpaque(false);
 		return signuppanel;
-	}
-
-	private JPanel searchPatientForm() {
-		JPanel patientpanel = new JPanel();
-		return patientpanel;
-	}
-
-	private JPanel searchRelativeForm() {
-		JPanel relativepanel = new JPanel();
-		return relativepanel;
-	}
-
-	private JPanel searchTreatmentForm() {
-		JPanel treatmentpanel = new JPanel();
-		return treatmentpanel;
-	}
-
-	private JPanel searchMedicationForm() {
-		JPanel medicationpanel = new JPanel();
-		return medicationpanel;
-	}
-
-	private JPanel searchIncidentForm() {
-		JPanel incidentpanel = new JPanel();
-		return incidentpanel;
-	}
-
-	private JPanel searchAppointmentForm() {
-		JPanel appointmentpanel = new JPanel();
-		return appointmentpanel;
 	}
 
 	private JPanel patientForm() {
@@ -598,6 +568,203 @@ public class GUI extends JFrame implements ActionListener {
 		return patientpanel;
 	}
 
+	private JPanel patientsForm(ResultSet rs, int x) {
+		try {
+			if (x == 1) {
+				if (rs.next() == false) {
+					rs.previous();
+				}
+			} else if (x == -1) {
+				if (rs.previous() == false) {
+					rs.next();
+				}
+			}
+			JLabel lblspace1 = new JLabel("                      ");
+			JLabel lblspace2 = new JLabel("                      ");
+			JPanel patientpanel = new JPanel();
+			JLabel lblname = new JLabel("     Name");
+			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblsurname = new JLabel("Surname");
+			lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblusername = new JLabel("Username");
+			lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpassword = new JLabel("Password");
+			lblpassword.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblphone = new JLabel("Phone");
+			lblphone.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblemail = new JLabel("Email");
+			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbladdress = new JLabel("Address");
+			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField name = new JTextField(rs.getString("Name"));
+			JTextField surname = new JTextField(rs.getString("Surname"));
+			JTextField username = new JTextField(rs.getString("PatientID"));
+			username.setEditable(false);
+			JTextField password = new JPasswordField(rs.getString("Password"));
+			password.setEditable(false);
+			JTextField phone = new JTextField(rs.getString("Phone"));
+			JTextField email = new JTextField(rs.getString("Email"));
+			JTextField address = new JTextField(rs.getString("Address"));
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.updatePatient(name.getText(), surname.getText(), Integer.parseInt(phone.getText()),
+								email.getText(), address.getText());
+						getContentPane().removeAll();
+						getContentPane().add(patientsForm(SADB.printPatients(), 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton delete = new JButton("Delete");
+			delete.setFont(new Font("Arial", Font.PLAIN, 14));
+			delete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.deletePatient(username.getText());
+						getContentPane().removeAll();
+						getContentPane().add(patientsForm(SADB.printPatients(), 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton previous = new JButton("<");
+			previous.setFont(new Font("Arial", Font.PLAIN, 14));
+			previous.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().removeAll();
+						getContentPane().add(patientsForm(rs, -1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton next = new JButton(">");
+			next.setFont(new Font("Arial", Font.PLAIN, 14));
+			next.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().removeAll();
+						getContentPane().add(patientsForm(rs, 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			patientpanel.add(lblspace1);
+			patientpanel.add(previous);
+			patientpanel.add(next);
+			patientpanel.add(lblspace2);
+			patientpanel.add(lblname);
+			patientpanel.add(name);
+			patientpanel.add(lblsurname);
+			patientpanel.add(surname);
+			patientpanel.add(lblusername);
+			patientpanel.add(username);
+			patientpanel.add(lblpassword);
+			patientpanel.add(password);
+			patientpanel.add(lblphone);
+			patientpanel.add(phone);
+			patientpanel.add(lblemail);
+			patientpanel.add(email);
+			patientpanel.add(lbladdress);
+			patientpanel.add(address);
+			patientpanel.add(update);
+			patientpanel.add(delete);
+			patientpanel.setBounds(350, 150, 250, 250);
+			patientpanel.setOpaque(false);
+			return patientpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchPatientForm() {
+		JPanel patientpanel = new JPanel();
+		JLabel message = new JLabel(
+				"Search Patients by Username, Name, Surname, Phone, Email, Address, Number of incidents, or all of them:");
+		message.setFont(new Font("Arial", Font.BOLD, 14));
+		JLabel lblspace1 = new JLabel("                       ");
+		JLabel lblspace2 = new JLabel("                       ");
+		JLabel lblname = new JLabel("     Name");
+		lblname.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblsurname = new JLabel("Surname");
+		lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblusername = new JLabel("Username");
+		lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblphone = new JLabel("Phone");
+		lblphone.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblemail = new JLabel("Email");
+		lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbladdress = new JLabel("Address");
+		lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblincidents = new JLabel("Number of incidents");
+		lblincidents.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField name = new JTextField(15);
+		JTextField surname = new JTextField(15);
+		JTextField username = new JTextField(15);
+		JTextField phone = new JTextField(15);
+		JTextField email = new JTextField(15);
+		JTextField address = new JTextField(15);
+		JTextField incidents = new JTextField(15);
+		JButton searchPatient = new JButton("Search");
+
+		patientpanel.add(lblspace1);
+		patientpanel.add(message);
+		patientpanel.add(lblspace2);
+		patientpanel.add(lblname);
+		patientpanel.add(name);
+		patientpanel.add(lblsurname);
+		patientpanel.add(surname);
+		patientpanel.add(lblusername);
+		patientpanel.add(username);
+		patientpanel.add(lblphone);
+		patientpanel.add(phone);
+		patientpanel.add(lblemail);
+		patientpanel.add(email);
+		patientpanel.add(lbladdress);
+		patientpanel.add(address);
+		patientpanel.add(lblincidents);
+		patientpanel.add(incidents);
+		patientpanel.add(searchPatient);
+		searchPatient.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ResultSet rs = SADB.searchPatient(name.getText(), surname.getText(), username.getText(), phone.getText(), email.getText(), address.getText(), incidents.getText());
+					getContentPane().removeAll();
+					getContentPane().add(searchPatientForm());
+					getContentPane().add(resultsForm(rs));
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		patientpanel.setBounds(50, 150, 900, 150);
+		patientpanel.setOpaque(false);
+		return patientpanel;
+	}
+	
 	private JPanel relativeForm() {
 		JPanel relativepanel = new JPanel();
 		JLabel lblpatientusername = new JLabel("Patient's Username");
@@ -662,66 +829,7 @@ public class GUI extends JFrame implements ActionListener {
 		relativepanel.setOpaque(false);
 		return relativepanel;
 	}
-
-	/*
-	 * private JPanel patientsForm(ResultSet rs, int x) { try { if (x == 1) { if
-	 * (rs.next() == false) { rs.previous(); } } else if (x == -1) { if
-	 * (rs.previous() == false) { rs.next(); } } JPanel patientpanel = new
-	 * JPanel(); JLabel lblname = new JLabel("     Name"); lblname.setFont(new
-	 * Font("Arial", Font.PLAIN, 14)); JLabel lblsurname = new
-	 * JLabel("Surname"); lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
-	 * JLabel lblusername = new JLabel("Username"); lblusername.setFont(new
-	 * Font("Arial", Font.PLAIN, 14)); JLabel lblpassword = new
-	 * JLabel("Password"); lblpassword.setFont(new Font("Arial", Font.PLAIN,
-	 * 14)); JLabel lblphone = new JLabel("Phone"); lblphone.setFont(new
-	 * Font("Arial", Font.PLAIN, 14)); JLabel lblemail = new JLabel("Email");
-	 * lblemail.setFont(new Font("Arial", Font.PLAIN, 14)); JLabel lbladdress =
-	 * new JLabel("Address"); lbladdress.setFont(new Font("Arial", Font.PLAIN,
-	 * 14)); JTextField name = new JTextField(rs.getString("Name")); JTextField
-	 * surname = new JTextField(rs.getString("Surname")); JTextField username =
-	 * new JTextField(rs.getString("PatientID")); JTextField password = new
-	 * JPasswordField(rs.getString("Password")); JTextField phone = new
-	 * JTextField(rs.getString("Phone")); JTextField email = new
-	 * JTextField(rs.getString("Email")); JTextField address = new
-	 * JTextField(rs.getString("Address")); JButton update = new
-	 * JButton("Update"); update.setFont(new Font("Arial", Font.PLAIN, 14));
-	 * update.addActionListener(new ActionListener() { public void
-	 * actionPerformed(ActionEvent e) { try {
-	 * SADB.updatePatient(username.getText(), name.getText(), surname.getText(),
-	 * password.getText(), Integer.parseInt(phone.getText()), email.getText(),
-	 * address.getText()); getContentPane().removeAll();
-	 * getContentPane().add(patientsForm(SADB.printPatients(), 1));
-	 * revalidate(); repaint(); pack(); } catch (Exception er) { // Ignore the
-	 * error and continues } } }); JButton delete = new JButton("Delete");
-	 * delete.setFont(new Font("Arial", Font.PLAIN, 14));
-	 * delete.addActionListener(new ActionListener() { public void
-	 * actionPerformed(ActionEvent e) { try {
-	 * SADB.deletePatient(username.getText()); getContentPane().removeAll();
-	 * getContentPane().add(patientsForm(SADB.printPatients(), 1));
-	 * revalidate(); repaint(); pack(); } catch (Exception er) { // Ignore the
-	 * error and continues } } }); JButton previous = new JButton("<");
-	 * previous.setFont(new Font("Arial", Font.PLAIN, 14));
-	 * previous.addActionListener(new ActionListener() { public void
-	 * actionPerformed(ActionEvent e) { try { getContentPane().removeAll();
-	 * getContentPane().add(patientsForm(rs, -1)); revalidate(); repaint();
-	 * pack(); } catch (Exception er) { // Ignore the error and continues } }
-	 * }); JButton next = new JButton(">"); next.setFont(new Font("Arial",
-	 * Font.PLAIN, 14)); next.addActionListener(new ActionListener() { public
-	 * void actionPerformed(ActionEvent e) { try { getContentPane().removeAll();
-	 * getContentPane().add(patientsForm(rs, 1)); revalidate(); repaint();
-	 * pack(); } catch (Exception er) { // Ignore the error and continues } }
-	 * }); patientpanel.add(lblname); patientpanel.add(name);
-	 * patientpanel.add(lblsurname); patientpanel.add(surname);
-	 * patientpanel.add(lblusername); patientpanel.add(username);
-	 * patientpanel.add(lblpassword); patientpanel.add(password);
-	 * patientpanel.add(lblphone); patientpanel.add(phone);
-	 * patientpanel.add(lblemail); patientpanel.add(email);
-	 * patientpanel.add(lbladdress); patientpanel.add(address);
-	 * patientpanel.add(update); patientpanel.add(delete);
-	 * patientpanel.setBounds(350, 150, 250, 250);
-	 * patientpanel.setOpaque(false); return patientpanel; } catch (Exception
-	 * er) { // Ignore the error and continues return null; } }
-	 */
+	
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
 		JTable results = new JTable(JDBC.buildTableModel(rs));
 		JScrollPane resultspanel = new JScrollPane(results);
