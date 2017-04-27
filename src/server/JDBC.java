@@ -1,4 +1,4 @@
-package gui;
+package server;
 
 import java.io.*;
 import java.sql.*;
@@ -65,7 +65,7 @@ public class JDBC {
 			Statement stmt = conn.createStatement();
 			String query;
 			if (role.equals("Doctor") || role.equals("Nurse") || role.equals("Health Visitor"))
-				query = "INSERT INTO ClinicalStaff (ClinicalStaffID, Password, Name, Surname, StaffType, Phone, Email, Address) VALUES ('"
+				query = "INSERT INTO Staff (StaffID, Password, Name, Surname, StaffType, Phone, Email, Address) VALUES ('"
 						+ username + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "', '"
 						+ phone + "', '" + email + "', '" + address + "');";
 			else
@@ -117,7 +117,7 @@ public class JDBC {
 			Statement stmt = conn.createStatement();
 			String query;
 			if (Role.equals("Doctor") || Role.equals("Nurse") || Role.equals("Health Visitor"))
-				query = "SELECT * FROM ClinicalStaff WHERE ClinicalStaffID='" + Username + "' AND Password='" + Password
+				query = "SELECT * FROM Staff WHERE StaffID='" + Username + "' AND Password='" + Password
 						+ "' AND StaffType='" + Role + "';";
 			else if (Role.equals("Patient"))
 				query = "SELECT * FROM Patient WHERE PatientID='" + Username + "' AND Password='" + Password + "';";
@@ -137,7 +137,7 @@ public class JDBC {
 			Statement stmt = conn.createStatement();
 			String query;
 			if (role.equals("Doctor") || role.equals("Nurse") || role.equals("Health Visitor"))
-				query = "UPDATE ClinicalStaff SET Password='" + newpassword + "' WHERE ClinicalStaffID='" + username + "';";
+				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username + "';";
 			else if (role.equals("Receptionist") || role.equals("Medical Records Staff"))
 				query = "UPDATE SimpleStaff SET Password='" + newpassword + "' WHERE SimpleStaffID='" + username + "';";
 			else
@@ -153,7 +153,7 @@ public class JDBC {
 			Statement stmt = conn.createStatement();
 			String query;
 			if (Role.equals("Doctor") || Role.equals("Nurse") || Role.equals("Health Visitor"))
-				query = "SELECT ClinicalStaffID FROM ClinicalStaff WHERE ClinicalStaffID='" + Username + "';";
+				query = "SELECT StaffID FROM Staff WHERE StaffID='" + Username + "';";
 			else
 				query = "SELECT SimpleStaffID FROM SimpleStaff WHERE SimpleStaffID='" + Username + "';";
 			ResultSet rs = stmt.executeQuery(query);
