@@ -63,13 +63,7 @@ public class JDBC {
 			String email, String address) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query;
-			if (role.equals("Doctor") || role.equals("Nurse") || role.equals("Health Visitor"))
-				query = "INSERT INTO Staff (StaffID, Password, Name, Surname, StaffType, Phone, Email, Address) VALUES ('"
-						+ username + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "', '"
-						+ phone + "', '" + email + "', '" + address + "');";
-			else
-				query = "INSERT INTO SimpleStaff (SimpleStaffID, Password, Name, Surname, StaffType, Phone, Email, Address) VALUES ('"
+			String query = "INSERT INTO Staff (StaffID, Password, Name, Surname, StaffType, Phone, Email, Address) VALUES ('"
 						+ username + "', '" + password + "', '" + name + "', '" + surname + "', '" + role + "', '"
 						+ phone + "', '" + email + "', '" + address + "');";
 			stmt.executeUpdate(query);
@@ -85,7 +79,7 @@ public class JDBC {
 	public void addPatient(String name, String surname, String username, String password, int phone, String email, String address) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Patient (PatientID, Password, Name, Surname, Phone, Email, Address) VALUES ('"+ username + "', '" + password + "', '" + name + "', '" + surname + "', '"+ phone + "', '" + email + "', '" + address + "');";
+			String query = "INSERT INTO Patient (PatientID, Password, Name, Surname, Phone, Email, Address) VALUES ('"+ username + "', '" + password + "', '" + name + "', '" + surname + "', "+ phone + ", '" + email + "', '" + address + "');";
 			stmt.executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -94,6 +88,121 @@ public class JDBC {
 			System.out.print("\nSQL State: ");
 			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void updatePatient(String name, String surname, int phone, String email, String address) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "UPDATE Patient SET Name='"+name+"', Surname='"+surname+"', Phone="+phone+", Email='"+email+"', Address='"+address+"';";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void deletePatient(String username) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "DELETE FROM Patient WHERE PatientID='"+username+"';";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public ResultSet searchPatient(String name, String surname, String username, String phone, String email, String address, String incidents) {
+		try {
+			conn.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			String query = "SELECT * FROM Patient WHERE ";
+			
+			boolean first = true;
+			
+			if (name.equals("") && surname.equals("") && username.equals("") && phone.equals("") && email.equals("") && address.equals("") && incidents.equals(""))
+				query += "PatientID= ''";
+			
+			if (!name.equals("")) {
+				query += "Name='" + name + "'" ;
+				first = false;
+			}
+			if (!surname.equals("")) {
+				if (first){
+					query += "Surname='" + surname + "'";
+				first = false;	
+				}
+				else
+					query += " AND Surname='" + surname + "'";
+			}
+			if (!username.equals("")) {
+				if (first){
+					query += "PatientID='" + username + "'";
+					first = false;	
+				}
+				else
+					query += " AND PatientID='" + username + "'";
+			}
+			if (!phone.equals("")) {
+				if (first){
+					query += "Phone=" + phone;
+					first = false;	
+				}
+				else
+					query += " AND Phone=" + phone;
+			}
+			if (!email.equals("")) {
+				if (first){
+					query += "Email='" + email + "'";
+					first = false;	
+				}
+				else
+					query += " AND Email='" + email + "'";
+			}
+			if (!address.equals("")) {
+				if (first){
+					query += "Address='" + address + "'";
+					first = false;	
+				}
+				else
+					query += " AND Address='" + address + "'";
+			}
+			if (!incidents.equals("")) {
+				if (first){
+					query += "NumOfIncidents=" + incidents;
+					first = false;	
+				}
+				else
+					query += " AND NumOfIncidents=" + incidents;
+			}		
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+			return null;
+		}
+
+	}
+	
+	public ResultSet printPatients() {
+		try {
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Patient");
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 	
@@ -111,19 +220,130 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	public void updateRelative(String patientusername, String name, String surname, int phone, String email, String address, String relationship) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "UPDATE Relative SET PatientID='"+patientusername+"', Name='"+name+"', Surname='"+surname+"', Phone="+phone+", Email='"+email+"', Address='"+address+"', Relationship='"+relationship+"';";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void deleteRelative(int RelativeID) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "DELETE FROM Relative WHERE RelativeID="+RelativeID+";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public ResultSet searchRelative(String relativeid, String patientusername, String name, String surname, String phone, String email, String address, String relationship) {
+		try {
+			conn.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			String query = "SELECT * FROM Patient WHERE ";
+			
+			boolean first = true;
+			
+			if (relativeid.equals("") && name.equals("") && surname.equals("") && phone.equals("") && email.equals("") && address.equals("") && relationship.equals(""))
+				query += "PatientID= ''";
+			
+			if (!relativeid.equals("")) {
+				query += "Relative=" + relativeid;
+				first = false;
+			}
+			if (!name.equals("")) {
+				if (first){
+					query += "Name='" + name + "'";
+				first = false;	
+				}
+				else
+					query += " AND Name='" + name + "'";
+			}
+			if (!surname.equals("")) {
+				if (first){
+					query += "Surname='" + surname + "'";
+				first = false;	
+				}
+				else
+					query += " AND Surname='" + surname + "'";
+			}
+			if (!phone.equals("")) {
+				if (first){
+					query += "Phone=" + phone;
+					first = false;	
+				}
+				else
+					query += " AND Phone=" + phone;
+			}
+			if (!email.equals("")) {
+				if (first){
+					query += "Email='" + email + "'";
+					first = false;	
+				}
+				else
+					query += " AND Email='" + email + "'";
+			}
+			if (!address.equals("")) {
+				if (first){
+					query += "Address='" + address + "'";
+					first = false;	
+				}
+				else
+					query += " AND Address='" + address + "'";
+			}
+			if (!relationship.equals("")) {
+				if (first){
+					query += "Relationship='" + relationship + "'";
+					first = false;	
+				}
+				else
+					query += " AND Relationshop='" + relationship + "'";
+			}		
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+			return null;
+		}
 
+	}
+	
+	public ResultSet printRelatives() {
+		try {
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Relative");
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
 	public ResultSet login(String Username, String Password, String Role) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query;
-			if (Role.equals("Doctor") || Role.equals("Nurse") || Role.equals("Health Visitor"))
-				query = "SELECT * FROM Staff WHERE StaffID='" + Username + "' AND Password='" + Password
-						+ "' AND StaffType='" + Role + "';";
-			else if (Role.equals("Patient"))
+			if (Role.equals("Patient"))
 				query = "SELECT * FROM Patient WHERE PatientID='" + Username + "' AND Password='" + Password + "';";
 			else
-				query = "SELECT * FROM SimpleStaff WHERE SimpleStaffID='" + Username + "' AND Password='" + Password
-						+ "' AND StaffType='" + Role + "';";
+				query = "SELECT * FROM Staff WHERE StaffID='" + Username + "' AND Password='" + Password + "';";
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException e) {
@@ -132,30 +352,24 @@ public class JDBC {
 		}
 	}
 
-	public void changepassword(String username, String newpassword, String role) {
+	public void changepassword(String username, String oldpassword, String newpassword, String role) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query;
-			if (role.equals("Doctor") || role.equals("Nurse") || role.equals("Health Visitor"))
-				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username + "';";
-			else if (role.equals("Receptionist") || role.equals("Medical Records Staff"))
-				query = "UPDATE SimpleStaff SET Password='" + newpassword + "' WHERE SimpleStaffID='" + username + "';";
+			if (role.equals("Patient"))
+				query = "UPDATE Patient SET Password='" + newpassword + "' WHERE PatientID='" + username + "' AND Password='" + oldpassword +"';";
 			else
-				query = "UPDATE Patient SET Password='" + newpassword + "' WHERE PatientID='" + username + "';";
+				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username + "' AND Password='" + oldpassword +"';";
 				stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			// System.out.println(e.getMessage());
 		}
 	}
 
-	public ResultSet checksignup(String Username, String Role) {
+	public ResultSet checksignup(String Username) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query;
-			if (Role.equals("Doctor") || Role.equals("Nurse") || Role.equals("Health Visitor"))
-				query = "SELECT StaffID FROM Staff WHERE StaffID='" + Username + "';";
-			else
-				query = "SELECT SimpleStaffID FROM SimpleStaff WHERE SimpleStaffID='" + Username + "';";
+			String query = "SELECT StaffID FROM Staff WHERE StaffID='" + Username + "';";
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException e) {
