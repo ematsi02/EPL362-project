@@ -329,10 +329,16 @@ public class GUI extends JFrame implements ActionListener {
 						usernameGUI = username.getText();
 						roleGUI = rs.getString("StaffType");
 						getContentPane().removeAll();
-						if (roleGUI.equals("Doctor") || roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor"))
+						if (roleGUI.equals("Doctor"))
+							setJMenuBar(menuForDoctor());
+						else if (roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor"))
 							setJMenuBar(menuForClinicalStaff());
-						else
-							setJMenuBar(menuForReceptionists());
+						else if (roleGUI.equals("Receptionist"))
+							setJMenuBar(menuForReceptionist());
+						else if (roleGUI.equals("Medical Records"))
+							setJMenuBar(menuForMedicalRecords());
+						else if (roleGUI.equals("Management"))
+							setJMenuBar(menuForManagement());
 						revalidate();
 						repaint();
 						pack();
@@ -748,7 +754,8 @@ public class GUI extends JFrame implements ActionListener {
 		searchPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.searchPatient(name.getText(), surname.getText(), username.getText(), phone.getText(), email.getText(), address.getText(), incidents.getText());
+					ResultSet rs = SADB.searchPatient(name.getText(), surname.getText(), username.getText(),
+							phone.getText(), email.getText(), address.getText(), incidents.getText());
 					getContentPane().removeAll();
 					getContentPane().add(searchPatientForm());
 					getContentPane().add(resultsForm(rs));
@@ -764,7 +771,7 @@ public class GUI extends JFrame implements ActionListener {
 		patientpanel.setOpaque(false);
 		return patientpanel;
 	}
-	
+
 	private JPanel relativeForm() {
 		JPanel relativepanel = new JPanel();
 		JLabel lblpatientusername = new JLabel("Patient's Username");
@@ -829,7 +836,7 @@ public class GUI extends JFrame implements ActionListener {
 		relativepanel.setOpaque(false);
 		return relativepanel;
 	}
-	
+
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
 		JTable results = new JTable(JDBC.buildTableModel(rs));
 		JScrollPane resultspanel = new JScrollPane(results);
@@ -837,12 +844,21 @@ public class GUI extends JFrame implements ActionListener {
 		return resultspanel;
 	}
 
+	/*
+	 * Account Menu Element. This menu is included for all the users of the
+	 * system. It offers options that have to do with the user's profile
+	 * information.
+	 */
 	private JMenu AccountMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
 		menu = new JMenu("Account");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Change My Password");
+		menuItem = new JMenuItem("View Profile");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Change Password");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
@@ -853,187 +869,252 @@ public class GUI extends JFrame implements ActionListener {
 		return menu;
 	}
 
-	private JMenu PatientsMenu() {
+	/*
+	 * Consultation/Treatment Menu Element. Allows the user to add, view,
+	 * search, edit or delete consultation or treatment information about a
+	 * patient.
+	 */
+	private JMenu ConsultationTreatmentMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
-		menu = new JMenu("Patients");
+		menu = new JMenu("Consultation/Treatment");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Patient");
+		menuItem = new JMenuItem("Add New Consultation");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Patient");
+		menuItem = new JMenuItem("View/Search Consultation");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Patient");
+		menuItem = new JMenuItem("Add New Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Patients");
+		menuItem = new JMenuItem("View/Search Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 		return menu;
 	}
 
+	/*
+	 * Comments, Incidents and Harm Risk Menu Element. Allows the user to add,
+	 * view, search, edit or delete incidents and comments about a patient, as
+	 * well as edit a patient's harm risk record.
+	 */
+	private JMenu CommentsIncidentsMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Comments/Harm Risk");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Add New Comment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("View/Search Comment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Add New Incident");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("View/Search Incident");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Update Harm Risk Record");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		return menu;
+	}
+
+	/*
+	 * Patients Menu Element. Allows the user to add, view, search, edit,
+	 * delete, import or export patient records.
+	 */
+	private JMenu PatientsMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Patient");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Add New Patient");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("View/Search Patient");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Import/Export Patient Record");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		return menu;
+	}
+
+	/*
+	 * Relatives Menu Element. Allows the user to add, view, search, edit or
+	 * delete relatives of a patient.
+	 */
 	private JMenu RelativesMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
 		menu = new JMenu("Relatives");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Relative");
+		menuItem = new JMenuItem("Add New Relative");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Relative");
+		menuItem = new JMenuItem("View/Search Relative");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Relative");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Relatives");
+		menuItem = new JMenuItem("Inform Relative");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 		return menu;
 	}
 
-	private JMenu IncidentsMenu() {
+	/*
+	 * Medication Menu Element. Allows the user to add, view, search, edit or
+	 * delete information about different medication records.
+	 */
+	private JMenu MedicationMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
-		menu = new JMenu("Incidents");
+		menu = new JMenu("Medication");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Incident");
+		menuItem = new JMenuItem("Add New Medication");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Incident");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Incident");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Incidents");
+		menuItem = new JMenuItem("View/Search Medication");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 		return menu;
 	}
 
-	private JMenu TreatmentsMenu() {
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Treatments");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Treatment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Treatment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Treatment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Treatments");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		return menu;
-	}
-
-	private JMenu MedicationsMenu() {
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Medications");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Medications");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		return menu;
-	}
-
-	private JMenuBar menuForClinicalStaff() {
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.add(AccountMenu());
-		menuBar.add(PatientsMenu());
-		menuBar.add(RelativesMenu());
-		menuBar.add(IncidentsMenu());
-		menuBar.add(TreatmentsMenu());
-		menuBar.add(MedicationsMenu());
-		return menuBar;
-	}
-
+	/*
+	 * Appointments Menu Element. Allows the user to add, view, search, edit or
+	 * delete information about different appointments.
+	 */
 	private JMenu AppointmentsMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
 		menu = new JMenu("Appointments");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Appointment");
+		menuItem = new JMenuItem("Add New Appointment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Appointment");
+		menuItem = new JMenuItem("View/Search Appointment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Appointment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(this);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Appointments");
+		menuItem = new JMenuItem("View Today's Appointments");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
 		return menu;
 	}
 
-	private JMenuBar menuForReceptionists() {
+	/*
+	 * Repeat Treatment Menu Element. Allows the user to repeat a treatment of a
+	 * patient, after request.
+	 */
+	private JMenu RepeatTreatmentMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Repeat Prescription");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Search Treatment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(this);
+		menu.add(menuItem);
+		return menu;
+	}
+
+	/*
+	 * Menu for Doctor. This method generates the menu that a user with the role
+	 * of "Doctor" can see, when logged in.
+	 */
+	private JMenuBar menuForDoctor() {
 		JMenuBar menuBar = new JMenuBar();
+		// Options for Clinical Staff, except the MedicationMenu (only Doctors)
 		menuBar.add(AccountMenu());
-		menuBar.add(AppointmentsMenu());
+		menuBar.add(ConsultationTreatmentMenu());
+		menuBar.add(CommentsIncidentsMenu());
+		menuBar.add(PatientsMenu());
+		menuBar.add(RelativesMenu());
+		menuBar.add(MedicationMenu());
 		return menuBar;
 	}
 
 	/*
-	public static void main(String[] args) {
-		GUI frame = new GUI();
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.contentPane.setLayout(null);
-		frame.setLocationByPlatform(true);
-		frame.setContentPane(frame.contentPane);
-		frame.getContentPane().add(frame.loginForm());
-		frame.getContentPane().add(frame.signupForm());
-		frame.pack();
-		frame.setVisible(true);
-		frame.SADB = new JDBC();
-		frame.SADB.conn = frame.SADB.getDBConnection();
-		if (frame.SADB.conn == null) {
-			return;
-		}
-		System.out.println("WELCOME TO Regional Health Authority JDBC program ! \n\n");
-	} // end of Main
-	*/
+	 * Menu for the rest Clinical Staff. This method generates the menu that a
+	 * user with the roles of "Nurse" or "Health Visitor" can see, when logged
+	 * in. The menu concerns all clinical staff, except doctors.
+	 */
+	private JMenuBar menuForClinicalStaff() {
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(AccountMenu());
+		menuBar.add(ConsultationTreatmentMenu());
+		menuBar.add(CommentsIncidentsMenu());
+		menuBar.add(PatientsMenu());
+		menuBar.add(RelativesMenu());
+		return menuBar;
+	}
+
+	/*
+	 * Menu for Receptionist. This method generates the menu that a user with
+	 * the role of "Receptionist" can see, when logged in.
+	 */
+	private JMenuBar menuForReceptionist() {
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(AccountMenu());
+		menuBar.add(AppointmentsMenu());
+		menuBar.add(RepeatTreatmentMenu());
+		return menuBar;
+	}
+
+	/*
+	 * Menu for Medical Records. This method generates the menu that a user with
+	 * the role of "Medical Records" can see, when logged in.
+	 */
+	private JMenuBar menuForMedicalRecords() {
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(AccountMenu());
+		return menuBar;
+	}
+
+	/*
+	 * Menu for Management. This method generates the menu that a user with the
+	 * role of "Management" can see, when logged in.
+	 */
+	private JMenuBar menuForManagement() {
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(AccountMenu());
+		return menuBar;
+	}
+
+	/*
+	 * public static void main(String[] args) { GUI frame = new GUI();
+	 * frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	 * frame.contentPane.setLayout(null); frame.setLocationByPlatform(true);
+	 * frame.setContentPane(frame.contentPane);
+	 * frame.getContentPane().add(frame.loginForm());
+	 * frame.getContentPane().add(frame.signupForm()); frame.pack();
+	 * frame.setVisible(true); frame.SADB = new JDBC(); frame.SADB.conn =
+	 * frame.SADB.getDBConnection(); if (frame.SADB.conn == null) { return; }
+	 * System.out.
+	 * println("WELCOME TO Regional Health Authority JDBC program ! \n\n"); } //
+	 * end of Main
+	 */
 
 }
 
