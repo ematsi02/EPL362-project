@@ -1,3 +1,5 @@
+package server;
+
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
@@ -13,9 +15,9 @@ public class JDBC {
 	public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 	public Connection getDBConnection() {
-		String url = "URL";
-		String username = "USERNAME";
-		String password = "PASSWORD";
+		String url = "jdbc:mysql://studentdb.in.cs.ucy.ac.cy:3306/EPL362project";
+		String username = "EPL362project";
+		String password = "GzMV6jFrWTLnB6Pp";
 		if (!dbDriverLoaded)
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
@@ -204,10 +206,10 @@ public class JDBC {
 		}
 	}
 	
-	public void addRelative(String patientusername, String name, String surname, int phone, String email, String address, String relationship) {
+	public void addRelative(String patientid, String name, String surname, int phone, String email, String address, String relationship) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Relative (PatientID, Name, Surname, Phone, Email, Address, Relationship) VALUES ('"+ patientusername + "', '" + name + "', '" + surname + "', '"+ phone + "', '" + email + "', '" + address + "', '"+relationship+"';";
+			String query = "INSERT INTO Relative (PatientID, Name, Surname, Phone, Email, Address, Relationship) VALUES ('"+ patientid + "', '" + name + "', '" + surname + "', "+ phone + ", '" + email + "', '" + address + "', '"+relationship+"');";
 			stmt.executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -219,10 +221,10 @@ public class JDBC {
 		}
 	}
 	
-	public void updateRelative(int relativeid, String patientusername, String name, String surname, int phone, String email, String address, String relationship) {
+	public void updateRelative(int relativeid, String patientid, String name, String surname, int phone, String email, String address, String relationship) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Relative SET PatientID='"+patientusername+"', Name='"+name+"', Surname='"+surname+"', Phone="+phone+", Email='"+email+"', Address='"+address+"', Relationship='"+relationship+"' WHERE RelativeID="+relativeid+";";
+			String query = "UPDATE Relative SET PatientID='"+patientid+"', Name='"+name+"', Surname='"+surname+"', Phone="+phone+", Email='"+email+"', Address='"+address+"', Relationship='"+relationship+"' WHERE RelativeID="+relativeid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -233,10 +235,10 @@ public class JDBC {
 		}
 	}
 	
-	public void deleteRelative(int RelativeID) {
+	public void deleteRelative(int relativeid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "DELETE FROM Relative WHERE RelativeID="+RelativeID+";";
+			String query = "DELETE FROM Relative WHERE RelativeID="+relativeid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -247,20 +249,28 @@ public class JDBC {
 		}
 	}
 	
-	public ResultSet searchRelative(String relativeid, String patientusername, String name, String surname, String phone, String email, String address, String relationship) {
+	public ResultSet searchRelative(String relativeid, String patientid, String name, String surname, String phone, String email, String address, String relationship) {
 		try {
 			conn.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			String query = "SELECT * FROM Patient WHERE ";
+			String query = "SELECT * FROM Relative WHERE ";
 			
 			boolean first = true;
 			
-			if (relativeid.equals("") && name.equals("") && surname.equals("") && phone.equals("") && email.equals("") && address.equals("") && relationship.equals(""))
-				query += "PatientID= ''";
+			if (relativeid.equals("") && patientid.equals("") && name.equals("") && surname.equals("") && phone.equals("") && email.equals("") && address.equals("") && relationship.equals(""))
+				query += "RelativeID= ''";
 			
 			if (!relativeid.equals("")) {
-				query += "Relative=" + relativeid;
+				query += "RelativeID=" + relativeid;
 				first = false;
+			}
+			if (!patientid.equals("")) {
+				if (first){
+					query += "PatientID='" + patientid + "'";
+				first = false;	
+				}
+				else
+					query += " AND PatientID='" + patientid + "'";
 			}
 			if (!name.equals("")) {
 				if (first){
@@ -337,7 +347,7 @@ public class JDBC {
 	public void addIncident(String patientid, String type, String shortDescription, String description, String date) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Incident (PatientID, IncidentType, ShortDescription, Description, Date) VALUES ('"+ patientid + "', '" + type + "', '" + shortDescription + "', '" + description + "', "+ date + "');";
+			String query = "INSERT INTO Incident (PatientID, IncidentType, ShortDescription, Description, Date) VALUES ('"+ patientid + "', '" + type + "', '" + shortDescription + "', '" + description + "', '"+ date + "');";
 			stmt.executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -349,10 +359,10 @@ public class JDBC {
 		}
 	}
 	
-	public void updateIncident(int incidentid, String type, String shortDescription, String description, String date) {
+	public void updateIncident(int incidentid, String patientid, String type, String shortDescription, String description, String date) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Incident SET IncidentType='"+type+"', ShortDescription='"+shortDescription+"', Description="+description+", Date='"+date+"' WHERE IncidentID="+incidentid+";";
+			String query = "UPDATE Incident SET IncidentType='"+type+"', PatientID='"+patientid+"', ShortDescription='"+shortDescription+"', Description='"+description+"', Date='"+date+"' WHERE IncidentID="+incidentid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -377,7 +387,7 @@ public class JDBC {
 		}
 	}
 	
-	public ResultSet searchIncident(String patientid, String type, String date) {
+	public ResultSet searchIncident(String incidentid, String patientid, String type, String date) {
 		try {
 			conn.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -385,12 +395,20 @@ public class JDBC {
 			
 			boolean first = true;
 			
-			if (patientid.equals("") && type.equals("") && date.equals(""))
-				query += "PatientID= ''";
+			if (incidentid.equals("") && patientid.equals("") && type.equals("") && date.equals(""))
+				query += "IncidentID= ''";
 			
-			if (!patientid.equals("")) {
-				query += "PatientID='" + patientid + "'" ;
+			if (!incidentid.equals("")) {
+				query += "IncidentID='" + incidentid + "'" ;
 				first = false;
+			}
+			if (!patientid.equals("")) {
+				if (first){
+					query += "PatientID='" + patientid + "'";
+				first = false;	
+				}
+				else
+					query += " AND PatientID='" + patientid + "'";
 			}
 			if (!type.equals("")) {
 				if (first){
@@ -435,7 +453,7 @@ public class JDBC {
 	public void addTreatment(String patientid, String startDate, String endDate, String diagnosis, String description, String staffid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Treatment (PatientID, StartDate, EndDate, Diagnosis, Description, StaffID) VALUES ('"+ patientid + "', '" + startDate + "', '" + endDate + "', '" + diagnosis + "', " + description + "', " + staffid + "');";
+			String query = "INSERT INTO Treatment (PatientID, StartDate, EndDate, Diagnosis, Description, StaffID) VALUES ('"+ patientid + "', '" + startDate + "', '" + endDate + "', '" + diagnosis + "', '" + description + "', '" + staffid + "');";
 			stmt.executeUpdate(query);
 			
 		} catch (SQLException e) {
@@ -450,7 +468,7 @@ public class JDBC {
 	public void updateTreatment(int treatmentid, String patientid, String startDate, String endDate, String diagnosis, String description, String staffid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Treatment SET PatientID='"+patientid+"', StartDate='"+startDate+"', EndDate="+endDate+", Diagnosis='"+diagnosis+", Description='"+description+", StaffID='"+staffid+"' WHERE TreatmentID="+treatmentid+";";
+			String query = "UPDATE Treatment SET PatientID='"+patientid+"', StartDate='"+startDate+"', EndDate='"+endDate+"', Diagnosis='"+diagnosis+"', Description='"+description+"', StaffID='"+staffid+"' WHERE TreatmentID="+treatmentid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -564,7 +582,7 @@ public class JDBC {
 	public void updateMedication(int medicationid, String brand, String name, String description, String effects) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Medication SET Brand='"+brand+"', Name='"+name+"', Description="+description+", KnownSideEffects='"+effects+"' WHERE MedicationID="+medicationid+";";
+			String query = "UPDATE Medication SET Brand='"+brand+"', Name='"+name+"', Description='"+description+"', KnownSideEffects='"+effects+"' WHERE MedicationID="+medicationid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -662,7 +680,7 @@ public class JDBC {
 	public void updateConsultation(int consultationid, String patientid, String staffid, String subject, String dateBooked, String date, String time, String treatmentid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Consultation SET PatientID='"+patientid+"', StaffID='"+staffid+"', Subject="+subject+", DateBooked='"+dateBooked+", Date='"+date+", Time='"+time+", TreatmentID='"+treatmentid+"' WHERE ConsultationID="+consultationid+";";
+			String query = "UPDATE Consultation SET PatientID='"+patientid+"', StaffID='"+staffid+"', Subject='"+subject+"', DateBooked='"+dateBooked+"', Date='"+date+"', Time='"+time+"', TreatmentID='"+treatmentid+"' WHERE ConsultationID="+consultationid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
