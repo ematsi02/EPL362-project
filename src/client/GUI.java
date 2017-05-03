@@ -242,36 +242,36 @@ public class GUI extends JFrame implements ActionListener {
 			} catch (Exception er) {
 				// Ignore the error and continues
 			}
-		} else if (btnLabel.equals("Add Appointment")) {
+		} else if (btnLabel.equals("Add Consultation")) {
 			this.getContentPane().removeAll();
-			// this.getContentPane().add(appointmentForm());
+			this.getContentPane().add(consultationForm());
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Search Appointment")) {
+		} else if (btnLabel.equals("Search Consultation")) {
 			this.getContentPane().removeAll();
-			// this.getContentPane().add(searchAppointmentForm());
+			this.getContentPane().add(searchConsultationForm());
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Edit/Delete Appointment")) {
+		} else if (btnLabel.equals("Edit/Delete Consultation")) {
 			this.getContentPane().removeAll();
-			// ResultSet rs = SADB.printAppointments();
-			// this.getContentPane().add(appointmentsForm(rs, 1));
+			ResultSet rs = SADB.printConsultations();
+			this.getContentPane().add(consultationsForm(rs, 1));
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("View All Appointments")) {
+		} else if (btnLabel.equals("View All Consultations")) {
 			try {
-				JLabel message = new JLabel("APPOINTMENTS");
+				JLabel message = new JLabel("CONSULTATIONS");
 				message.setFont(new Font("Arial", Font.BOLD, 14));
 				message.setBounds(450, 80, 100, 100);
 				this.getContentPane().removeAll();
-				// ResultSet rs = SADB.printAppointments();
+				ResultSet rs = SADB.printConsultations();
 				this.getContentPane().add(message);
-				// JScrollPane r = resultsForm(rs);
-				// r.setBounds(50, 150, 900, 600);
-				// this.getContentPane().add(r);
+				JScrollPane r = resultsForm(rs);
+				r.setBounds(50, 150, 900, 600);
+				this.getContentPane().add(r);
 				this.revalidate();
 				this.repaint();
 				this.pack();
@@ -1744,7 +1744,304 @@ public class GUI extends JFrame implements ActionListener {
 		medicationpanel.setOpaque(false);
 		return medicationpanel;
 	}
+	
+	private JPanel consultationForm() {
+		JPanel consultationpanel = new JPanel();
+		JLabel lblpatientid = new JLabel("Patient's Username");
+		lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblstaffid = new JLabel("Staff ID");
+		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblsubject = new JLabel("Subject");
+		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldateBooked = new JLabel("Date Booked");
+		lbldateBooked.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldate = new JLabel("Date");
+		lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbltime = new JLabel("Time");
+		lbltime.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbltreatmentid = new JLabel("Treatment ID");
+		lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField patientid = new JTextField(15);
+		JTextField staffid = new JTextField(15);
+		JTextField subject = new JTextField(15);
+		JTextField dateBooked = new JTextField(15);
+		JTextField date = new JTextField(15);
+		JTextField time = new JTextField(15);
+		JTextField treatmentid = new JTextField(15);
+		JButton addConsultation = new JButton("Add");
 
+		consultationpanel.add(lblpatientid);
+		consultationpanel.add(patientid);
+		consultationpanel.add(lblstaffid);
+		consultationpanel.add(staffid);
+		consultationpanel.add(lblsubject);
+		consultationpanel.add(subject);
+		consultationpanel.add(lbldateBooked);
+		consultationpanel.add(dateBooked);
+		consultationpanel.add(lbldate);
+		consultationpanel.add(date);
+		consultationpanel.add(lbltime);
+		consultationpanel.add(time);
+		consultationpanel.add(lbltreatmentid);
+		consultationpanel.add(treatmentid);
+		consultationpanel.add(addConsultation);
+		addConsultation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					SADB.addConsultation(patientid.getText(), staffid.getText(), subject.getText(),
+							dateBooked.getText(), date.getText(), time.getText(), treatmentid.getText());
+					getContentPane().removeAll();
+					JLabel message = new JLabel("You have successfully added the consultation!");
+					message.setFont(new Font("Arial", Font.BOLD, 14));
+					message.setBounds(340, 470, 350, 50);
+					getContentPane().add(consultationForm());
+					getContentPane().add(message);
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		consultationpanel.setBounds(350, 150, 250, 250);
+		consultationpanel.setOpaque(false);
+		return consultationpanel;
+	}
+
+	private JPanel consultationsForm(ResultSet rs, int x) {
+		try {
+			JPanel consultationpanel = new JPanel();
+			if (rs.next() == false && rs.previous() == false)
+				return consultationpanel;
+			if (x == 1) {
+				if (rs.next() == false) {
+					rs.previous();
+				}
+			} else if (x == -1) {
+				if (rs.previous() == false) {
+					rs.next();
+				}
+			}
+			JLabel lblspace1 = new JLabel("                      ");
+			JLabel lblspace2 = new JLabel("                      ");
+			JLabel lblid = new JLabel("    ID");
+			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpatientid = new JLabel("Patient's Username");
+			lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstaffid = new JLabel("Staff ID");
+			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblsubject = new JLabel("Subject");
+			lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldateBooked = new JLabel("Date Booked");
+			lbldateBooked.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldate = new JLabel("Date");
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbltime = new JLabel("Time");
+			lbltime.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbltreatmentid = new JLabel("Treatment ID");
+			lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblattended = new JLabel("Attended");
+			lblattended.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblupdated = new JLabel("Medical Record Updated");
+			lblupdated.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField id = new JTextField(rs.getString("ConsultationID"));
+			id.setEditable(false);
+			JTextField patientid = new JTextField(rs.getString("PatientID"));
+			JTextField staffid = new JTextField(rs.getString("StaffID"));
+			JTextField subject = new JTextField(rs.getString("Subject"));
+			JTextField dateBooked = new JTextField(rs.getString("DateBooked"));
+			JTextField date = new JTextField(rs.getString("Date"));
+			JTextField time = new JTextField(rs.getString("Time"));
+			JTextField attended = new JTextField(rs.getString("Attended"));
+			JTextField updated = new JTextField(rs.getString("MedicalRecordUpdated"));
+			JTextField treatmentid = new JTextField(rs.getString("TreatmentID"));
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.updateConsultation(Integer.parseInt(id.getText()), patientid.getText(), staffid.getText(),
+								subject.getText(), dateBooked.getText(), date.getText(), time.getText(),
+								Integer.parseInt(attended.getText()), Integer.parseInt(updated.getText()),
+								Integer.parseInt(treatmentid.getText()));
+						getContentPane().removeAll();
+						getContentPane().add(consultationsForm(SADB.printConsultations(), 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton delete = new JButton("Delete");
+			delete.setFont(new Font("Arial", Font.PLAIN, 14));
+			delete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.deleteConsultation(Integer.parseInt(id.getText()));
+						getContentPane().removeAll();
+						getContentPane().add(consultationsForm(SADB.printConsultations(), 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton previous = new JButton("<");
+			previous.setFont(new Font("Arial", Font.PLAIN, 14));
+			previous.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().removeAll();
+						getContentPane().add(consultationsForm(rs, -1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton next = new JButton(">");
+			next.setFont(new Font("Arial", Font.PLAIN, 14));
+			next.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().removeAll();
+						getContentPane().add(consultationsForm(rs, 1));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			consultationpanel.add(lblspace1);
+			consultationpanel.add(previous);
+			consultationpanel.add(next);
+			consultationpanel.add(lblspace2);
+			consultationpanel.add(lblid);
+			consultationpanel.add(id);
+			consultationpanel.add(lblpatientid);
+			consultationpanel.add(patientid);
+			consultationpanel.add(lblstaffid);
+			consultationpanel.add(staffid);
+			consultationpanel.add(lblsubject);
+			consultationpanel.add(subject);
+			consultationpanel.add(lbldateBooked);
+			consultationpanel.add(dateBooked);
+			consultationpanel.add(lbldate);
+			consultationpanel.add(date);
+			consultationpanel.add(lbltime);
+			consultationpanel.add(time);
+			consultationpanel.add(lblattended);
+			consultationpanel.add(attended);
+			consultationpanel.add(lblupdated);
+			consultationpanel.add(updated);
+			consultationpanel.add(lbltreatmentid);
+			consultationpanel.add(treatmentid);
+			consultationpanel.add(update);
+			consultationpanel.add(delete);
+			consultationpanel.setBounds(350, 150, 250, 250);
+			consultationpanel.setOpaque(false);
+			return consultationpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchConsultationForm() {
+		JPanel consultationpanel = new JPanel();
+		JLabel message = new JLabel(
+				"Search Consultations by ID, Patient's Username, Staff ID, Subject, Date Booked, Date, Time, Attended, Medical Record Updated, Treatment ID or all of them:");
+		message.setFont(new Font("Arial", Font.BOLD, 14));
+		JLabel lblspace1 = new JLabel("                       ");
+		JLabel lblspace2 = new JLabel("                       ");
+		JLabel lblid = new JLabel("    ID");
+		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblpatientid = new JLabel("Patient's Username");
+		lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblstaffid = new JLabel("Staff ID");
+		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblsubject = new JLabel("Subject");
+		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldateBooked = new JLabel("Date Booked");
+		lbldateBooked.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldate = new JLabel("Date");
+		lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbltime = new JLabel("Time");
+		lbltime.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbltreatmentid = new JLabel("Treatment ID");
+		lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblattended = new JLabel("Attended");
+		lblattended.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblupdated = new JLabel("Medical Record Updated");
+		lblupdated.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField id = new JTextField(15);
+		JTextField patientid = new JTextField(15);
+		JTextField staffid = new JTextField(15);
+		JTextField subject = new JTextField(15);
+		JTextField dateBooked = new JTextField(15);
+		JTextField date = new JTextField(15);
+		JTextField time = new JTextField(15);
+		JTextField attended = new JTextField(15);
+		JTextField updated = new JTextField(15);
+		JTextField treatmentid = new JTextField(15);
+		JButton searchConsultation = new JButton("Search");
+
+		consultationpanel.add(lblspace1);
+		consultationpanel.add(message);
+		consultationpanel.add(lblspace2);
+		consultationpanel.add(lblid);
+		consultationpanel.add(lblid);
+		consultationpanel.add(id);
+		consultationpanel.add(lblpatientid);
+		consultationpanel.add(patientid);
+		consultationpanel.add(lblstaffid);
+		consultationpanel.add(staffid);
+		consultationpanel.add(lblsubject);
+		consultationpanel.add(subject);
+		consultationpanel.add(lbldateBooked);
+		consultationpanel.add(dateBooked);
+		consultationpanel.add(lbldate);
+		consultationpanel.add(date);
+		consultationpanel.add(lbltime);
+		consultationpanel.add(time);
+		consultationpanel.add(lblattended);
+		consultationpanel.add(attended);
+		consultationpanel.add(lblupdated);
+		consultationpanel.add(updated);
+		consultationpanel.add(lbltreatmentid);
+		consultationpanel.add(treatmentid);
+		consultationpanel.add(searchConsultation);
+		searchConsultation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ResultSet rs = SADB.searchConsultation(id.getText(), patientid.getText(), staffid.getText(),
+							subject.getText(), dateBooked.getText(), date.getText(), time.getText(), attended.getText(),
+							updated.getText(), treatmentid.getText());
+					getContentPane().removeAll();
+					getContentPane().add(searchConsultationForm());
+					getContentPane().add(resultsForm(rs));
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		consultationpanel.setBounds(50, 150, 900, 150);
+		consultationpanel.setOpaque(false);
+		return consultationpanel;
+	}
+	
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
 		JTable results = new JTable(JDBC.buildTableModel(rs));
 		JScrollPane resultspanel = new JScrollPane(results);
@@ -1759,7 +2056,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		menu = new JMenu("Account");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Change My Password");
+		menuItem = new JMenuItem("Change Password");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
@@ -1879,7 +2176,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		menu = new JMenu("Account");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Change My Password");
+		menuItem = new JMenuItem("Change Password");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
@@ -1889,21 +2186,21 @@ public class GUI extends JFrame implements ActionListener {
 		menu.add(menuItem);
 		menuBar.add(menu);
 
-		menu = new JMenu("Appointments");
+		menu = new JMenu("Consultations");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Add Appointment");
+		menuItem = new JMenuItem("Add Consultation");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Search Appointment");
+		menuItem = new JMenuItem("Search Consultation");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Appointment");
+		menuItem = new JMenuItem("Edit/Delete Consultation");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("View All Appointments");
+		menuItem = new JMenuItem("View All Consultations");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(this);
 		menu.add(menuItem);
