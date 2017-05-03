@@ -677,10 +677,10 @@ public class JDBC {
 		}
 	}
 	
-	public void updateConsultation(int consultationid, String patientid, String staffid, String subject, String dateBooked, String date, String time, String treatmentid) {
+	public void updateConsultation(int consultationid, String patientid, String staffid, String subject, String dateBooked, String date, String time, int attended, int updated, int treatmentid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "UPDATE Consultation SET PatientID='"+patientid+"', StaffID='"+staffid+"', Subject='"+subject+"', DateBooked='"+dateBooked+"', Date='"+date+"', Time='"+time+"', TreatmentID='"+treatmentid+"' WHERE ConsultationID="+consultationid+";";
+			String query = "UPDATE Consultation SET PatientID='"+patientid+"', StaffID='"+staffid+"', Subject='"+subject+"', DateBooked='"+dateBooked+"', Date='"+date+"', Time='"+time+"', Attended="+attended+", MedicalRecordUpdated="+updated+", TreatmentID="+treatmentid+" WHERE ConsultationID="+consultationid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -694,7 +694,7 @@ public class JDBC {
 	public void deleteConsultation(int consultationid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "DELETE FROM Medication WHERE ConsultationID="+consultationid+";";
+			String query = "DELETE FROM Consultation WHERE ConsultationID="+consultationid+";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -705,7 +705,7 @@ public class JDBC {
 		}
 	}
 	
-	public ResultSet searchConsultation(String consultationid, String patientid, String staffid, String subject, String dateBooked, String date, String time, String treatmentid) {
+	public ResultSet searchConsultation(String consultationid, String patientid, String staffid, String subject, String dateBooked, String date, String time, String attended, String updated, String treatmentid) {
 		try {
 			conn.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
 			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -713,7 +713,7 @@ public class JDBC {
 			
 			boolean first = true;
 			
-			if (consultationid.equals("") && patientid.equals("") && staffid.equals("") && subject.equals("") && dateBooked.equals("") && date.equals("") && time.equals("") && treatmentid.equals(""))
+			if (consultationid.equals("") && patientid.equals("") && staffid.equals("") && subject.equals("") && dateBooked.equals("") && date.equals("") && time.equals("") && attended.equals("") && updated.equals("") && treatmentid.equals(""))
 				query += "ConsultationID= ''"; 
 			
 			if (!consultationid.equals("")) {
@@ -767,6 +767,22 @@ public class JDBC {
 				}
 				else
 					query += " AND Time='" + time + "'";
+			}
+			if (!attended.equals("")) {
+				if (first){
+					query += "Attended='" + attended + "'";
+					first = false;	
+				}
+				else
+					query += " AND Attended='" + attended + "'";
+			}
+			if (!updated.equals("")) {
+				if (first){
+					query += "MedicalRecordUpdated='" + updated + "'";
+					first = false;	
+				}
+				else
+					query += " AND MedicalRecordUpdated='" + updated + "'";
 			}
 			if (!treatmentid.equals("")) {
 				if (first){
@@ -826,7 +842,7 @@ public class JDBC {
 				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username + "' AND Password='" + oldpassword +"';";
 				stmt.executeUpdate(query);
 		} catch (SQLException e) {
-			// System.out.println(e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 
