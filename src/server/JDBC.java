@@ -2,11 +2,7 @@ package server;
 
 import java.io.*;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
-
 import javax.swing.table.DefaultTableModel;
 
 public class JDBC {
