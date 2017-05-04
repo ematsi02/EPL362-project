@@ -28,7 +28,7 @@ public class GUIMenu {
 		JMenuItem menuItem;
 		menu = new JMenu("Account");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("View Profile");
+		menuItem = new JMenuItem("View/Edit Profile");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -61,11 +61,19 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Consultation");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("Add New Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
 		menuItem = new JMenuItem("View/Search Treatment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -90,11 +98,19 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Comment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("Add New Incident");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
 		menuItem = new JMenuItem("View/Search Incident");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Incident");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -122,6 +138,10 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Patient");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("Import/Export Patient Record");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
@@ -146,7 +166,15 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Relative");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("Inform Relative");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("View/Search Messages to Relatives");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -170,6 +198,10 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Medication");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		return menu;
 	}
 
@@ -190,6 +222,10 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("Edit/Delete Appointment");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("View Today's Appointments");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
@@ -204,7 +240,7 @@ public class GUIMenu {
 	private JMenu RepeatTreatmentMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
-		menu = new JMenu("Repeat Prescription");
+		menu = new JMenu("Renew Prescription");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem = new JMenuItem("Search Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -268,6 +304,14 @@ public class GUIMenu {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
 		menuBar.add(AppointmentsMenu());
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Patient");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("View/Search Patient");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);		
 		menuBar.add(RepeatTreatmentMenu());
 		return menuBar;
 	}
