@@ -530,7 +530,7 @@ public class GUI extends JFrame implements ActionListener {
 					out.flush();
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if (messageFromServer.equals("1\n")) {// successful sign
+						if (messageFromServer.equals("1")) {// successful sign
 																// up
 							JLabel message = new JLabel("You have successfully signed up!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
@@ -539,7 +539,7 @@ public class GUI extends JFrame implements ActionListener {
 							getContentPane().add(signupForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("2\n")) {// username
+						if (messageFromServer.equals("2")) {// username
 																// already
 																// exists
 							JLabel message = new JLabel("Username already exists! Give a different one!");
