@@ -370,12 +370,28 @@ public class GUI extends JFrame implements ActionListener {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(menuForClinicalStaff());
+							// TODO menu selection needs to change, based on the specific StaffType
+							/*
+							roleGUI = rs.getString("StaffType");
+							getContentPane().removeAll();
+							GUIMenu myMenu = new GUIMenu(this);
+							if (roleGUI.equals("Doctor"))
+								setJMenuBar(myMenu.menuForDoctor());
+							else if (roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor"))
+								setJMenuBar(myMenu.menuForClinicalStaff());
+							else if (roleGUI.equals("Receptionist"))
+								setJMenuBar(myMenu.menuForReceptionist());
+							else if (roleGUI.equals("Medical Records"))
+								setJMenuBar(myMenu.menuForMedicalRecords());
+							else if (roleGUI.equals("Management"))
+								setJMenuBar(myMenu.menuForManagement());
+							*/
 						}
-						else if (messageFromServer.equals("2")) {// user is
-															// receptionist
+						else if (messageFromServer.equals("2")) {// user is receptionist
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(menuForReceptionists());
+							// TODO menu selection needs to change, based on the specific StaffType
 						}
 						else if (messageFromServer.equals("3")) {// incorrect user
 							JLabel message = new JLabel("Username or Password incorrect!");
