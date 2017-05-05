@@ -19,9 +19,13 @@ public class PsychiatryServer {
 	PrintWriter outToClient, file;
 	Socket socket;
 	String messageFromClient;
-	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	LocalDateTime now = LocalDateTime.now();
 
+	/*
+	 * Server gets username, password and role from client,checks if user exists,
+	 * sends message accordingly role and writes in log file the action and the datetime.
+	 */
 	void login() throws Exception {
 		System.out.println("mpika sto login");
 		String username = inFromClient.readLine();
@@ -46,40 +50,39 @@ public class PsychiatryServer {
 						file.print(username + " log in as Doctor... ");
 						file.println(dtf.format(now));
 						file.flush();
-						outToClient.println("1");
+						outToClient.println("Doctor");
 						outToClient.flush();
 					} else if (roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor")) {
-						file.print(username + " log in as Nurse or Health Visitor... ");
+						file.print(username + " log in as "+ roleGUI+"... ");
 						file.println(dtf.format(now));
 						file.flush();
-						outToClient.println("2");
+						outToClient.println("Nurse-HealthVisitor");
 						outToClient.flush();
 					} else if (roleGUI.equals("Receptionist")) {
 						file.print(username + " log in as Receptionist... ");
 						file.println(dtf.format(now));
 						file.flush();
-						outToClient.println("3");
+						outToClient.println("Receptionist");
 						outToClient.flush();
 					} else if (roleGUI.equals("Medical Records")) {
 						file.print(username + " log in as Medical Records... ");
 						file.println(dtf.format(now));
 						file.flush();
-						outToClient.println("4");
+						outToClient.println("MedicalRecords");
 						outToClient.flush();
 					} else if (roleGUI.equals("Management")) {
 						file.print(username + " log in as Management... ");
 						file.println(dtf.format(now));
 						file.flush();
-						outToClient.println("5");
+						outToClient.println("Management");
 						outToClient.flush();
 					}
 				}
-
 			} else {
 				file.print(username + " try to log in but failed... ");
 				file.println(dtf.format(now));
 				file.flush();
-				outToClient.println("0");
+				outToClient.println("wrong");
 				outToClient.flush();
 			}
 
@@ -88,6 +91,10 @@ public class PsychiatryServer {
 		}
 	}
 
+	/*
+	 * Server gets some fields from client, add the new user with those fields in database,
+	 * sends successful or not message and writes in log file the action and the datetime.
+	 */
 	void signup() throws Exception {
 		String username = inFromClient.readLine();
 		String password = inFromClient.readLine();
@@ -105,16 +112,19 @@ public class PsychiatryServer {
 			ResultSet rs = jdbc.checksignup(username);
 			if (!rs.next()) {
 				jdbc.signup(username, password, name, surname, role, phone, email, address);
-				outToClient.println("1");
+				outToClient.println("success");
 			} else {
-				outToClient.println("2");
+				outToClient.println("alreadyExists");
 			}
 			outToClient.flush();
 		} catch (Exception er) {
 			// Ignore the error and continues
 		}
 	}
-
+	
+	/*
+	 * When client log outs, server writes in log file that a user with "username" have just log out at this time.
+	 */
 	void logout() {
 		try {
 			String username = inFromClient.readLine();
@@ -128,6 +138,10 @@ public class PsychiatryServer {
 		}
 	}
 
+	/*
+	 * Server gets username, old password and new password from client, checks if username exists,
+	 * changes old password with new password and writes in log file the action and the datetime.
+	 */
 	void changePassword() throws IOException {
 		String username = inFromClient.readLine();
 		String oldpassword = inFromClient.readLine();
@@ -145,10 +159,10 @@ public class PsychiatryServer {
 			if (rs.next()) {
 				jdbc.changepassword(username, oldpassword, newpassword, role);
 				System.out.println("allaksa ton kwdiko");
-				outToClient.println("1");// password Changed
+				outToClient.println("passwordChanged");//send to client the message password changed
 				outToClient.flush();
 			} else {
-				outToClient.println("2");// wrong password
+				outToClient.println("wrongPassword");//send to client the message wrong password
 				outToClient.flush();
 			}
 		} catch (SQLException e) {
@@ -156,6 +170,23 @@ public class PsychiatryServer {
 		}
 	}
 
+	void addPatient() throws IOException{
+		String name = inFromClient.readLine();
+		String surname = inFromClient.readLine();
+		String username = inFromClient.readLine();
+		String password = inFromClient.readLine();
+		int phone = Integer.parseInt(inFromClient.readLine());
+		String email = inFromClient.readLine();
+		String address = inFromClient.readLine();
+		file.print(name+" "+surname+" added with username "+username+"... ");
+		file.println(dtf.format(now));
+		file.flush();
+		
+		jdbc.addPatient(name,surname,username,password,phone,email,address);
+		outToClient.println("patientAdded");//add patient
+		outToClient.flush();
+	}
+	
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -184,6 +215,8 @@ public class PsychiatryServer {
 						logout();
 					if (messageFromClient.equals("changePassword"))
 						changePassword();
+					if (messageFromClient.equals("patient"))
+						addPatient();
 				}
 
 			}
