@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 public class Patient {
 
 	public String PatientID;
@@ -15,7 +17,8 @@ public class Patient {
 	public String RiskStatus;
 	public boolean ChangedByPatient;
 	public boolean DeadReadOnly;
-
+	public static ArrayList<String> columnNames = fillColumnNames();
+	
 	public Patient(String PatientID, String Password, String Name, String Surname, int Phone, String Email,
 			String Address, int NumOfIncidents, boolean SelfHarmRisk, boolean OthersHarmRisk, String RiskStatus,
 			boolean ChangedByPatient, boolean DeadReadOnly) {
@@ -32,5 +35,24 @@ public class Patient {
 		this.RiskStatus = RiskStatus;
 		this.ChangedByPatient = ChangedByPatient;
 		this.DeadReadOnly = DeadReadOnly;
+		this.fillColumnNames();
+	}
+	
+	private static ArrayList<String> fillColumnNames(){
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("PatientID");
+		columnNames.add("Password");
+		columnNames.add("Name");
+		columnNames.add("Surname");
+		columnNames.add("Phone");
+		columnNames.add("Email");
+		columnNames.add("Address");
+		columnNames.add("NumOfIncidents");
+		columnNames.add("SelfHarmRisk");
+		columnNames.add("OthersHarmRisk");
+		columnNames.add("RiskStatus");
+		columnNames.add("ChangedByPatient");
+		columnNames.add("DeadReadOnly");
+		return columnNames;
 	}
 }
