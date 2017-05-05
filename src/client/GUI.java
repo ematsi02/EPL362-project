@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import entities.Patient;
+import entities.Relative;
 
 public class GUI extends JFrame implements ActionListener, java.io.Serializable {
 	/**
@@ -770,7 +771,6 @@ private JPanel searchPatientForm() {
 		JTextField email = new JTextField(15);
 		JTextField address = new JTextField(15);
 		JButton addRelative = new JButton("Add");
-
 		relativepanel.add(lblpatientusername);
 		relativepanel.add(patientusername);
 		relativepanel.add(lblrelationship);
@@ -789,19 +789,29 @@ private JPanel searchPatientForm() {
 		addRelative.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addRelative(patientusername.getText(), name.getText(), surname.getText(),
-							Integer.parseInt(phone.getText()), email.getText(), address.getText(),
-							relationship.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the relative!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setBounds(340, 470, 350, 50);
-					message.setForeground(Color.blue);
-					getContentPane().add(relativeForm());
-					getContentPane().add(message);
-					revalidate();
-					repaint();
-					pack();
+					out.println("relativeForm");
+					out.println(patientusername.getText());
+					out.println(name.getText());
+					out.println(surname.getText());
+					out.println(Integer.parseInt(phone.getText()));
+					out.println(email.getText());
+					out.println(address.getText());
+					out.println(relationship.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("success")) {
+							JLabel message = new JLabel("You have successfully added the relative!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setBounds(340, 470, 350, 50);
+							message.setForeground(Color.blue);
+							getContentPane().add(relativeForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
@@ -813,10 +823,9 @@ private JPanel searchPatientForm() {
 		return relativepanel;
 	}
 
-	private JPanel relativesForm(ResultSet rs) {
+	private JPanel relativesForm(List<Relative> relatives) {
 		try {
 			JPanel relativepanel = new JPanel();
-			rs.next();
 			JLabel lblid = new JLabel("    ID");
 			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblpatientid = new JLabel("Patient's Username");
@@ -833,29 +842,42 @@ private JPanel searchPatientForm() {
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblrelationship = new JLabel("Relationship");
 			lblrelationship.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(rs.getString("RelativeID"));
+			JTextField id =new JTextField(Integer.toString(relatives.get(0).RelativeID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(rs.getString("PatientID"));
-			JTextField name = new JTextField(rs.getString("Name"));
-			JTextField surname = new JTextField(rs.getString("Surname"));
-			JTextField phone = new JTextField(rs.getString("Phone"));
-			JTextField email = new JTextField(rs.getString("Email"));
-			JTextField address = new JTextField(rs.getString("Address"));
-			JTextField relationship = new JTextField(rs.getString("Relationship"));
+			JTextField patientid = new JTextField(relatives.get(0).PatientID);
+			JTextField name = new JTextField(relatives.get(0).Name);
+			JTextField surname = new JTextField(relatives.get(0).Surname);
+			JTextField phone = new JTextField(Integer.toString(relatives.get(0).Phone));
+			JTextField email = new JTextField(relatives.get(0).Email);
+			JTextField address = new JTextField(relatives.get(0).Address);
+			JTextField relationship = new JTextField(relatives.get(0).Relationship);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
+				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.updateRelative(Integer.parseInt(id.getText()), patientid.getText(), name.getText(),
-								surname.getText(), Integer.parseInt(phone.getText()), email.getText(),
-								address.getText(), relationship.getText());
-						getContentPane().removeAll();
-						getContentPane().add(searchRelativeForm());
-						getContentPane().add(relativesForm(SADB.printRelative(Integer.parseInt(id.getText()))));
-						revalidate();
-						repaint();
-						pack();
+						out.println("updateRelative");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(patientid.getText());
+						out.println(name.getText());
+						out.println(surname.getText());
+						out.println(Integer.parseInt(phone.getText()));
+						out.println(email.getText());
+						out.println(address.getText());
+						out.println(relationship.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if(messageFromServer.equals("relativeUpdated")){
+								getContentPane().add(searchRelativeForm());
+								List<Relative> ls=new ArrayList<Relative>();
+								ls = (List<Relative>) inObject.readObject();
+								getContentPane().add(relativesForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -866,12 +888,20 @@ private JPanel searchPatientForm() {
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.deleteRelative(Integer.parseInt(id.getText()));
-						getContentPane().removeAll();
-						getContentPane().add(searchRelativeForm());
-						revalidate();
-						repaint();
-						pack();
+							out.println("deleteRelative");
+							out.println(Integer.parseInt(id.getText()));
+							if ((messageFromServer = in.readLine()) != null) {
+								getContentPane().removeAll();
+								if (messageFromServer.equals("relativeDeleted")) {
+									getContentPane().add(searchRelativeForm());
+								}
+
+								revalidate();
+								repaint();
+								pack();
+							}
+						
+						
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -895,7 +925,7 @@ private JPanel searchPatientForm() {
 			relativepanel.add(relationship);
 			relativepanel.add(update);
 			relativepanel.add(delete);
-			relativepanel.setBounds(350, 150, 250, 250);
+			relativepanel.setBounds(350, 300, 250, 250);
 			relativepanel.setOpaque(false);
 			return relativepanel;
 		} catch (Exception er) {
@@ -914,13 +944,23 @@ private JPanel searchPatientForm() {
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.printRelative(Integer.parseInt(id.getText()));
-					getContentPane().removeAll();
-					getContentPane().add(searchRelativeForm());
-					getContentPane().add(relativesForm(rs));
-					revalidate();
-					repaint();
-					pack();
+					out.flush();
+					out.println("searchRelative");
+					out.flush();
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("relativeSearched")) {
+							getContentPane().add(searchRelativeForm());
+							List<Relative>ls=(List<Relative>) inObject.readObject();
+							getContentPane().add(relativesForm(ls));
+						}
+
+						revalidate();
+						repaint();
+						pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
