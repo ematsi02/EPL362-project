@@ -359,29 +359,24 @@ public class GUI extends JFrame implements ActionListener {
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("1")) {// user is doctor
+						if (messageFromServer.equals("Doctor")) {// user is doctor
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForDoctor());
-						} else if (messageFromServer.equals("2")) {// user is
-																	// nurse or
-																	// health
-																	// visitor
+						} else if (messageFromServer.equals("Nurse-HealthVisitor")) {// user is
+																	// nurse or health visitor
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForClinicalStaff());
-						} else if (messageFromServer.equals("3")) {// user is
-																	// receptionist
+						} else if (messageFromServer.equals("Receptionist")) {// user is receptionist
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForReceptionist());
-						} else if (messageFromServer.equals("4")) {// user is
-																	// medical
-																	// records
+						} else if (messageFromServer.equals("MedicalRecords")) {// user is medical records
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForMedicalRecords());
-						} else if (messageFromServer.equals("5")) {// user is management
+						} else if (messageFromServer.equals("Management")) {// user is management
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForManagement());
@@ -390,8 +385,7 @@ public class GUI extends JFrame implements ActionListener {
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForPatient());
 						}
-						else if (messageFromServer.equals("0")) {// incorrect
-																	// user
+						else if (messageFromServer.equals("wrong")) {// incorrect user
 							JLabel message = new JLabel("Username or Password incorrect!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
 							message.setBounds(380, 180, 250, 150);
@@ -403,8 +397,7 @@ public class GUI extends JFrame implements ActionListener {
 						revalidate();
 						repaint();
 						pack();
-					} else
-						System.out.println("else of big if");
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 					System.out.println("exception in logn");
@@ -450,7 +443,7 @@ public class GUI extends JFrame implements ActionListener {
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("1")) {// password changed
+						if (messageFromServer.equals("passwordChanged")) {// password changed
 							System.out.println(messageFromServer + "allagi");
 							JLabel message = new JLabel("You have successfully changed your password!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
@@ -458,7 +451,7 @@ public class GUI extends JFrame implements ActionListener {
 							getContentPane().add(changePasswordForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("2")) {// wrong password
+						if (messageFromServer.equals("wrongPassword")) {// wrong password
 							JLabel message = new JLabel("Wrong password! Give again!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
 							message.setBounds(400, 180, 350, 150);
@@ -530,7 +523,7 @@ public class GUI extends JFrame implements ActionListener {
 					out.flush();
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if (messageFromServer.equals("1\n")) {// successful sign
+						if (messageFromServer.equals("success")) {// successful sign
 																// up
 							JLabel message = new JLabel("You have successfully signed up!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
@@ -539,9 +532,7 @@ public class GUI extends JFrame implements ActionListener {
 							getContentPane().add(signupForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("2\n")) {// username
-																// already
-																// exists
+						if (messageFromServer.equals("alreadyExists")) {// username already exists
 							JLabel message = new JLabel("Username already exists! Give a different one!");
 							message.setFont(new Font("Arial", Font.BOLD, 14));
 							message.setBounds(320, 470, 350, 160);
@@ -624,18 +615,28 @@ public class GUI extends JFrame implements ActionListener {
 		addPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addPatient(name.getText(), surname.getText(), username.getText(), password.getText(),
-							Integer.parseInt(phone.getText()), email.getText(), address.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the patient!");
-					message.setFont(new Font("Arial", Font.BOLD, 14));
-					message.setBounds(340, 470, 350, 50);
-					getContentPane().add(patientForm());
-					getContentPane().add(message);
-					revalidate();
-					repaint();
-					pack();
-				} catch (Exception er) {
+					out.println("patient");
+					out.println(name.getText());
+					out.println(surname.getText());
+					out.println(username.getText());
+					out.println(password.getText());
+					out.println(Integer.parseInt(phone.getText()));
+					out.println(email.getText());
+					out.println(address.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						getContentPane().removeAll();
+						if(messageFromServer.equals("patientAdded")){
+							JLabel message = new JLabel("You have successfully added the patient!");
+							message.setFont(new Font("Arial", Font.BOLD, 14));
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(patientForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}					
+				}  catch (Exception er) {
 					// Ignore the error and continues
 				}
 			}
