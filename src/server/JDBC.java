@@ -7,7 +7,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class JDBC {
 	public static boolean dbDriverLoaded = false;
-	public static Connection conn = null;
+	public Connection conn = null;
 	public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
 	public Connection getDBConnection() {
