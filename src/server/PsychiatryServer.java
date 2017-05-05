@@ -5,22 +5,59 @@ import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.io.IOException;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PsychiatryServer {
+import entities.Patient;
+
+public class PsychiatryServer implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static JDBC jdbc = new JDBC();
 	BufferedReader inFromClient;
 	PrintWriter outToClient, file;
+	ObjectOutputStream outObject;
 	Socket socket;
 	String messageFromClient;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	LocalDateTime now = LocalDateTime.now();
+	
+	List<Patient> convertRsToList(ResultSet rs) throws SQLException{
+		List<Patient> Patients=new ArrayList<Patient>();
+
+		while(rs.next()) {
+			Patient patient=new Patient();
+			patient.PatientID=rs.getString("PatientID");
+		   patient.Password=rs.getString("Password");
+		   patient.Name=rs.getString("Name");
+		   patient.Surname=rs.getString("Surname");
+		   patient.Phone=rs.getInt("Phone");
+		   System.out.println(patient.Phone);
+		   patient.Email=rs.getString("Email");
+		   patient.Address=rs.getString("Address");
+		   patient.NumOfIncidents=rs.getInt("NumOfIncidents");
+		   patient.SelfHarmRisk=rs.getBoolean("SelfHarmRisk");
+		   patient.OthersHarmRisk=rs.getBoolean("OthersHarmRisk");
+		   patient.RiskStatus=rs.getString("RiskStatus");
+		   patient.ChangedByPatient=rs.getBoolean("ChangedByPatient");
+		   patient.DeadReadOnly=rs.getBoolean("DeadReadOnly");
+
+		  Patients.add(patient);
+		} 
+		return Patients;
+		
+	}
 
 	/*
 	 * Server gets username, password and role from client,checks if user exists,
@@ -41,7 +78,7 @@ public class PsychiatryServer {
 					file.print(username + " log in as Patient... ");
 					file.println(dtf.format(now));
 					file.flush();
-					outToClient.println("6");
+					outToClient.println("Patient");
 					outToClient.flush();
 				}
 				else {
@@ -178,13 +215,57 @@ public class PsychiatryServer {
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
+		jdbc.addPatient(name,surname,username,password,phone,email,address);
+		
 		file.print(name+" "+surname+" added with username "+username+"... ");
 		file.println(dtf.format(now));
 		file.flush();
-		
-		jdbc.addPatient(name,surname,username,password,phone,email,address);
 		outToClient.println("patientAdded");//add patient
 		outToClient.flush();
+	}
+	
+	void updatePatient() throws IOException, SQLException{
+		String username = inFromClient.readLine();
+		String name = inFromClient.readLine();
+		String surname = inFromClient.readLine();
+		int phone = Integer.parseInt(inFromClient.readLine());
+		String email = inFromClient.readLine();
+		String address = inFromClient.readLine();		
+		System.out.println("update before");
+		jdbc.updatePatient(username, name, surname,phone, email, address);
+		System.out.println("update after");
+		
+		file.print(name+" "+surname+" updated... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("patientUpdated");//updated patient
+		outToClient.flush();
+		ResultSet rs=jdbc.printPatient(username);
+		List<Patient> ls = convertRsToList(rs);
+		outObject.writeObject(ls);	}
+	
+	void searchPatient() throws IOException, SQLException{
+		String username = inFromClient.readLine();
+		ResultSet rs=jdbc.printPatient(username);
+		file.print(username+" searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("patientSearched");//searched patient
+		outToClient.flush();
+		List<Patient> ls = convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("search after");
+	}
+	void deletePatient()throws IOException, SQLException{
+		String username = inFromClient.readLine();
+		jdbc.deletePatient(username);
+		
+		file.print(username+" deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("patientDeleted");//deleted patient
+		outToClient.flush();
+		
 	}
 	
 	void start() throws IOException {
@@ -199,6 +280,7 @@ public class PsychiatryServer {
 				System.out.println("connected");
 				inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				outToClient = new PrintWriter(socket.getOutputStream(), true);
+				outObject = new ObjectOutputStream(socket.getOutputStream());
 				file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
 				file.print("Start... ");
 				file.println(dtf.format(now));
@@ -215,8 +297,15 @@ public class PsychiatryServer {
 						logout();
 					if (messageFromClient.equals("changePassword"))
 						changePassword();
-					if (messageFromClient.equals("patient"))
+					if (messageFromClient.equals("addPatient"))
 						addPatient();
+					if (messageFromClient.equals("searchPatient"))
+						searchPatient();
+					if (messageFromClient.equals("updatePatient"))
+						updatePatient();
+					if (messageFromClient.equals("deletePatient"))
+						deletePatient();
+					
 				}
 
 			}
