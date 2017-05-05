@@ -61,19 +61,11 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Consultation");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuItem = new JMenuItem("Add New Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
 		menuItem = new JMenuItem("View/Search Treatment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -98,19 +90,11 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Comment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuItem = new JMenuItem("Add New Incident");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
 		menuItem = new JMenuItem("View/Search Incident");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Incident");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -138,10 +122,6 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Patient");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuItem = new JMenuItem("Import/Export Patient Record");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
@@ -166,15 +146,7 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Relative");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuItem = new JMenuItem("Inform Relative");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("View/Search Messages to Relatives");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
@@ -198,10 +170,6 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		return menu;
 	}
 
@@ -222,10 +190,6 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Edit/Delete Appointment");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuItem = new JMenuItem("View Today's Appointments");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
@@ -240,7 +204,7 @@ public class GUIMenu {
 	private JMenu RepeatTreatmentMenu() {
 		JMenu menu;
 		JMenuItem menuItem;
-		menu = new JMenu("Renew Prescription");
+		menu = new JMenu("Repeat Prescription");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem = new JMenuItem("Search Treatment");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -250,83 +214,19 @@ public class GUIMenu {
 	}
 
 	/*
-	 * Warnings Menu Element. Allows the user to see some lists of patients that
-	 * need attention.
+	 * Menu for Doctor. This method generates the menu that a user with the role
+	 * of "Doctor" can see, when logged in.
 	 */
-	private JMenu WarningsMenu() {
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Warnings");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Patients with Self-harm History");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Patients with Self-harm Possibility");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Patients with Accidental Self-harm records");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		return menu;
-	}
-
-	/*
-	 * Daily Reports Menu Element. Allows the user to see some .
-	 */
-	private JMenu DailyReportsMenu() {
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Daily Reports");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Attended Consultations");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Non Updated Medical Records");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Changes of Patient Profiles");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		return menu;
-	}
-
-	/*
-	 * Patient Reports Menu Element. Allows the user to see some reports as
-	 * lists of patients, depending on the filter (condition or treatment/
-	 * medication), or some weekly reports.
-	 */
-	private JMenu PatientReportsMenu() {
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Patient Reports");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("Patients with specific Condition");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Patients with specific Treatment/Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Number of Patients by Condition");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Number of Patients by Treatment/Medication");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuItem = new JMenuItem("Weekly Report");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		return menu;
+	public JMenuBar menuForDoctor() {
+		JMenuBar menuBar = new JMenuBar();
+		// Options for Clinical Staff, except the MedicationMenu (only Doctors)
+		menuBar.add(AccountMenu());
+		menuBar.add(ConsultationTreatmentMenu());
+		menuBar.add(CommentsIncidentsMenu());
+		menuBar.add(PatientsMenu());
+		menuBar.add(RelativesMenu());
+		menuBar.add(MedicationMenu());
+		return menuBar;
 	}
 
 	/*
@@ -346,23 +246,6 @@ public class GUIMenu {
 	}
 
 	/*
-	 * Menu for Doctor. This method generates the menu that a user with the role
-	 * of "Doctor" can see, when logged in.
-	 */
-	public JMenuBar menuForDoctor() {
-		JMenuBar menuBar = new JMenuBar();
-		// Options for Clinical Staff, except the MedicationMenu (only Doctors)
-		menuBar.add(AccountMenu());
-		menuBar.add(ConsultationTreatmentMenu());
-		menuBar.add(CommentsIncidentsMenu());
-		menuBar.add(PatientsMenu());
-		menuBar.add(RelativesMenu());
-		menuBar.add(MedicationMenu());
-		menuBar.add(WarningsMenu());
-		return menuBar;
-	}
-
-	/*
 	 * Menu for the rest Clinical Staff. This method generates the menu that a
 	 * user with the roles of "Nurse" or "Health Visitor" can see, when logged
 	 * in. The menu concerns all clinical staff, except doctors.
@@ -374,7 +257,6 @@ public class GUIMenu {
 		menuBar.add(CommentsIncidentsMenu());
 		menuBar.add(PatientsMenu());
 		menuBar.add(RelativesMenu());
-		menuBar.add(WarningsMenu());
 		return menuBar;
 	}
 
@@ -386,14 +268,6 @@ public class GUIMenu {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
 		menuBar.add(AppointmentsMenu());
-		JMenu menu;
-		JMenuItem menuItem;
-		menu = new JMenu("Patient");
-		menu.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem = new JMenuItem("View/Search Patient");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
 		menuBar.add(RepeatTreatmentMenu());
 		return menuBar;
 	}
@@ -405,8 +279,7 @@ public class GUIMenu {
 	public JMenuBar menuForMedicalRecords() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
-		menuBar.add(DailyReportsMenu());
-		menuBar.add(PatientReportsMenu());
+		// menuBar.add(Menu(al));
 		return menuBar;
 	}
 
@@ -417,8 +290,6 @@ public class GUIMenu {
 	public JMenuBar menuForManagement() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
-		menuBar.add(DailyReportsMenu());
-		menuBar.add(PatientReportsMenu());
 		return menuBar;
 	}
 }
