@@ -55,13 +55,9 @@ public class JDBC {
 		return new DefaultTableModel(data, columnNames);
 	}
 	
-	public static DefaultTableModel buildTableModel(ArrayList<Object> list, ArrayList<String> columnNames) throws SQLException {
+	public static DefaultTableModel buildTableModel(ArrayList<Object> list, Vector<String> columnNames) throws SQLException {
 		int columnCount = columnNames.size();
 		int i = 0;
-		Vector<String> columns = new Vector<String>();
-		for (int column = 1; column <= columnCount; column++) {
-			columns.add(columnNames.get(i-1));
-		}
 		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		while (i<columnCount) {
 			Object element = list.get(i);
@@ -71,7 +67,7 @@ public class JDBC {
 			}
 			data.add(vector);
 		}
-		return new DefaultTableModel(data, columns);
+		return new DefaultTableModel(data, columnNames);
 	}
 
 	public void signup(String username, String password, String name, String surname, String role, int phone,
