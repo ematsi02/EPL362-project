@@ -214,6 +214,113 @@ public class GUIMenu {
 	}
 
 	/*
+	 * Consultation Reports Menu Element. Allows the user to see reports (daily
+	 * or general) about consultation, appointments and treatments.
+	 */
+	private JMenu ConsultationReportsMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Consultation Reports");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Attended Daily Consultations");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Attended General Consultations");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Non Attended Daily Consultations");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Non Attended General Consultations");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Non Updated Daily Medical Records");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Non Updated General Medical Records");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Changes of Patient Profiles");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		return menu;
+	}
+
+	/*
+	 * Patient Reports Menu Element. Allows the user to see reports (daily
+	 * or general) about patient records and information.
+	 */
+	private JMenu PatientReportsMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Patient Reports");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Patients with specific Condition");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Patients with specific Treatment/Medication");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Number of Patients by Condition");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Number of Patients by Treatment/Medication");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("Medication prescriptions summary");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuItem = new JMenuItem("");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		return menu;
+	}
+	
+	/*
+	 * Weekly Reports Menu Element. Allows the user to see weekly reports.
+	 */
+	private JMenu WeeklyReportsMenu() {
+		JMenu menu;
+		JMenuItem menuItem;
+		menu = new JMenu("Weekly Reports");
+		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Report1");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		return menu;
+	}
+
+	/*
 	 * Menu for Doctor. This method generates the menu that a user with the role
 	 * of "Doctor" can see, when logged in.
 	 */
@@ -279,7 +386,7 @@ public class GUIMenu {
 	public JMenuBar menuForMedicalRecords() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
-		// menuBar.add(Menu(al));
+		menuBar.add(ConsultationReportsMenu());
 		return menuBar;
 	}
 
@@ -290,6 +397,7 @@ public class GUIMenu {
 	public JMenuBar menuForManagement() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(AccountMenu());
+		menuBar.add(ConsultationReportsMenu());
 		return menuBar;
 	}
 }
