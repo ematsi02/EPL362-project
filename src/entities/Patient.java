@@ -1,10 +1,13 @@
 package entities;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-public class Patient {
+public class Patient  implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public String PatientID;
 	public String Password;
 	public String Name;
@@ -18,7 +21,7 @@ public class Patient {
 	public String RiskStatus;
 	public boolean ChangedByPatient;
 	public boolean DeadReadOnly;
-	public static Vector<String> columnNames = fillColumnNames();
+	public static ArrayList<String> columnNames = fillColumnNames();
 	
 	public Patient() {
 		new Patient(null, null, null, null, 0, null, null, 0, false, false, null, false, false);
@@ -43,8 +46,8 @@ public class Patient {
 		this.fillColumnNames();
 	}
 	
-	private static Vector<String> fillColumnNames(){
-		Vector<String> columnNames = new Vector<String>();
+	private static ArrayList<String> fillColumnNames(){
+		ArrayList<String> columnNames = new ArrayList<String>();
 		columnNames.add("PatientID");
 		columnNames.add("Password");
 		columnNames.add("Name");
