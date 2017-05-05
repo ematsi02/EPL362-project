@@ -1,0 +1,88 @@
+// --- Consultation Reports Menu
+
+// ---------
+Attended Daily Consultations
+
+String MyDate="2017-05-05";
+String MyDate="2017-05-14";
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='1' AND Consultation.Date=MyDate
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Attended General Consultations
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='1'
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Non Attended Daily Consultations
+
+String MyDate="2017-05-05";
+String MyDate="2017-05-14";
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='0' AND Consultation.Date=MyDate
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Non Attended General Consultations
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='0'
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Non Updated Daily Medical Records
+
+String MyDate="2017-05-14";
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='1' AND Consultation.Date=MyDate
+AND Consultation.MedicalRecordUpdated='0'
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Non Updated General Medical Records
+
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+From Patient, Consultation, Staff
+Where Consultation.Attended='1'
+AND Consultation.MedicalRecordUpdated='0'
+AND Patient.PatientID=Consultation.PatientID 
+AND Consultation.StaffID=Staff.StaffID;
+
+// ---------
+Changes of Patient Profiles
+
+
+// --- Patient Reports  Menu
+
+// ---------
+Patients with specific Condition
+
+// ---------
+Patients with specific Treatment/Medication
+
+// ---------
+Number of Patients by Condition
+
+// ---------
+Number of Patients by Treatment/Medication
+
+// ---------
+Medication prescriptions summary
+
+// --- Weekly Reports Menu
