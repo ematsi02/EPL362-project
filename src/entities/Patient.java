@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class Patient {
 
@@ -17,7 +18,7 @@ public class Patient {
 	public String RiskStatus;
 	public boolean ChangedByPatient;
 	public boolean DeadReadOnly;
-	public static ArrayList<String> columnNames = fillColumnNames();
+	public static Vector<String> columnNames = fillColumnNames();
 	
 	public Patient(String PatientID, String Password, String Name, String Surname, int Phone, String Email,
 			String Address, int NumOfIncidents, boolean SelfHarmRisk, boolean OthersHarmRisk, String RiskStatus,
@@ -38,8 +39,8 @@ public class Patient {
 		this.fillColumnNames();
 	}
 	
-	private static ArrayList<String> fillColumnNames(){
-		ArrayList<String> columnNames = new ArrayList<String>();
+	private static Vector<String> fillColumnNames(){
+		Vector<String> columnNames = new Vector<String>();
 		columnNames.add("PatientID");
 		columnNames.add("Password");
 		columnNames.add("Name");
