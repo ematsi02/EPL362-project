@@ -443,7 +443,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblpassword = new JLabel(" Password");
 		lblpassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lblrole = new JLabel("        Role  ");
+		JLabel lblrole = new JLabel("        Role          ");
 		lblrole.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblphone = new JLabel("      Phone");
 		lblphone.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -530,19 +530,19 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 
 	private JPanel patientForm() {
 		JPanel patientpanel = new JPanel();
-		JLabel lblname = new JLabel("     Name");
+		JLabel lblname = new JLabel("        Name");
 		lblname.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lblsurname = new JLabel("Surname");
+		JLabel lblsurname = new JLabel("  Surname");
 		lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblusername = new JLabel("Username");
 		lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lblpassword = new JLabel("Password");
+		JLabel lblpassword = new JLabel(" Password");
 		lblpassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lblphone = new JLabel("Phone");
+		JLabel lblphone = new JLabel("      Phone");
 		lblphone.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lblemail = new JLabel("Email");
+		JLabel lblemail = new JLabel("       Email");
 		lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbladdress = new JLabel("Address");
+		JLabel lbladdress = new JLabel("  Address");
 		lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
 		JTextField name = new JTextField(15);
 		JTextField surname = new JTextField(15);
