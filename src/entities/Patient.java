@@ -20,6 +20,10 @@ public class Patient {
 	public boolean DeadReadOnly;
 	public static Vector<String> columnNames = fillColumnNames();
 	
+	public Patient() {
+		new Patient(null, null, null, null, 0, null, null, 0, false, false, null, false, false);
+	}
+	
 	public Patient(String PatientID, String Password, String Name, String Surname, int Phone, String Email,
 			String Address, int NumOfIncidents, boolean SelfHarmRisk, boolean OthersHarmRisk, String RiskStatus,
 			boolean ChangedByPatient, boolean DeadReadOnly) {
