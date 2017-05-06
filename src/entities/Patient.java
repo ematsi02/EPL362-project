@@ -1,8 +1,11 @@
 package entities;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Patient  implements java.io.Serializable {
+public class Patient implements java.io.Serializable  {
 
 	/**
 	 * 
@@ -44,6 +47,29 @@ public class Patient  implements java.io.Serializable {
 		this.ChangedByPatient = ChangedByPatient;
 		this.DeadReadOnly = DeadReadOnly;
 		this.fillColumnNames();
+	}
+	
+	public List<Patient> convertRsToList(ResultSet rs) throws SQLException{
+		List<Patient> Patients=new ArrayList<Patient>();
+		while(rs.next()) {
+			Patient patient=new Patient();
+			patient.PatientID=rs.getString("PatientID");
+		   patient.Password=rs.getString("Password");
+		   patient.Name=rs.getString("Name");
+		   patient.Surname=rs.getString("Surname");
+		   patient.Phone=rs.getInt("Phone");
+		   patient.Email=rs.getString("Email");
+		   patient.Address=rs.getString("Address");
+		   patient.NumOfIncidents=rs.getInt("NumOfIncidents");
+		   patient.SelfHarmRisk=rs.getBoolean("SelfHarmRisk");
+		   patient.OthersHarmRisk=rs.getBoolean("OthersHarmRisk");
+		   patient.RiskStatus=rs.getString("RiskStatus");
+		   patient.ChangedByPatient=rs.getBoolean("ChangedByPatient");
+		   patient.DeadReadOnly=rs.getBoolean("DeadReadOnly");
+
+		  Patients.add(patient);
+		} 
+		return Patients;
 	}
 	
 	private static ArrayList<String> fillColumnNames(){
