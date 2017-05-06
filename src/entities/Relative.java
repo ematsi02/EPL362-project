@@ -1,5 +1,10 @@
 package entities;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Relative implements java.io.Serializable  {
 
 	private static final long serialVersionUID = 1L;
@@ -25,6 +30,25 @@ public class Relative implements java.io.Serializable  {
 		this.Email=email;
 		this.Address=address;
 		this.Relationship=relatioship;	
+	}
+	
+	public List<Relative> convertRsToRelatList(ResultSet rs) throws SQLException{
+		List<Relative> Relatives=new ArrayList<Relative>();
+		while(rs.next()) {
+			Relative relative=new Relative();
+			relative.RelativeID=rs.getInt("RelativeID");
+			relative.PatientID=rs.getString("PatientID");
+		   relative.Name=rs.getString("Name");
+		   relative.Surname=rs.getString("Surname");
+		   relative.Phone=rs.getInt("Phone");
+		   relative.Email=rs.getString("Email");
+		   relative.Address=rs.getString("Address");
+		   relative.Relationship=rs.getString("Relationship");
+
+
+		  Relatives.add(relative);
+		} 
+		return Relatives;
 	}
 
 }
