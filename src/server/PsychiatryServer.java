@@ -4,6 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.io.IOException;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -17,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Incident;
 import entities.Patient;
 import entities.Relative;
 
@@ -33,49 +35,10 @@ public class PsychiatryServer implements java.io.Serializable {
 	String messageFromClient;
 	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	LocalDateTime now = LocalDateTime.now();
-	
-	List<Patient> convertRsToList(ResultSet rs) throws SQLException{
-		List<Patient> Patients=new ArrayList<Patient>();
-		while(rs.next()) {
-			Patient patient=new Patient();
-			patient.PatientID=rs.getString("PatientID");
-		   patient.Password=rs.getString("Password");
-		   patient.Name=rs.getString("Name");
-		   patient.Surname=rs.getString("Surname");
-		   patient.Phone=rs.getInt("Phone");
-		   System.out.println(patient.Phone);
-		   patient.Email=rs.getString("Email");
-		   patient.Address=rs.getString("Address");
-		   patient.NumOfIncidents=rs.getInt("NumOfIncidents");
-		   patient.SelfHarmRisk=rs.getBoolean("SelfHarmRisk");
-		   patient.OthersHarmRisk=rs.getBoolean("OthersHarmRisk");
-		   patient.RiskStatus=rs.getString("RiskStatus");
-		   patient.ChangedByPatient=rs.getBoolean("ChangedByPatient");
-		   patient.DeadReadOnly=rs.getBoolean("DeadReadOnly");
+	Patient patient;
+	Relative relative;
+	Incident incident;
 
-		  Patients.add(patient);
-		} 
-		return Patients;
-	}
-	
-	List<Relative> convertRsToRelatList(ResultSet rs) throws SQLException{
-		List<Relative> Relatives=new ArrayList<Relative>();
-		while(rs.next()) {
-			Relative relative=new Relative();
-			relative.RelativeID=rs.getInt("RelativeID");
-			relative.PatientID=rs.getString("PatientID");
-		   relative.Name=rs.getString("Name");
-		   relative.Surname=rs.getString("Surname");
-		   relative.Phone=rs.getInt("Phone");
-		   relative.Email=rs.getString("Email");
-		   relative.Address=rs.getString("Address");
-		   relative.Relationship=rs.getString("Relationship");
-
-
-		  Relatives.add(relative);
-		} 
-		return Relatives;
-	}
 
 	/*
 	 * Server gets username, password and role from client,checks if user exists,
@@ -259,7 +222,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.println("patientUpdated");//updated patient
 		outToClient.flush();
 		ResultSet rs=jdbc.printPatient(username);
-		List<Patient> ls = convertRsToList(rs);
+		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);	}
 	
 	void searchPatient() throws IOException, SQLException{
@@ -270,7 +233,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		file.flush();
 		outToClient.println("patientSearched");//searched patient
 		outToClient.flush();
-		List<Patient> ls = convertRsToList(rs);
+		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
@@ -313,10 +276,10 @@ public class PsychiatryServer implements java.io.Serializable {
 		file.print(relationship+" of "+patientid+" updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("relativeUpdated");//updated patient
+		outToClient.println("relativeUpdated");//updated relative
 		outToClient.flush();
 		ResultSet rs=jdbc.printRelative(id);
-		List<Relative> ls = convertRsToRelatList(rs);
+		List<Relative> ls = relative.convertRsToRelatList(rs);
 		outObject.writeObject(ls);	
 		System.out.println("esteila kai to resultset");
 		}
@@ -329,7 +292,7 @@ public class PsychiatryServer implements java.io.Serializable {
 			file.flush();
 			outToClient.println("relativeSearched");//searched relative
 			outToClient.flush();
-			List<Relative> ls = convertRsToRelatList(rs);
+			List<Relative> ls = relative.convertRsToRelatList(rs);
 			outObject.writeObject(ls);
 			System.out.println("relative search after");			
 		}
@@ -341,9 +304,61 @@ public class PsychiatryServer implements java.io.Serializable {
 			file.print("relative with id "+id+" deleted... ");
 			file.println(dtf.format(now));
 			file.flush();
-			outToClient.println("relativeDeleted");//deleted patient
+			outToClient.println("relativeDeleted");//deleted relative
 			outToClient.flush();
-		
+		}
+		void addincident() throws IOException{
+			String patientid = inFromClient.readLine();
+			String type = inFromClient.readLine();
+			String shortDescription = inFromClient.readLine();
+			String description = inFromClient.readLine();
+			String date = inFromClient.readLine();			
+			jdbc.addIncident(patientid,type,shortDescription,description,date);
+			file.print("Incident for "+patientid+" added... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("success");//add incident
+			outToClient.flush();
+		}
+		void updateIncident() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			String patientid = inFromClient.readLine();
+			String type = inFromClient.readLine();
+			String shortDescription = inFromClient.readLine();
+			String description = inFromClient.readLine();		
+			String date = inFromClient.readLine();	
+			jdbc.updateIncident(id,patientid,type,shortDescription,description,date);
+			file.print(patientid+"incident's "+id+" updated... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("incidentUpdated");//updated incident
+			outToClient.flush();
+			ResultSet rs=jdbc.printIncident(id);
+			List<Incident> ls = incident.convertRsToList(rs);
+			outObject.writeObject(ls);	
+			System.out.println("esteila kai to resultset");
+		}
+		void deleteIncident() throws IOException {
+			int id = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteIncident(id);
+			
+			file.print("incident with id "+id+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("incidentDeleted");//deleted incident
+			outToClient.flush();
+		}
+		void searchIncident() throws IOException, SQLException {
+			int id = Integer.parseInt(inFromClient.readLine());			
+			ResultSet rs=jdbc.printIncident(id);
+			file.print("incident with id "+id+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("incidentSearched");//searched incident
+			outToClient.flush();
+			List<Incident> ls = incident.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("incident search after");			
 		}
 	
 	void start() throws IOException {
@@ -360,6 +375,9 @@ public class PsychiatryServer implements java.io.Serializable {
 				outToClient = new PrintWriter(socket.getOutputStream(), true);
 				outObject = new ObjectOutputStream(socket.getOutputStream());
 				file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
+				patient=new Patient();
+				relative=new Relative();
+				incident=new Incident();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -391,7 +409,17 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteRelative();
 					if (messageFromClient.equals("searchRelative"))
 						searchRelative();
-
+					if (messageFromClient.equals("incidentForm"))
+						addincident();
+					if (messageFromClient.equals("updateIncident"))
+						updateIncident();
+					if (messageFromClient.equals("deleteIncident"))
+						deleteIncident();
+					if (messageFromClient.equals("searchIncident"))
+						searchIncident();
+					
+					
+					
 				}
 
 			}
@@ -405,6 +433,9 @@ public class PsychiatryServer implements java.io.Serializable {
 		}
 
 	}
+
+
+
 	public static void main(String[] args) throws IOException {
 		PsychiatryServer s = new PsychiatryServer();
 		s.start();
