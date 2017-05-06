@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+
+import entities.Incident;
 import entities.Patient;
 import entities.Relative;
 
@@ -1013,33 +1015,41 @@ private JPanel searchPatientForm() {
 		addIncident.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addIncident(patientid.getText(), type.getSelectedItem().toString(), shortDescription.getText(),
-							description.getText(), DateFormat.getDateInstance().format(date.getDate()));
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the incident!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setForeground(Color.blue);
-					message.setBounds(340, 470, 350, 50);
-					getContentPane().add(incidentForm());
-					getContentPane().add(message);
-					revalidate();
-					repaint();
-					pack();
+					out.println("incidentForm");
+					out.println(patientid.getText());
+					out.println(type.getSelectedItem().toString());
+					out.println(shortDescription.getText());
+					out.println(description.getText());
+					out.println(DateFormat.getDateInstance().format(date.getDate()));
+					if ((messageFromServer = in.readLine()) != null) {
+						getContentPane().removeAll();
+						if(messageFromServer.equals("success")){
+							JLabel message = new JLabel("You have successfully added the incident!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(incidentForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+					
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
 			}
 		});
-		incidentpanel.setBounds(350, 150, 350, 180);
+		incidentpanel.setBounds(350, 250, 350, 180);
 		incidentpanel.setOpaque(false);
 		incidentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return incidentpanel;
 	}
 
-	private JPanel incidentsForm(ResultSet rs) {
+	private JPanel incidentsForm(List<Incident> incident) {
 		try {
 			JPanel incidentpanel = new JPanel();
-			rs.next();
 			JLabel lblid = new JLabel("    ID");
 			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblpatientid = new JLabel("Patient's Username");
@@ -1051,27 +1061,39 @@ private JPanel searchPatientForm() {
 			JLabel lbldescription = new JLabel("Description");
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldate = new JLabel("Date");
-			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(rs.getString("IncidentID"));
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));			
+			JTextField id =new JTextField(Integer.toString(incident.get(0).IncidentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(rs.getString("PatientID"));
-			JTextField type = new JTextField(rs.getString("IncidentType"));
-			JTextField shortDescription = new JTextField(rs.getString("ShortDescription"));
-			JTextField description = new JTextField(rs.getString("Description"));
-			JTextField date = new JTextField(rs.getString("Date"));
+			JTextField patientid = new JTextField(incident.get(0).PatientID);
+			JTextField type = new JTextField(incident.get(0).IncidentType);
+			JTextField shortDescription = new JTextField(incident.get(0).ShortDescription);
+			JTextField description = new JTextField(incident.get(0).Description);
+			JTextField date = new JTextField(incident.get(0).Date);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					try {
-						SADB.updateIncident(Integer.parseInt(id.getText()), patientid.getText(), type.getText(),
-								shortDescription.getText(), description.getText(), date.getText());
-						getContentPane().removeAll();
-						getContentPane().add(searchIncidentForm());
-						getContentPane().add(incidentsForm(SADB.printIncident(Integer.parseInt(id.getText()))));
-						revalidate();
-						repaint();
-						pack();
+					try {	
+						out.println("updateIncident");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(patientid.getText());
+						out.println(type.getText());
+						out.println(shortDescription.getText());
+						out.println(description.getText());
+						out.println(date.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if(messageFromServer.equals("incidentUpdated")){
+								getContentPane().add(searchIncidentForm());
+								List<Incident> ls=new ArrayList<Incident>();
+								ls = (List<Incident>) inObject.readObject();
+								getContentPane().add(incidentsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -1082,12 +1104,17 @@ private JPanel searchPatientForm() {
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.deleteIncident(Integer.parseInt(id.getText()));
-						getContentPane().removeAll();
-						getContentPane().add(searchIncidentForm());
-						revalidate();
-						repaint();
-						pack();
+						out.println("deleteIncident");
+						out.println(Integer.parseInt(id.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("incidentDeleted")) {
+								getContentPane().add(searchIncidentForm());
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -1107,7 +1134,7 @@ private JPanel searchPatientForm() {
 			incidentpanel.add(date);
 			incidentpanel.add(update);
 			incidentpanel.add(delete);
-			incidentpanel.setBounds(350, 150, 250, 250);
+			incidentpanel.setBounds(350, 250, 250, 250);
 			incidentpanel.setOpaque(false);
 			return incidentpanel;
 		} catch (Exception er) {
@@ -1126,13 +1153,24 @@ private JPanel searchPatientForm() {
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.printIncident(Integer.parseInt(id.getText()));
-					getContentPane().removeAll();
-					getContentPane().add(searchIncidentForm());
-					getContentPane().add(incidentsForm(rs));
-					revalidate();
-					repaint();
-					pack();
+					out.println("searchIncident");
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("incidentSearched")) {
+							getContentPane().add(searchIncidentForm());
+							List<Incident>ls=(List<Incident>) inObject.readObject();
+							getContentPane().add(incidentsForm(ls));
+							}
+
+						revalidate();
+						repaint();
+						pack();
+					}
+					
+					
+	
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
