@@ -16,6 +16,7 @@ public class Medication implements java.io.Serializable   {
 	public String Description;
 	public String KnownSideEffects;
 	public int MaxDose;
+	public static ArrayList<String> columnNames = fillColumnNames();
 
 	public Medication() {
 		new Medication(0, null, null, null, null, 0);
@@ -44,5 +45,16 @@ public class Medication implements java.io.Serializable   {
 			Medication.add(medication);
 		} 
 		return Medication;
+	}
+	
+	private static ArrayList<String> fillColumnNames(){
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("MedicationID");
+		columnNames.add("Brand");
+		columnNames.add("Name");
+		columnNames.add("Description");
+		columnNames.add("KnownSideEffects");	
+		columnNames.add("MaxDose");		
+		return columnNames;
 	}
 }
