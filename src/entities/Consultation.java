@@ -20,6 +20,7 @@ public class Consultation implements java.io.Serializable   {
 	public int Attended;
 	public int MedicalRecordUpdated;
 	public int TreatmentID;
+	public static ArrayList<String> columnNames = fillColumnNames();
 
 	public List<Consultation> convertRsToList(ResultSet rs) throws SQLException{
 		List<Consultation> Consultation=new ArrayList<Consultation>();
@@ -39,5 +40,20 @@ public class Consultation implements java.io.Serializable   {
 			Consultation.add(consultation);
 		} 
 		return Consultation;
+	}
+	
+	private static ArrayList<String> fillColumnNames() {
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("ConsultationID");
+		columnNames.add("PatientID");
+		columnNames.add("StaffID");
+		columnNames.add("Subject");
+		columnNames.add("DateBooked");
+		columnNames.add("Date");
+		columnNames.add("Time");
+		columnNames.add("Attended");
+		columnNames.add("MedicalRecordUpdated");
+		columnNames.add("TreatmentID");
+		return columnNames;
 	}
 }
