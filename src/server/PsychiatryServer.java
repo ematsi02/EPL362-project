@@ -360,6 +360,23 @@ public class PsychiatryServer implements java.io.Serializable {
 			outObject.writeObject(ls);
 			System.out.println("incident search after");			
 		}
+		
+		void addTreatment()throws IOException{
+			String patientid=inFromClient.readLine();
+			String startDate=inFromClient.readLine();
+			String endDate=inFromClient.readLine();
+			String diagnosis=inFromClient.readLine();
+			String description=inFromClient.readLine();
+			String staffid=inFromClient.readLine();
+			
+			jdbc.addTreatment(patientid,startDate,endDate, diagnosis,description, staffid);
+			file.print("Treatment for "+patientid+" added... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("treatmentAdded");//searched incident
+
+			
+		}
 	
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -417,7 +434,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteIncident();
 					if (messageFromClient.equals("searchIncident"))
 						searchIncident();
-					
+					if (messageFromClient.equals("addTreatment"))
+						addTreatment();
 					
 					
 				}
