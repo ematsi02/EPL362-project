@@ -64,25 +64,72 @@ AND Consultation.MedicalRecordUpdated='0'
 AND Patient.PatientID=Consultation.PatientID 
 AND Consultation.StaffID=Staff.StaffID;
 
+// --- Patient Reports  Menu
+
 // ---------
 Changes of Patient Profiles
 
-
-// --- Patient Reports  Menu
+Select Patient.* 
+From Patient
+Where Patient.ChangedByPatient='1';
 
 // ---------
 Patients with specific Condition
 
+String condition="Depression";
+
+Select Patient.*
+From Patient, Treatment
+Where Treatment.Diagnosis=condition
+AND Patient.PatientID=Treatment.PatientID
+Group By Patient.PatientID;
+
 // ---------
 Patients with specific Treatment/Medication
+
+String medName="Medication 1";
+
+Select Patient.* 
+From Patient, Treatment, TreatmentMedication, Medication
+Where Medication.Name=medName
+AND Patients.PatientID=Treatment.PatientID
+AND Treatment.TreatmentID=TreatmentMedication.TreatmentID
+AND TreatmentMedication.MedicationID=Medication.MedicationID
+Group By Patient.PatientID;
+
+// --- General Reports Menu
+
+// ---------
+Number of Patients Attended
+
+Select COUNT(Consultation.PatientID)
+From Consultation
+Where Consultation.Attended='1'
+Group By Consultation.Date
+Order By COUNT(Consultation.PatientID);
 
 // ---------
 Number of Patients by Condition
 
+Select COUNT(Treatment.PatientID), Treatment.Diagnosis  
+From Treatment
+Group By Treatment.Diagnosis
+Order By COUNT(PatientID) DESC;
+
 // ---------
 Number of Patients by Treatment/Medication
+
+Select COUNT(Treatment.PatientID), Medication.MedicationID, Medication.Name
+From Treatment, TreatmentMedication, Medication
+Where Treatment.TreatmentID=TreatmentMedication.TreatmentID
+AND TreatmentMedication.MedicationID=Medication.MedicationID
+Group By Treatment.PatientID
+Order By COUNT(Treatment.PatientID) DESC;
 
 // ---------
 Medication prescriptions summary
 
-// --- Weekly Reports Menu
+Select *
+From Treatment, TreatmentMedication, Medication
+Where Treatment.TreatmentID=TreatmentMedication.TreatmentID
+AND TreatmentMedication.MedicationID=Medication.MedicationID;
