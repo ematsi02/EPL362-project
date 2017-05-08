@@ -34,6 +34,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
+
+import entities.Comment;
 import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
@@ -2106,17 +2108,26 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addComment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addComment(patientid.getText(), staffid.getText(), subject.getText(), comment.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the comment!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setForeground(Color.blue);
-					message.setBounds(340, 470, 350, 50);
-					getContentPane().add(commentForm());
-					getContentPane().add(message);
+					out.println("addComment");
+					out.println(patientid.getText());
+					out.println(staffid.getText());
+					out.println(subject.getText());
+					out.println(comment.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("commentAdded")) {
+							JLabel message = new JLabel("You have successfully added the comment!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(commentForm());
+							getContentPane().add(message);
+						}			
 					revalidate();
 					repaint();
 					pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
@@ -2128,10 +2139,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return commentpanel;
 	}
 	
-	private JPanel commentsForm(ResultSet rs) {
+	private JPanel commentsForm(List<Comment> comment) {
 		try {
 			JPanel commentpanel = new JPanel();
-			rs.next();
 			JLabel lblid = new JLabel("    ID");
 			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblpatientid = new JLabel("Patient's Username");
@@ -2142,25 +2152,35 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblcomment = new JLabel("Comment");
 			lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(rs.getString("CommentID"));
+			JTextField id =  new JTextField(Integer.toString(comment.get(0).CommentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(rs.getString("PatientID"));
-			JTextField staffid = new JTextField(rs.getString("StaffID"));
-			JTextField subject = new JTextField(rs.getString("Subject"));
-			JTextField comment = new JTextField(rs.getString("Comment"));
+			JTextField patientid = new JTextField(comment.get(0).PatientID);
+			JTextField staffid = new JTextField(comment.get(0).StaffID);
+			JTextField subject = new JTextField(comment.get(0).Subject);
+			JTextField comm = new JTextField(comment.get(0).Comment);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.updateComment(Integer.parseInt(id.getText()), patientid.getText(), staffid.getText(),
-								subject.getText(), comment.getText());
-						getContentPane().removeAll();
-						getContentPane().add(searchCommentForm());
-						getContentPane().add(commentsForm(SADB.printComment(Integer.parseInt(id.getText()))));
-						revalidate();
-						repaint();
-						pack();
+						out.println("updateComment");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(patientid.getText());
+						out.println(staffid.getText());
+						out.println(subject.getText());
+						out.println(comm.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("commentUpdated")) {
+								getContentPane().add(searchCommentForm());
+								List<Comment> ls = new ArrayList<Comment>();
+								ls = (List<Comment>) inObject.readObject();
+								getContentPane().add(commentsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -2171,12 +2191,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.deleteComment(Integer.parseInt(id.getText()));
-						getContentPane().removeAll();
-						getContentPane().add(searchCommentForm());
-						revalidate();
-						repaint();
-						pack();
+						out.println("deleteComment");
+						out.println(Integer.parseInt(id.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("commentDeleted")) {
+								getContentPane().add(searchCommentForm());
+							}
+							revalidate();
+							repaint();
+							pack();
+						}								
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -2191,10 +2216,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			commentpanel.add(lblsubject);
 			commentpanel.add(subject);
 			commentpanel.add(lblcomment);
-			commentpanel.add(comment);
+			commentpanel.add(comm);
 			commentpanel.add(update);
 			commentpanel.add(delete);
-			commentpanel.setBounds(350, 150, 250, 250);
+			commentpanel.setBounds(350, 250, 250, 250);
 			commentpanel.setOpaque(false);
 			return commentpanel;
 		} catch (Exception er) {
@@ -2213,13 +2238,21 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.printComment(Integer.parseInt(id.getText()));
-					getContentPane().removeAll();
-					getContentPane().add(searchCommentForm());
-					getContentPane().add(commentsForm(rs));
-					revalidate();
-					repaint();
-					pack();
+					out.println("searchComment");
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("commentSearched")) {
+							getContentPane().add(searchCommentForm());
+							List<Comment> ls = (List<Comment>) inObject.readObject();
+							getContentPane().add(commentsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}			
+					
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
