@@ -15,18 +15,8 @@ public class Comment implements java.io.Serializable   {
 	public String StaffID;
 	public String Subject;
 	public String Comment;
+	public static ArrayList<String> columnNames = fillColumnNames();
 
-	public Comment() {
-		new Comment(0, null, null, null, null);
-	}
-
-	public Comment(int commentID, String patientID, String staffID, String subject, String comment) {
-		this.CommentID = commentID;
-		this.PatientID = patientID;
-		this.StaffID = staffID;
-		this.Subject = subject;
-		this.Comment = comment;
-	}
 	public List<Comment> convertRsToList(ResultSet rs) throws SQLException{
 		List<Comment> Comment=new ArrayList<Comment>();
 		while(rs.next()) {
@@ -40,5 +30,15 @@ public class Comment implements java.io.Serializable   {
 			Comment.add(comment);
 		} 
 		return Comment;
+	}
+	
+	private static ArrayList<String> fillColumnNames(){
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("CommentID");
+		columnNames.add("PatientID");
+		columnNames.add("StaffID");
+		columnNames.add("Subject");
+		columnNames.add("Comment");		
+		return columnNames;
 	}
 }
