@@ -590,7 +590,7 @@ public class JDBC {
 	public void addComment(String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Comments (PatientID, StaffID, Comment) VALUES ('" + patientid + "', '" + staffid
+			String query = "INSERT INTO Comments (PatientID, StaffID,Subject, Comment) VALUES ('" + patientid + "', '" + staffid
 					+ "', '" + subject + "', '" + comment + "');";
 			stmt.executeUpdate(query);
 
