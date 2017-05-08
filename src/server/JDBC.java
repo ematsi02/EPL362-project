@@ -527,12 +527,12 @@ public class JDBC {
 	}
 
 	public void addConsultation(String patientid, String staffid, String subject, String dateBooked, String date,
-			String time, String treatmentid) {
+			String time, int treatmentid) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "INSERT INTO Consultation (PatientID, StaffID, Subject, DateBooked, Date, Time, TreatmentID) VALUES ('"
 					+ patientid + "', '" + staffid + "', '" + subject + "', '" + dateBooked + "', '" + date + "', '"
-					+ time + "', '" + treatmentid + "');";
+					+ time + "', " + treatmentid + ");";
 			stmt.executeUpdate(query);
 
 		} catch (SQLException e) {
