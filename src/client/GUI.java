@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,13 +34,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-
 import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
+import entities.MedicationReaction;
 
 public class GUI extends JFrame implements ActionListener, java.io.Serializable {
 	/**
@@ -313,8 +312,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForManagement());
-						} else if (messageFromServer.equals("6")) {// user is
-																	// management
+						} else if (messageFromServer.equals("Patient")) {// user is
+																	// patient
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForPatient());
@@ -1652,6 +1651,194 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return medicationpanel;
 	}
 
+	private JPanel medicationReactionForm() {
+		JPanel reactionpanel = new JPanel();
+		JLabel lblpatientid = new JLabel("Patient's Username");
+		lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblmedicationid = new JLabel("         Medication ID");
+		lblmedicationid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbltype = new JLabel("        Reaction Type");
+		lbltype.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldescription = new JLabel("Description");
+		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField patientid = new JTextField(15);
+		JTextField medicationid = new JTextField(15);
+		JTextField type = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(description);
+		JButton addReaction = new JButton("Add");
+
+		reactionpanel.add(lblpatientid);
+		reactionpanel.add(patientid);
+		reactionpanel.add(lblmedicationid);
+		reactionpanel.add(medicationid);
+		reactionpanel.add(lbltype);
+		reactionpanel.add(type);
+		reactionpanel.add(lbldescription);
+		reactionpanel.add(scrollPane);
+		reactionpanel.add(addReaction);
+		addReaction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("addReaction");
+					out.println(patientid.getText());
+					out.println(medicationid.getText());
+					out.println(type.getText());
+					out.println(description.getText());
+					System.out.println("TA ESTEILA!");
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("reactionAdded")) {
+							JLabel message = new JLabel("You have successfully added the reaction!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(medicationReactionForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		reactionpanel.setBounds(350, 150, 350, 200);
+		reactionpanel.setOpaque(false);
+		reactionpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		return reactionpanel;
+	}
+
+	private JPanel medicationReactionsForm(List<MedicationReaction> reaction) {
+		try {
+			JPanel reactionpanel = new JPanel();
+			JLabel lblpatientid = new JLabel("Patient's Username");
+			lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblmedicationid = new JLabel("Medication ID");
+			lblmedicationid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbltype = new JLabel("Reaction Type");
+			lbltype.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldescription = new JLabel("Description");
+			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField patientid = new JTextField(reaction.get(0).PatientID);
+			JTextField medicationid = new JTextField(Integer.toString(reaction.get(0).MedicationID));
+			JTextField type = new JTextField(reaction.get(0).ReactionType);
+			JTextField description = new JTextField(reaction.get(0).Description);
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						out.println("updateReaction");
+						out.println(patientid.getText());
+						out.println(Integer.parseInt(medicationid.getText()));
+						out.println(type.getText());
+						out.println(description.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("reactionUpdated")) {
+								getContentPane().add(searchMedicationReactionForm());
+								List<MedicationReaction> ls = new ArrayList<MedicationReaction>();
+								ls = (List<MedicationReaction>) inObject.readObject();
+								getContentPane().add(medicationReactionsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton delete = new JButton("Delete");
+			delete.setFont(new Font("Arial", Font.PLAIN, 14));
+			delete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						out.println("deleteReaction");
+						out.println(patientid.getText());
+						out.println(Integer.parseInt(medicationid.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("reactionDeleted")) {
+								getContentPane().add(searchMedicationReactionForm());
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			reactionpanel.add(lblpatientid);
+			reactionpanel.add(patientid);
+			reactionpanel.add(lblmedicationid);
+			reactionpanel.add(medicationid);
+			reactionpanel.add(lbltype);
+			reactionpanel.add(type);
+			reactionpanel.add(lbldescription);
+			reactionpanel.add(description);
+			reactionpanel.add(update);
+			reactionpanel.add(delete);
+			reactionpanel.setBounds(350, 250, 250, 250);
+			reactionpanel.setOpaque(false);
+			return reactionpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchMedicationReactionForm() {
+		JPanel reactionpanel = new JPanel();
+		JLabel lblpid = new JLabel("Search Medication Reaction with Patient's Username: ");
+		lblpid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField pid = new JTextField(15);
+		JLabel lblmid = new JLabel("and Medication ID: ");
+		lblmid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField mid = new JTextField(15);
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("searchReaction");
+					out.println(pid.getText());
+					out.println(Integer.parseInt(mid.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("reactionSearched")) {
+							getContentPane().add(searchMedicationReactionForm());
+							@SuppressWarnings("unchecked")
+							List<MedicationReaction> ls = (List<MedicationReaction>) inObject.readObject();
+							getContentPane().add(medicationReactionsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		reactionpanel.add(lblpid);
+		reactionpanel.add(pid);
+		reactionpanel.add(lblmid);
+		reactionpanel.add(mid);
+		reactionpanel.add(search);
+		reactionpanel.setBounds(50, 150, 900, 150);
+		reactionpanel.setOpaque(false);
+		return reactionpanel;
+	}
+	
 	private JPanel consultationForm() {
 		JPanel consultationpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
