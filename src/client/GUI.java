@@ -36,6 +36,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 
+import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
@@ -197,21 +198,21 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.repaint();
 			this.pack();
 		}  else if (btnLabel.equals("Update Harm Risk Record")) {
-			try {
-				this.getContentPane().removeAll();
-				ResultSet rs = SADB.erasmia();
-				if (rs==null){
-					System.out.println("eimai idiotropo");
-				}
-				JScrollPane r;
-				r = resultsForm(rs);
-				r.setBounds(50, 150, 900, 600);
-				this.getContentPane().add(r);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				System.out.println("harm risk");
-				e.printStackTrace();
-			}
+//			try {
+//				this.getContentPane().removeAll();
+//				ResultSet rs = SADB.erasmia();
+//				if (rs==null){
+//					System.out.println("eimai idiotropo");
+//				}
+//				JScrollPane r;
+//				r = resultsForm(rs);
+//				r.setBounds(50, 150, 900, 600);
+//				this.getContentPane().add(r);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				System.out.println("harm risk");
+//				e.printStackTrace();
+//			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -1696,19 +1697,30 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addConsultation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addConsultation(patientid.getText(), staffid.getText(), subject.getText(),
-							DateFormat.getDateInstance().format(dateBooked.getDate()),
-							DateFormat.getDateInstance().format(date.getDate()), time.getText(), treatmentid.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the consultation!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setForeground(Color.blue);
-					message.setBounds(340, 470, 350, 50);
-					getContentPane().add(consultationForm());
-					getContentPane().add(message);
-					revalidate();
-					repaint();
-					pack();
+					out.println("addConsultation");
+					out.println(patientid.getText());
+					out.println(staffid.getText());
+					out.println(subject.getText());
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					out.println(dateFormat.format(dateBooked.getDate()));
+					out.println(dateFormat.format(date.getDate()));
+					out.println(time.getText());
+					out.println(treatmentid.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("consultationAdded")) {
+							JLabel message = new JLabel("You have successfully added the consultation!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(consultationForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
@@ -1720,10 +1732,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return consultationpanel;
 	}
 
-	private JPanel consultationsForm(ResultSet rs) {
+	private JPanel consultationsForm(List<Consultation> consultation) {
 		try {
 			JPanel consultationpanel = new JPanel();
-			rs.next();
 			JLabel lblid = new JLabel("    ID");
 			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblpatientid = new JLabel("Patient's Username");
@@ -1744,32 +1755,45 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblattended.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblupdated = new JLabel("Medical Record Updated");
 			lblupdated.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(rs.getString("ConsultationID"));
+			JTextField id = new JTextField(Integer.toString(consultation.get(0).ConsultationID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(rs.getString("PatientID"));
-			JTextField staffid = new JTextField(rs.getString("StaffID"));
-			JTextField subject = new JTextField(rs.getString("Subject"));
-			JTextField dateBooked = new JTextField(rs.getString("DateBooked"));
-			JTextField date = new JTextField(rs.getString("Date"));
-			JTextField time = new JTextField(rs.getString("Time"));
-			JTextField attended = new JTextField(rs.getString("Attended"));
-			JTextField updated = new JTextField(rs.getString("MedicalRecordUpdated"));
-			JTextField treatmentid = new JTextField(rs.getString("TreatmentID"));
+			JTextField patientid = new JTextField(consultation.get(0).PatientID);
+			JTextField staffid = new JTextField(consultation.get(0).StaffID);
+			JTextField subject = new JTextField(consultation.get(0).Subject);
+			JTextField dateBooked = new JTextField(consultation.get(0).DateBooked);
+			JTextField date = new JTextField(consultation.get(0).Date);
+			JTextField time = new JTextField(consultation.get(0).Time);
+			JTextField attended = new JTextField(Integer.toString(consultation.get(0).Attended));
+			JTextField updated = new JTextField(Integer.toString(consultation.get(0).MedicalRecordUpdated));
+			JTextField treatmentid = new JTextField(Integer.toString(consultation.get(0).TreatmentID));
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.updateConsultation(Integer.parseInt(id.getText()), patientid.getText(), staffid.getText(),
-								subject.getText(), dateBooked.getText(), date.getText(), time.getText(),
-								Integer.parseInt(attended.getText()), Integer.parseInt(updated.getText()),
-								Integer.parseInt(treatmentid.getText()));
-						getContentPane().removeAll();
-						getContentPane().add(searchConsultationForm());
-						getContentPane().add(consultationsForm(SADB.printConsultation(Integer.parseInt(id.getText()))));
-						revalidate();
-						repaint();
-						pack();
+						out.println("updateConsultation");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(patientid.getText());
+						out.println(staffid.getText());
+						out.println(subject.getText());
+						out.println(dateBooked.getText());
+						out.println(date.getText());
+						out.println(time.getText());
+						out.println(Integer.parseInt(attended.getText()));
+						out.println(Integer.parseInt(updated.getText()));
+						out.println(Integer.parseInt(treatmentid.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("consultationUpdated")) {
+								getContentPane().add(searchConsultationForm());
+								List<Consultation> ls = new ArrayList<Consultation>();
+								ls = (List<Consultation>) inObject.readObject();
+								getContentPane().add(consultationsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -1780,12 +1804,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.deleteConsultation(Integer.parseInt(id.getText()));
-						getContentPane().removeAll();
-						getContentPane().add(searchConsultationForm());
-						revalidate();
-						repaint();
-						pack();
+						out.println("deleteConsultation");
+						out.println(Integer.parseInt(id.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("consultationDeleted")) {
+								getContentPane().add(searchConsultationForm());
+							}
+							revalidate();
+							repaint();
+							pack();
+						}		
+
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -1813,7 +1843,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			consultationpanel.add(treatmentid);
 			consultationpanel.add(update);
 			consultationpanel.add(delete);
-			consultationpanel.setBounds(350, 150, 250, 250);
+			consultationpanel.setBounds(350, 250, 250, 250);
 			consultationpanel.setOpaque(false);
 			return consultationpanel;
 		} catch (Exception er) {
@@ -1832,13 +1862,21 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.printConsultation(Integer.parseInt(id.getText()));
-					getContentPane().removeAll();
-					getContentPane().add(searchConsultationForm());
-					getContentPane().add(consultationsForm(rs));
-					revalidate();
-					repaint();
-					pack();
+					out.println("searchConsultation");
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("consultationSearched")) {
+							getContentPane().add(searchConsultationForm());
+							@SuppressWarnings("unchecked")
+							List<Consultation> ls = (List<Consultation>) inObject.readObject();
+							getContentPane().add(consultationsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}								
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
