@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Treatment implements java.io.Serializable   {
 	
-
 	private static final long serialVersionUID = 1L;
 	public int TreatmentID;
 	public String PatientID;
@@ -16,21 +15,8 @@ public class Treatment implements java.io.Serializable   {
 	public String Diagnosis;
 	public String Description;
 	public String StaffID;
+	public static ArrayList<String> columnNames = fillColumnNames();
 
-	public Treatment() {
-		new Treatment(0, null, null, null, null, null,null);
-	}
-
-	public Treatment(int treatmentID, String patientID, String startDate, String endDate, String diagnosis, 
-			String description,String staffID) {
-		this.TreatmentID = treatmentID;
-		this.PatientID = patientID;
-		this.StartDate = startDate;
-		this.EndDate = endDate;
-		this.Diagnosis = diagnosis;
-		this.Description = description;
-		this.StaffID = staffID;
-	}
 	public List<Treatment> convertRsToList(ResultSet rs) throws SQLException{
 		List<Treatment> Treatment=new ArrayList<Treatment>();
 		while(rs.next()) {
@@ -42,10 +28,20 @@ public class Treatment implements java.io.Serializable   {
 			treatment.Diagnosis=rs.getString("Diagnosis");
 			treatment.Description=rs.getString("Description");
 			treatment.StaffID=rs.getString("StaffID");
-			
 			Treatment.add(treatment);
 		} 
 		return Treatment;
 	}
 
+	private static ArrayList<String> fillColumnNames() {
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("TreatmentID");
+		columnNames.add("PatientID");
+		columnNames.add("StartDate");
+		columnNames.add("EndDate");
+		columnNames.add("Diagnosis");
+		columnNames.add("Description");
+		columnNames.add("StaffID");
+		return columnNames;
+	}
 }
