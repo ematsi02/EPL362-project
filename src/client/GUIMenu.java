@@ -248,7 +248,7 @@ public class GUIMenu {
 		menu.add(menuItem);
 		return menu;
 	}
-	
+
 	/*
 	 * Patient Reports Menu Element. Allows the medical records user 
 	 * to see reports (daily or general) about patient records and 
@@ -273,7 +273,7 @@ public class GUIMenu {
 		menu.add(menuItem);
 		return menu;
 	}
-		
+	
 	/*
 	 * General Reports Menu Element. Allows the health service management user 
 	 * to see general reports.
@@ -283,6 +283,10 @@ public class GUIMenu {
 		JMenuItem menuItem;
 		menu = new JMenu("General Reports");
 		menu.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem = new JMenuItem("Number of Patients Attended");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		menuItem = new JMenuItem("Number of Patients by Condition");
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
