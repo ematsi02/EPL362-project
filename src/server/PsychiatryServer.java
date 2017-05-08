@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
@@ -42,6 +43,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	Incident incident;
 	Treatment treatment;
 	Medication medication;
+	Consultation consultation;
 
 
 	/*
@@ -461,7 +463,6 @@ public class PsychiatryServer implements java.io.Serializable {
 			outToClient.println("medicationDeleted");//deleted medication
 			outToClient.flush();
 		}
-		
 		void searchMedication() throws IOException, SQLException{
 			int id = Integer.parseInt(inFromClient.readLine());			
 			ResultSet rs=jdbc.printMedication(id);
@@ -475,6 +476,66 @@ public class PsychiatryServer implements java.io.Serializable {
 			System.out.println("search after");
 		}
 		
+		void addConsultation()throws IOException{
+			String patientid=inFromClient.readLine();
+			String staffid=inFromClient.readLine();
+			String subject=inFromClient.readLine();
+			String dateBooked=inFromClient.readLine();
+			String date=inFromClient.readLine();
+			String time=inFromClient.readLine();
+			int treatmentid=Integer.parseInt(inFromClient.readLine());
+			jdbc.addConsultation(patientid,staffid,subject, dateBooked,date,time,treatmentid);
+			file.print("Consultation for patient with username "+patientid+" with"+staffid+" added... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("consulationAdded");//added consultation
+		}
+		void updateConsultation() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			String patientid = inFromClient.readLine();
+			String staffid = inFromClient.readLine();
+			String subject = inFromClient.readLine();		
+			String dateBooked = inFromClient.readLine();
+			String date = inFromClient.readLine();		
+			String time = inFromClient.readLine();	
+			int attended = Integer.parseInt(inFromClient.readLine());
+			int updated = Integer.parseInt(inFromClient.readLine());
+			int treatmentid = Integer.parseInt(inFromClient.readLine());			
+			jdbc.updateConsultation(id,patientid,staffid,subject,dateBooked,date,time,attended,updated,treatmentid);
+			file.print("Consultation "+id+" updated... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("consultationUpdated");//updated Consultation
+			outToClient.flush();
+			ResultSet rs=jdbc.printConsultation(id);
+			List<Consultation> ls = consultation.convertRsToList(rs);
+			outObject.writeObject(ls);	
+			System.out.println("esteila kai to resultset");
+			
+		}
+		void deleteConsultation() throws IOException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteConsultation(id);
+			file.print("Consultation with id "+id+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("consultationDeleted");//deleted medication
+			outToClient.flush();
+			
+		}
+		void searchConsultation() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());			
+			ResultSet rs=jdbc.printConsultation(id);
+			file.print("Consultation with id "+id+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("consultationSearched");//searched Consultation
+			outToClient.flush();
+			List<Consultation> ls = consultation.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("search after");
+			
+		}
 		
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -495,6 +556,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				incident=new Incident();
 				treatment=new Treatment();
 				medication=new Medication();
+				consultation=new Consultation();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -550,6 +612,14 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteMedication();
 					if (messageFromClient.equals("searchMedication"))
 						searchMedication();
+					if (messageFromClient.equals("addConsultation"))
+						addConsultation();
+					if (messageFromClient.equals("updateConsultation"))
+						updateConsultation();
+					if (messageFromClient.equals("deleteConsultation"))
+						deleteConsultation();
+					if (messageFromClient.equals("searchConsultation"))
+						searchConsultation();
 					
 				}
 
