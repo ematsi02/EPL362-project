@@ -467,20 +467,60 @@ public class JDBC {
 		}
 	}
 	
-	public ResultSet erasmia() {
+	public void addMedicationReaction(String patientid, int medicationid, String type, String description) {
 		try {
-			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			String q = "SELECT Consultation.ConsultationID, Consultation.Subject, "
-					+ "Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, "
-					+ "Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated "
-					+ "FROM Patient, Consultation, Staff "
-					+ "WHERE Consultation.Attended='0' AND Consultation.Date='2017-05-14' "
-					+ "AND Patient.PatientID=Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
-			q = "Select * from Patient, Consultation, Staff where Patient.PatientID=Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
-			ResultSet rs = stmt.executeQuery("Select * from Patient;");
+			Statement stmt = conn.createStatement();
+			String query = "INSERT INTO MedicationReaction (PatientID, MedicationID, ReactionType, Description) VALUES ('"
+					+ patientid + "', " + medicationid + ", '" + type + "', '" + description + "');";
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void updateMedicationReaction(String patientid, int medicationid, String type, String description) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "UPDATE MedicationReaction SET PatientID='" + patientid + "', MedicationID=" + medicationid
+					+ ", ReactionType='" + type + "', Description='" + description + "' WHERE PatientID='" + patientid
+					+ "' AND MedicationID=" + medicationid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public void deleteMedicationReaction(String patientid, int medicationid) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "DELETE FROM MedicationReaction WHERE PatientID='" + patientid
+					+ "' AND MedicationID=" + medicationid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public ResultSet printMedicationReaction(String patientid, int medicationid) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM MedicationReaction WHERE PatientID='" + patientid
+					+ "' AND MedicationID=" + medicationid + ";");
 			return rs;
 		} catch (SQLException e) {
-			System.out.println("throw exception from jdbc");
 			System.out.println(e.getMessage());
 			return null;
 		}
