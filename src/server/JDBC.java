@@ -733,4 +733,54 @@ public class JDBC {
 			return null;
 		}
 	}
+	
+	/**
+	 * This function returns the ResultSet of three reports, depending on the
+	 * parameters : (A) Changes of Patient Profiles; if option==1 and
+	 * value==null, (B) Patients with specific Condition; if option==2 and value
+	 * !=null, (C) Patients with specific Treatment/Medication; if option==3 and
+	 * value !=null. The RetultSet returnd gets info about Patient records
+	 * (object).
+	 * 
+	 * @param int
+	 *            option : 1 for Changes of Patient Profiles, 2 for Patients
+	 *            with specific Condition, 3 for Patients with specific
+	 *            Treatment/Medication
+	 * 
+	 * @param String
+	 *            value : null if option 1 is selected, Name of a condition if
+	 *            option 2 is selected, Name of a Medication if option 3 is
+	 *            selected
+	 * 
+	 */
+	public ResultSet getPatientReport(int option, String value) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "";
+			switch (option) {
+			case 1: // Changes of Patient Profiles
+				query = "Select * From Patient Where ChangedByPatient='1';";
+				break;
+
+			case 2: // Patients with specific Condition,
+					// so value = condition name
+				query = "Select Patient.* From Patient, Treatment Where Treatment.Diagnosis='" + value
+						+ "' AND Patient.PatientID=Treatment.PatientID Group By Patient.PatientID;";
+				break;
+
+			case 3: // Patients with specific Treatment/Medication,
+					// so value = medication name
+				query = "Select Patient.* From Patient, Treatment, TreatmentMedication, Medication Where "
+						+ "Medication.Name='" + value + "' AND Patient.PatientID=Treatment.PatientID AND "
+						+ "Treatment.TreatmentID=TreatmentMedication.TreatmentID AND "
+						+ "TreatmentMedication.MedicationID=Medication.MedicationID Group By Patient.PatientID;";
+			}
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 }
