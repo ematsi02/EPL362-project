@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 import server.JDBC;
@@ -75,7 +78,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} if (btnLabel.equals("View/Edit Profile")) {
+		}
+		if (btnLabel.equals("View/Edit Profile")) {
 			this.getContentPane().removeAll();
 			ResultSet rs = SADB.printProfile(usernameGUI, roleGUI);
 			this.getContentPane().add(profileForm(rs));
@@ -121,6 +125,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		} else if (btnLabel.equals("View/Search Relative")) {
 			this.getContentPane().removeAll();
 			this.getContentPane().add(searchRelativeForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} else if (btnLabel.equals("Inform Relative")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(informRelativesForm());
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -172,7 +182,19 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
+		} else if (btnLabel.equals("Add New Comment")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(commentForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} else if (btnLabel.equals("View/Search Comment")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(searchCommentForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		}
 	}
 
 	class MyPanel extends JPanel implements java.io.Serializable {
@@ -239,33 +261,43 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("Doctor")) {// user is doctor
+						if (messageFromServer.equals("Doctor")) {// user is
+																	// doctor
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForDoctor());
-						} else if (messageFromServer.equals("Nurse-HealthVisitor")) {// user is
-																	// nurse or health visitor
+						} else if (messageFromServer.equals("Nurse-HealthVisitor")) {// user
+																						// is
+							// nurse or health visitor
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForClinicalStaff());
-						} else if (messageFromServer.equals("Receptionist")) {// user is receptionist
+						} else if (messageFromServer.equals("Receptionist")) {// user
+																				// is
+																				// receptionist
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForReceptionist());
-						} else if (messageFromServer.equals("MedicalRecords")) {// user is medical records
+						} else if (messageFromServer.equals("MedicalRecords")) {// user
+																				// is
+																				// medical
+																				// records
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForMedicalRecords());
-						} else if (messageFromServer.equals("Management")) {// user is management
+						} else if (messageFromServer.equals("Management")) {// user
+																			// is
+																			// management
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForManagement());
-						} else if (messageFromServer.equals("6")) {// user is management
+						} else if (messageFromServer.equals("6")) {// user is
+																	// management
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForPatient());
-						}
-						else if (messageFromServer.equals("wrong")) {// incorrect user
+						} else if (messageFromServer.equals("wrong")) {// incorrect
+																		// user
 							JLabel message = new JLabel("* Username or Password incorrect!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -297,7 +329,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		loginpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return loginpanel;
 	}
-	
+
 	private JPanel profileForm(ResultSet rs) {
 		try {
 			JPanel profilepanel = new JPanel();
@@ -396,7 +428,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("passwordChanged")) {// password changed
+						if (messageFromServer.equals("passwordChanged")) {// password
+																			// changed
 							System.out.println(messageFromServer + "allagi");
 							JLabel message = new JLabel("You have successfully changed your password!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -405,7 +438,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							getContentPane().add(changePasswordForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("wrongPassword")) {// wrong password
+						if (messageFromServer.equals("wrongPassword")) {// wrong
+																		// password
 							JLabel message = new JLabel("* Wrong password! Give again!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -479,8 +513,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.flush();
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if (messageFromServer.equals("success")) {// successful sign
-																// up
+						if (messageFromServer.equals("success")) {// successful
+																	// sign
+																	// up
 							JLabel message = new JLabel("You have successfully signed up!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
@@ -489,7 +524,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							getContentPane().add(signupForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("alreadyExists")) {// username already exists
+						if (messageFromServer.equals("alreadyExists")) {// username
+																		// already
+																		// exists
 							JLabel message = new JLabel("* Username already exists! Give a different one!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -584,7 +621,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(address.getText());
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if(messageFromServer.equals("patientAdded")){
+						if (messageFromServer.equals("patientAdded")) {
 							JLabel message = new JLabel("You have successfully added the patient!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setBounds(340, 350, 350, 50);
@@ -595,8 +632,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						revalidate();
 						repaint();
 						pack();
-					}					
-				}  catch (Exception er) {
+					}
+				} catch (Exception er) {
 					// Ignore the error and continues
 				}
 			}
@@ -606,9 +643,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		patientpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return patientpanel;
 	}
-	
+
 	private JPanel patientsForm(List<Patient> patients) {
-		try {	
+		try {
 			JPanel patientpanel = new JPanel();
 			JLabel lblname = new JLabel("     Name");
 			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -649,11 +686,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(address.getText());
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
-							if(messageFromServer.equals("patientUpdated")){
+							if (messageFromServer.equals("patientUpdated")) {
 								getContentPane().add(searchPatientForm());
-								List<Patient> ls=new ArrayList<Patient>();
+								List<Patient> ls = new ArrayList<Patient>();
 								ls = (List<Patient>) inObject.readObject();
-								getContentPane().add(patientsForm(ls));								
+								getContentPane().add(patientsForm(ls));
 							}
 							revalidate();
 							repaint();
@@ -710,8 +747,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			return null;
 		}
 	}
-	
-private JPanel searchPatientForm() {
+
+	private JPanel searchPatientForm() {
 		JPanel patientpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Patient with Username: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -728,7 +765,7 @@ private JPanel searchPatientForm() {
 						getContentPane().removeAll();
 						if (messageFromServer.equals("patientSearched")) {
 							getContentPane().add(searchPatientForm());
-							List<Patient>ls=(List<Patient>) inObject.readObject();
+							List<Patient> ls = (List<Patient>) inObject.readObject();
 							getContentPane().add(patientsForm(ls));
 						}
 
@@ -844,7 +881,7 @@ private JPanel searchPatientForm() {
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblrelationship = new JLabel("Relationship");
 			lblrelationship.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id =new JTextField(Integer.toString(relatives.get(0).RelativeID));
+			JTextField id = new JTextField(Integer.toString(relatives.get(0).RelativeID));
 			id.setEditable(false);
 			JTextField patientid = new JTextField(relatives.get(0).PatientID);
 			JTextField name = new JTextField(relatives.get(0).Name);
@@ -870,9 +907,9 @@ private JPanel searchPatientForm() {
 						out.println(relationship.getText());
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
-							if(messageFromServer.equals("relativeUpdated")){
+							if (messageFromServer.equals("relativeUpdated")) {
 								getContentPane().add(searchRelativeForm());
-								List<Relative> ls=new ArrayList<Relative>();
+								List<Relative> ls = new ArrayList<Relative>();
 								ls = (List<Relative>) inObject.readObject();
 								getContentPane().add(relativesForm(ls));
 							}
@@ -890,20 +927,19 @@ private JPanel searchPatientForm() {
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-							out.println("deleteRelative");
-							out.println(Integer.parseInt(id.getText()));
-							if ((messageFromServer = in.readLine()) != null) {
-								getContentPane().removeAll();
-								if (messageFromServer.equals("relativeDeleted")) {
-									getContentPane().add(searchRelativeForm());
-								}
-
-								revalidate();
-								repaint();
-								pack();
+						out.println("deleteRelative");
+						out.println(Integer.parseInt(id.getText()));
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("relativeDeleted")) {
+								getContentPane().add(searchRelativeForm());
 							}
-						
-						
+
+							revalidate();
+							repaint();
+							pack();
+						}
+
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -955,7 +991,7 @@ private JPanel searchPatientForm() {
 						getContentPane().removeAll();
 						if (messageFromServer.equals("relativeSearched")) {
 							getContentPane().add(searchRelativeForm());
-							List<Relative>ls=(List<Relative>) inObject.readObject();
+							List<Relative> ls = (List<Relative>) inObject.readObject();
 							getContentPane().add(relativesForm(ls));
 						}
 
@@ -985,7 +1021,7 @@ private JPanel searchPatientForm() {
 		lbltype.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblshortDescription = new JLabel("   Short Description");
 		lblshortDescription.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbldescription = new JLabel("            Description");
+		JLabel lbldescription = new JLabel("Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldate = new JLabel("                       Date");
 		JLabel lblspace = new JLabel("                          ");
@@ -994,7 +1030,8 @@ private JPanel searchPatientForm() {
 		JTextField patientid = new JTextField(15);
 		JComboBox type = new JComboBox(types);
 		JTextField shortDescription = new JTextField(15);
-		JTextField description = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(description);
 		JDateChooser date = new JDateChooser();
 		date.setDateFormatString("yyyy-MM-dd");
 		JButton addIncident = new JButton("Add");
@@ -1006,7 +1043,7 @@ private JPanel searchPatientForm() {
 		incidentpanel.add(lblshortDescription);
 		incidentpanel.add(shortDescription);
 		incidentpanel.add(lbldescription);
-		incidentpanel.add(description);
+		incidentpanel.add(scrollPane);
 		incidentpanel.add(lbldate);
 		incidentpanel.add(date);
 		incidentpanel.add(lblspace);
@@ -1020,10 +1057,11 @@ private JPanel searchPatientForm() {
 					out.println(type.getSelectedItem().toString());
 					out.println(shortDescription.getText());
 					out.println(description.getText());
-					out.println(DateFormat.getDateInstance().format(date.getDate()));
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					out.println(dateFormat.format(date.getDate()));
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if(messageFromServer.equals("success")){
+						if (messageFromServer.equals("success")) {
 							JLabel message = new JLabel("You have successfully added the incident!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
@@ -1035,13 +1073,13 @@ private JPanel searchPatientForm() {
 						repaint();
 						pack();
 					}
-					
+
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
 			}
 		});
-		incidentpanel.setBounds(350, 250, 350, 180);
+		incidentpanel.setBounds(350, 150, 350, 230);
 		incidentpanel.setOpaque(false);
 		incidentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return incidentpanel;
@@ -1061,8 +1099,8 @@ private JPanel searchPatientForm() {
 			JLabel lbldescription = new JLabel("Description");
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldate = new JLabel("Date");
-			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));			
-			JTextField id =new JTextField(Integer.toString(incident.get(0).IncidentID));
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField id = new JTextField(Integer.toString(incident.get(0).IncidentID));
 			id.setEditable(false);
 			JTextField patientid = new JTextField(incident.get(0).PatientID);
 			JTextField type = new JTextField(incident.get(0).IncidentType);
@@ -1073,7 +1111,7 @@ private JPanel searchPatientForm() {
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					try {	
+					try {
 						out.println("updateIncident");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -1083,9 +1121,9 @@ private JPanel searchPatientForm() {
 						out.println(date.getText());
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
-							if(messageFromServer.equals("incidentUpdated")){
+							if (messageFromServer.equals("incidentUpdated")) {
 								getContentPane().add(searchIncidentForm());
-								List<Incident> ls=new ArrayList<Incident>();
+								List<Incident> ls = new ArrayList<Incident>();
 								ls = (List<Incident>) inObject.readObject();
 								getContentPane().add(incidentsForm(ls));
 							}
@@ -1093,7 +1131,7 @@ private JPanel searchPatientForm() {
 							repaint();
 							pack();
 						}
-					
+
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
@@ -1160,17 +1198,15 @@ private JPanel searchPatientForm() {
 						getContentPane().removeAll();
 						if (messageFromServer.equals("incidentSearched")) {
 							getContentPane().add(searchIncidentForm());
-							List<Incident>ls=(List<Incident>) inObject.readObject();
+							List<Incident> ls = (List<Incident>) inObject.readObject();
 							getContentPane().add(incidentsForm(ls));
-							}
+						}
 
 						revalidate();
 						repaint();
 						pack();
 					}
-					
-					
-	
+
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
@@ -1194,7 +1230,7 @@ private JPanel searchPatientForm() {
 		lblendDate.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldiagnosis = new JLabel("              Diagnosis");
 		lbldiagnosis.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbldescription = new JLabel("            Description");
+		JLabel lbldescription = new JLabel("Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblstaffid = new JLabel("   Staff's Username");
 		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1204,7 +1240,8 @@ private JPanel searchPatientForm() {
 		JDateChooser endDate = new JDateChooser();
 		endDate.setDateFormatString("yyyy-MM-dd");
 		JTextField diagnosis = new JTextField(15);
-		JTextField description = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(description);
 		JTextField staffid = new JTextField(15);
 		JButton addTreatment = new JButton("Add");
 
@@ -1217,7 +1254,7 @@ private JPanel searchPatientForm() {
 		treatmentpanel.add(lbldiagnosis);
 		treatmentpanel.add(diagnosis);
 		treatmentpanel.add(lbldescription);
-		treatmentpanel.add(description);
+		treatmentpanel.add(scrollPane);
 		treatmentpanel.add(lblstaffid);
 		treatmentpanel.add(staffid);
 		treatmentpanel.add(addTreatment);
@@ -1242,7 +1279,7 @@ private JPanel searchPatientForm() {
 				}
 			}
 		});
-		treatmentpanel.setBounds(350, 150, 350, 200);
+		treatmentpanel.setBounds(350, 150, 350, 250);
 		treatmentpanel.setOpaque(false);
 		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return treatmentpanel;
@@ -1369,14 +1406,16 @@ private JPanel searchPatientForm() {
 		lblbrand.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblname = new JLabel("                     Name");
 		lblname.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbldescription = new JLabel("             Description");
+		JLabel lbldescription = new JLabel("            Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbleffects = new JLabel("Known Side Effects");
 		lbleffects.setFont(new Font("Arial", Font.PLAIN, 14));
 		JTextField brand = new JTextField(15);
 		JTextField name = new JTextField(15);
-		JTextField description = new JTextField(15);
-		JTextField effects = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane1 = new JScrollPane(description);
+		JTextArea effects = new JTextArea(5, 20);
+		JScrollPane scrollPane2 = new JScrollPane(effects);
 		JButton addMedication = new JButton("Add");
 
 		medicationpanel.add(lblbrand);
@@ -1384,9 +1423,9 @@ private JPanel searchPatientForm() {
 		medicationpanel.add(lblname);
 		medicationpanel.add(name);
 		medicationpanel.add(lbldescription);
-		medicationpanel.add(description);
+		medicationpanel.add(scrollPane1);
 		medicationpanel.add(lbleffects);
-		medicationpanel.add(effects);
+		medicationpanel.add(scrollPane2);
 		medicationpanel.add(addMedication);
 		addMedication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1407,7 +1446,7 @@ private JPanel searchPatientForm() {
 				}
 			}
 		});
-		medicationpanel.setBounds(350, 150, 350, 140);
+		medicationpanel.setBounds(350, 150, 370, 270);
 		medicationpanel.setOpaque(false);
 		medicationpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return medicationpanel;
@@ -1719,6 +1758,212 @@ private JPanel searchPatientForm() {
 		return consultationpanel;
 	}
 
+	private JPanel commentForm() {
+		JPanel commentpanel = new JPanel();
+		JLabel lblpatientid = new JLabel("Patient's Username");
+		lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblstaffid = new JLabel("    Staff's Username");
+		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblsubject = new JLabel("                   Subject");
+		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblcomment = new JLabel("        Comment");
+		lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField patientid = new JTextField(15);
+		JTextField staffid = new JTextField(15);
+		JTextField subject = new JTextField(15);
+		JTextArea comment = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(comment);
+		JButton addComment = new JButton("Add");
+
+		commentpanel.add(lblpatientid);
+		commentpanel.add(patientid);
+		commentpanel.add(lblstaffid);
+		commentpanel.add(staffid);
+		commentpanel.add(lblsubject);
+		commentpanel.add(subject);
+		commentpanel.add(lblcomment);
+		commentpanel.add(scrollPane);
+		commentpanel.add(addComment);
+		addComment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					SADB.addComment(patientid.getText(), staffid.getText(), subject.getText(), comment.getText());
+					getContentPane().removeAll();
+					JLabel message = new JLabel("You have successfully added the comment!");
+					message.setFont(new Font("Arial", Font.PLAIN, 14));
+					message.setForeground(Color.blue);
+					message.setBounds(340, 470, 350, 50);
+					getContentPane().add(commentForm());
+					getContentPane().add(message);
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		commentpanel.setBounds(350, 150, 350, 210);
+		commentpanel.setOpaque(false);
+		commentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		return commentpanel;
+	}
+
+	private JPanel commentsForm(ResultSet rs) {
+		try {
+			JPanel commentpanel = new JPanel();
+			rs.next();
+			JLabel lblid = new JLabel("    ID");
+			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpatientid = new JLabel("Patient's Username");
+			lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstaffid = new JLabel("Staff ID");
+			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblsubject = new JLabel("Subject");
+			lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblcomment = new JLabel("Comment");
+			lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField id = new JTextField(rs.getString("CommentID"));
+			id.setEditable(false);
+			JTextField patientid = new JTextField(rs.getString("PatientID"));
+			JTextField staffid = new JTextField(rs.getString("StaffID"));
+			JTextField subject = new JTextField(rs.getString("Subject"));
+			JTextField comment = new JTextField(rs.getString("Comment"));
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.updateComment(Integer.parseInt(id.getText()), patientid.getText(), staffid.getText(),
+								subject.getText(), comment.getText());
+						getContentPane().removeAll();
+						getContentPane().add(searchCommentForm());
+						getContentPane().add(commentsForm(SADB.printComment(Integer.parseInt(id.getText()))));
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			JButton delete = new JButton("Delete");
+			delete.setFont(new Font("Arial", Font.PLAIN, 14));
+			delete.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						SADB.deleteComment(Integer.parseInt(id.getText()));
+						getContentPane().removeAll();
+						getContentPane().add(searchCommentForm());
+						revalidate();
+						repaint();
+						pack();
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			commentpanel.add(lblid);
+			commentpanel.add(id);
+			commentpanel.add(lblpatientid);
+			commentpanel.add(patientid);
+			commentpanel.add(lblstaffid);
+			commentpanel.add(staffid);
+			commentpanel.add(lblsubject);
+			commentpanel.add(subject);
+			commentpanel.add(lblcomment);
+			commentpanel.add(comment);
+			commentpanel.add(update);
+			commentpanel.add(delete);
+			commentpanel.setBounds(350, 150, 250, 250);
+			commentpanel.setOpaque(false);
+			return commentpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchCommentForm() {
+		JPanel commentpanel = new JPanel();
+		JLabel lblid = new JLabel("Search Comment with ID: ");
+		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField id = new JTextField(15);
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ResultSet rs = SADB.printComment(Integer.parseInt(id.getText()));
+					getContentPane().removeAll();
+					getContentPane().add(searchCommentForm());
+					getContentPane().add(commentsForm(rs));
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		commentpanel.add(lblid);
+		commentpanel.add(id);
+		commentpanel.add(search);
+		commentpanel.setBounds(50, 150, 900, 150);
+		commentpanel.setOpaque(false);
+		return commentpanel;
+	}
+
+	private JPanel informRelativesForm() {
+		JPanel informpanel = new JPanel();
+		JLabel lblpatientid = new JLabel("Patient's Username");
+		lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblstaffid = new JLabel("    Staff's Username");
+		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblsubject = new JLabel("                  Subject");
+		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblmessage = new JLabel("Message");
+		lblmessage.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField patientid = new JTextField(15);
+		JTextField staffid = new JTextField(15);
+		JTextField subject = new JTextField(15);
+		JTextArea msg = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(msg);
+		JButton addInform = new JButton("Inform");
+
+		informpanel.add(lblpatientid);
+		informpanel.add(patientid);
+		informpanel.add(lblstaffid);
+		informpanel.add(staffid);
+		informpanel.add(lblsubject);
+		informpanel.add(subject);
+		informpanel.add(lblmessage);
+		informpanel.add(scrollPane);
+		informpanel.add(addInform);
+		addInform.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					SADB.informRelatives(patientid.getText(), staffid.getText(), subject.getText(), msg.getText());
+					getContentPane().removeAll();
+					JLabel message = new JLabel("You have successfully informed the relatives!");
+					message.setFont(new Font("Arial", Font.PLAIN, 14));
+					message.setBounds(340, 470, 350, 50);
+					message.setForeground(Color.blue);
+					getContentPane().add(informRelativesForm());
+					getContentPane().add(message);
+					revalidate();
+					repaint();
+					pack();
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		informpanel.setBounds(350, 150, 320, 200);
+		informpanel.setOpaque(false);
+		informpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		return informpanel;
+	}
 
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
 		JTable results = new JTable(JDBC.buildTableModel(rs));
