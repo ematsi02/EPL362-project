@@ -55,6 +55,22 @@ public class JDBC {
 		return new DefaultTableModel(data, columnNames);
 	}
 
+	public ResultSet login(String Username, String Password, String Role) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query;
+			if (Role.equals("Patient"))
+				query = "SELECT * FROM Patient WHERE PatientID='" + Username + "' AND Password='" + Password + "';";
+			else
+				query = "SELECT * FROM Staff WHERE StaffID='" + Username + "' AND Password='" + Password + "';";
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
 	public void signup(String username, String password, String name, String surname, String role, int phone,
 			String email, String address) {
 		try {
@@ -69,6 +85,34 @@ public class JDBC {
 			System.out.print("\nSQL State: ");
 			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
+		}
+	}
+
+	public void changepassword(String username, String oldpassword, String newpassword, String role) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query;
+			if (role.equals("Patient"))
+				query = "UPDATE Patient SET Password='" + newpassword + "' WHERE PatientID='" + username
+						+ "' AND Password='" + oldpassword + "';";
+			else
+				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username
+						+ "' AND Password='" + oldpassword + "';";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public ResultSet checksignup(String Username) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "SELECT StaffID FROM Staff WHERE StaffID='" + Username + "';";
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 
@@ -98,16 +142,16 @@ public class JDBC {
 			Statement stmt = conn.createStatement();
 			ResultSet rs;
 			if (role.equals("Patient"))
-			rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='"+username+"';");
+				rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='" + username + "';");
 			else
-				rs = stmt.executeQuery("SELECT * FROM Staff WHERE StaffID='"+username+"';");
+				rs = stmt.executeQuery("SELECT * FROM Staff WHERE StaffID='" + username + "';");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
 		}
 	}
-	
+
 	public void addPatient(String name, String surname, String username, String password, int phone, String email,
 			String address) {
 		try {
@@ -158,7 +202,7 @@ public class JDBC {
 	public ResultSet printPatient(String username) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='"+username+"';");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='" + username + "';");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -218,7 +262,7 @@ public class JDBC {
 	public ResultSet printRelative(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Relative WHERE RelativeID="+id+";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Relative WHERE RelativeID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -233,7 +277,9 @@ public class JDBC {
 					+ patientid + "', '" + type + "', '" + shortDescription + "', '" + description + "', '" + date
 					+ "');";
 			stmt.executeUpdate(query);
-
+			Statement stmt2 = conn.createStatement();
+			String query2 = "UPDATE Patient SET NumOfIncidents=NumOfIncidents+1 WHERE PatientID='"+ patientid + "';";
+			stmt2.executeUpdate(query2);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
 			System.out.print(e.getErrorCode());
@@ -277,7 +323,7 @@ public class JDBC {
 	public ResultSet printIncident(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Incident WHERE IncidentID="+id+";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Incident WHERE IncidentID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -337,7 +383,7 @@ public class JDBC {
 	public ResultSet printTreatment(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Treatment WHERE TreatmentID="+id+";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Treatment WHERE TreatmentID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -393,7 +439,7 @@ public class JDBC {
 	public ResultSet printMedication(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Medication WHERE MedicationID="+id+";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Medication WHERE MedicationID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -454,7 +500,7 @@ public class JDBC {
 	public ResultSet printConsultation(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Consultation WHERE ConsultationID="+id+";");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Consultation WHERE ConsultationID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -462,47 +508,75 @@ public class JDBC {
 		}
 	}
 
-	public ResultSet login(String Username, String Password, String Role) {
+	public void addComment(String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query;
-			if (Role.equals("Patient"))
-				query = "SELECT * FROM Patient WHERE PatientID='" + Username + "' AND Password='" + Password + "';";
-			else
-				query = "SELECT * FROM Staff WHERE StaffID='" + Username + "' AND Password='" + Password + "';";
-			ResultSet rs = stmt.executeQuery(query);
-			return rs;
+			String query = "INSERT INTO Comments (PatientID, StaffID, Comment) VALUES ('" + patientid + "', '" + staffid
+					+ "', '" + subject + "', '" + comment + "');";
+			stmt.executeUpdate(query);
+
 		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
-			return null;
 		}
 	}
 
-	public void changepassword(String username, String oldpassword, String newpassword, String role) {
+	public void updateComment(int commentid, String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query;
-			if (role.equals("Patient"))
-				query = "UPDATE Patient SET Password='" + newpassword + "' WHERE PatientID='" + username
-						+ "' AND Password='" + oldpassword + "';";
-			else
-				query = "UPDATE Staff SET Password='" + newpassword + "' WHERE StaffID='" + username
-						+ "' AND Password='" + oldpassword + "';";
+			String query = "UPDATE Comments SET PatientID='" + patientid + "', StaffID='" + staffid + "', Subject='"
+					+ subject + "', Comment='" + comment + "' WHERE CommentID=" + commentid + ";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
 		}
 	}
 
-	public ResultSet checksignup(String Username) {
+	public void deleteComment(int commentid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "SELECT StaffID FROM Staff WHERE StaffID='" + Username + "';";
-			ResultSet rs = stmt.executeQuery(query);
+			String query = "DELETE FROM Comments WHERE CommentID=" + commentid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public ResultSet printComment(int commentid) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Comments WHERE CommentID=" + commentid + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
+		}
+	}
+
+	public void informRelatives(String patientid, String staffid, String subject, String message) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "INSERT INTO InformRelatives (PatientID, StaffID, Subject, Message) VALUES ('" + patientid
+					+ "', '" + staffid + "', '" + subject + "', '" + message + "');";
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
 		}
 	}
 }
