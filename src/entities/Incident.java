@@ -16,20 +16,8 @@ public class Incident implements java.io.Serializable   {
 	public String ShortDescription;
 	public String Description;
 	public String Date;
+	public static ArrayList<String> columnNames = fillColumnNames();
 
-	public Incident() {
-		new Incident(0, null, null, null, null, null);
-	}
-
-	public Incident(int incidentID, String patientID, String incidentType, String shortDescription, String description,
-			String date) {
-		this.IncidentID = incidentID;
-		this.PatientID = patientID;
-		this.IncidentType = incidentType;
-		this.ShortDescription = shortDescription;
-		this.Description = description;
-		this.Date = date;
-	}
 	public List<Incident> convertRsToList(ResultSet rs) throws SQLException{
 		List<Incident> Incident=new ArrayList<Incident>();
 		while(rs.next()) {
@@ -44,5 +32,16 @@ public class Incident implements java.io.Serializable   {
 			Incident.add(incident);
 		} 
 		return Incident;
+	}
+	
+	private static ArrayList<String> fillColumnNames() {
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("IncidentID");
+		columnNames.add("PatientID");
+		columnNames.add("IncidentType");
+		columnNames.add("ShortDescription");
+		columnNames.add("Description");
+		columnNames.add("Date");
+		return columnNames;
 	}
 }
