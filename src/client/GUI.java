@@ -1460,10 +1460,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return medicationpanel;
 	}
 
-	private JPanel medicationsForm(ResultSet rs) {
+	private JPanel medicationsForm(List<Medication> medication) {
 		try {
 			JPanel medicationpanel = new JPanel();
-			rs.next();
 			JLabel lblid = new JLabel("    ID");
 			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblbrand = new JLabel("Brand");
@@ -1474,22 +1473,40 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbleffects = new JLabel("Known Side Effects");
 			lbleffects.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(rs.getString("MedicationID"));
+			JTextField id = new JTextField(Integer.toString(medication.get(0).MedicationID));
 			id.setEditable(false);
-			JTextField brand = new JTextField(rs.getString("Brand"));
-			JTextField name = new JTextField(rs.getString("Name"));
-			JTextField description = new JTextField(rs.getString("Description"));
-			JTextField effects = new JTextField(rs.getString("KnownSideEffects"));
+			JTextField brand = new JTextField(medication.get(0).Brand);
+			JTextField name = new JTextField(medication.get(0).Name);
+			JTextField description = new JTextField(medication.get(0).Description);
+			JTextField effects = new JTextField(medication.get(0).KnownSideEffects);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						out.println("updateMedication");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(brand.getText());
+						out.println(name.getText());
+						out.println(description.getText());
+						out.println(effects.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("medicationUpdated")) {
+								getContentPane().add(searchMedicationForm());
+								List<Medication> ls = new ArrayList<Medication>();
+								ls = (List<Medication>) inObject.readObject();
+								getContentPane().add(medicationsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 						SADB.updateMedication(Integer.parseInt(id.getText()), brand.getText(), name.getText(),
 								description.getText(), effects.getText());
 						getContentPane().removeAll();
 						getContentPane().add(searchMedicationForm());
-						getContentPane().add(medicationsForm(SADB.printMedication(Integer.parseInt(id.getText()))));
+					//	getContentPane().add(medicationsForm(SADB.printMedication(Integer.parseInt(id.getText()))));
 						revalidate();
 						repaint();
 						pack();
@@ -1545,13 +1562,20 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					ResultSet rs = SADB.printMedication(Integer.parseInt(id.getText()));
-					getContentPane().removeAll();
-					getContentPane().add(searchMedicationForm());
-					getContentPane().add(medicationsForm(rs));
-					revalidate();
-					repaint();
-					pack();
+					out.println("searchMedication");
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("medicationSearched")) {
+							getContentPane().add(searchMedicationForm());
+							List<Medication> ls = (List<Medication>) inObject.readObject();
+							getContentPane().add(medicationsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}					
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
