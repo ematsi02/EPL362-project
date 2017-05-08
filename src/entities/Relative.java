@@ -16,21 +16,7 @@ public class Relative implements java.io.Serializable  {
 	public String Email;
 	public String Address;
 	public String Relationship;
-	
-	public Relative() {
-		new Relative(0,null, null, null, 0, null, null, null);
-	}
-
-	public Relative(int relativeID,String patientID,String name,String surname,int phone,String email,String address,String relatioship){
-		this.RelativeID = relativeID;
-		this.PatientID = patientID;
-		this.Name=name;
-		this.Surname=surname;
-		this.Phone=phone;
-		this.Email=email;
-		this.Address=address;
-		this.Relationship=relatioship;	
-	}
+	public static ArrayList<String> columnNames = fillColumnNames();
 	
 	public List<Relative> convertRsToRelatList(ResultSet rs) throws SQLException{
 		List<Relative> Relatives=new ArrayList<Relative>();
@@ -51,4 +37,16 @@ public class Relative implements java.io.Serializable  {
 		return Relatives;
 	}
 
+	private static ArrayList<String> fillColumnNames() {
+		ArrayList<String> columnNames = new ArrayList<String>();
+		columnNames.add("RelativeID");
+		columnNames.add("PatientID");
+		columnNames.add("Name");
+		columnNames.add("Surname");
+		columnNames.add("Phone");
+		columnNames.add("Email");
+		columnNames.add("Address");
+		columnNames.add("Relationship");
+		return columnNames;
+	}
 }
