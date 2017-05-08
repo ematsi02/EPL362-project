@@ -599,4 +599,79 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	// REPORTS
+
+	/**
+	 * This function returns the ResultSet of four reports, depending on the
+	 * parameters : (A) Attended Daily Consultations; if attended=true and
+	 * myDate!=null, (B) Attended General Consultations; if attended=true and
+	 * myDate==null, (C) Non Attended Daily Consultations; if attended=false and
+	 * myDate!=null (D) Non Attended General Consultations; if attended=false
+	 * and myDate==null
+	 * 
+	 * @param boolean
+	 *            attended : true if the patient attended the consultations,
+	 *            false if the patient didn't attend the consultations
+	 * 
+	 * @param String
+	 *            myDate : the date of the consultations in the form
+	 *            "yyyy-mm-dd", or null if general instead of daily report is
+	 *            requested
+	 */
+	public ResultSet getConsultationReport(boolean attended, String myDate) {
+		try {
+			Statement stmt = conn.createStatement();
+			String attend = "'0'";
+			if (attended)
+				attend = "'1'";
+			String query = "Select Consultation.ConsultationID, Consultation.Subject, "
+					+ "Consultation.Date, Consultation.Time, Patient.PatientID, "
+					+ "Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, "
+					+ "Staff.Surname, Consultation.MedicalRecordUpdated From Patient, "
+					+ "Consultation, Staff Where Consultation.Attended=" + attend;
+			if (myDate != null) { // Daily
+				query += "AND Consultation.Date='" + myDate + "' ";
+			}
+			query += "AND Patient.PatientID=Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * This function returns the ResultSet of four reports, depending on the
+	 * parameters : (A) Non Updated Daily Medical Records; if myDate!=null and
+	 * (B) Non Updated General Medical Records; myDate==null
+	 * 
+	 * @param String
+	 *            myDate : the date of the consultations in the form
+	 *            "yyyy-mm-dd", or null if general instead of daily report is
+	 *            requested
+	 */
+	public ResultSet getUpdatedMedicalRecordsReport(String myDate) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "Select Consultation.ConsultationID, Consultation.Subject, "
+					+ "Consultation.Date, Consultation.Time, Patient.PatientID, "
+					+ "Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, "
+					+ "Staff.Surname, Consultation.MedicalRecordUpdated From Patient, "
+					+ "Consultation, Staff Where Consultation.Attended='1'";
+			if (myDate != null) { // Daily
+				query += "AND Consultation.Date='" + myDate + "' ";
+			}
+			query += "AND Consultation.MedicalRecordUpdated='0' AND Patient.PatientID="
+					+ "Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
 }
