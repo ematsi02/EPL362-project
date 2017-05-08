@@ -374,10 +374,19 @@ public class PsychiatryServer implements java.io.Serializable {
 			file.println(dtf.format(now));
 			file.flush();
 			outToClient.println("treatmentAdded");//searched incident
-
-			
 		}
-	
+		void searchMedication() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());			
+			ResultSet rs=jdbc.printIncident(id);
+			file.print("Medication with id "+id+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("medicationSearched");//searched medication
+			outToClient.flush();
+			List<Medication> ls = medication.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("search after");
+		}
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
