@@ -58,7 +58,6 @@ AND Consultation.StaffID=Staff.StaffID;
 Non Updated General Medical Records
 
 Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='1'
 AND Consultation.MedicalRecordUpdated='0'
