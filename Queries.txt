@@ -92,7 +92,7 @@ String medName="Medication 1";
 Select Patient.* 
 From Patient, Treatment, TreatmentMedication, Medication
 Where Medication.Name=medName
-AND Patients.PatientID=Treatment.PatientID
+AND Patient.PatientID=Treatment.PatientID
 AND Treatment.TreatmentID=TreatmentMedication.TreatmentID
 AND TreatmentMedication.MedicationID=Medication.MedicationID
 Group By Patient.PatientID;
@@ -102,7 +102,7 @@ Group By Patient.PatientID;
 // ---------
 Number of Patients Attended
 
-Select COUNT(Consultation.PatientID)
+Select COUNT(Consultation.PatientID), Consultation.Date
 From Consultation
 Where Consultation.Attended='1'
 Group By Consultation.Date
