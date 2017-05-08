@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.Incident;
+import entities.Medication;
 import entities.Patient;
 import entities.Relative;
+import entities.Treatment;
 
 public class PsychiatryServer implements java.io.Serializable {
 	/**
@@ -38,6 +40,8 @@ public class PsychiatryServer implements java.io.Serializable {
 	Patient patient;
 	Relative relative;
 	Incident incident;
+	Treatment treatment;
+	Medication medication;
 
 
 	/*
@@ -360,7 +364,7 @@ public class PsychiatryServer implements java.io.Serializable {
 			outObject.writeObject(ls);
 			System.out.println("incident search after");			
 		}
-		
+
 		void addTreatment()throws IOException{
 			String patientid=inFromClient.readLine();
 			String startDate=inFromClient.readLine();
@@ -368,16 +372,99 @@ public class PsychiatryServer implements java.io.Serializable {
 			String diagnosis=inFromClient.readLine();
 			String description=inFromClient.readLine();
 			String staffid=inFromClient.readLine();
-			
 			jdbc.addTreatment(patientid,startDate,endDate, diagnosis,description, staffid);
 			file.print("Treatment for "+patientid+" added... ");
 			file.println(dtf.format(now));
 			file.flush();
-			outToClient.println("treatmentAdded");//searched incident
+			outToClient.println("treatmentAdded");//added treatment
 		}
+		void updateTreatment() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			String patientid = inFromClient.readLine();
+			String startDate = inFromClient.readLine();
+			String endDate = inFromClient.readLine();
+			String diagnosis = inFromClient.readLine();
+			String description = inFromClient.readLine();		
+			String staffid = inFromClient.readLine();
+			jdbc.updateTreatment(id,patientid,startDate,endDate,diagnosis,description,staffid);
+			file.print(patientid+"treatment's "+id+" updated... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("treatmentUpdated");//updated treatment
+			outToClient.flush();
+			ResultSet rs=jdbc.printTreatment(id);
+			List<Treatment> ls = treatment.convertRsToList(rs);
+			outObject.writeObject(ls);	
+			System.out.println("esteila kai to resultset");
+		}
+		void deleteTreatment() throws IOException {
+			int id = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteTreatment(id);
+			
+			file.print("treatment with id "+id+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("treatmentDeleted");//deleted treatment
+			outToClient.flush();
+		}
+		void searchTreatment() throws IOException, SQLException {
+			int id = Integer.parseInt(inFromClient.readLine());			
+			ResultSet rs=jdbc.printTreatment(id);
+			file.print("treatment with id "+id+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("treatmentSearched");//searched treatment
+			outToClient.flush();
+			List<Treatment> ls = treatment.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("incident search after");			
+		}
+		
+		void addMedication()throws IOException{
+			String brand=inFromClient.readLine();
+			String name=inFromClient.readLine();
+			String description=inFromClient.readLine();
+			String effects=inFromClient.readLine();
+			int dose=Integer.parseInt(inFromClient.readLine());				
+			jdbc.addMedication(brand,name,description, effects,dose);
+			file.print("Medication with name "+name+" added... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("medicationAdded");//added medication
+		}
+		
+		void updateMedication() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			String brand = inFromClient.readLine();
+			String name = inFromClient.readLine();
+			String description = inFromClient.readLine();		
+			String effects = inFromClient.readLine();
+			int dose = Integer.parseInt(inFromClient.readLine());
+			jdbc.updateMedication(id,brand,name,description,effects,dose);
+			file.print("Medication "+id+" updated... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("medicationUpdated");//updated medication
+			outToClient.flush();
+			ResultSet rs=jdbc.printTreatment(id);
+			List<Medication> ls = medication.convertRsToList(rs);
+			outObject.writeObject(ls);	
+			System.out.println("esteila kai to resultset");
+		}
+		void deleteMedication() throws IOException {
+			int id = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteMedication(id);
+			
+			file.print("medication with id "+id+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("medicationDeleted");//deleted medication
+			outToClient.flush();
+		}
+		
 		void searchMedication() throws IOException, SQLException{
 			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printIncident(id);
+			ResultSet rs=jdbc.printMedication(id);
 			file.print("Medication with id "+id+" searched... ");
 			file.println(dtf.format(now));
 			file.flush();
@@ -387,6 +474,8 @@ public class PsychiatryServer implements java.io.Serializable {
 			outObject.writeObject(ls);
 			System.out.println("search after");
 		}
+		
+		
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -404,6 +493,8 @@ public class PsychiatryServer implements java.io.Serializable {
 				patient=new Patient();
 				relative=new Relative();
 				incident=new Incident();
+				treatment=new Treatment();
+				medication=new Medication();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -445,7 +536,20 @@ public class PsychiatryServer implements java.io.Serializable {
 						searchIncident();
 					if (messageFromClient.equals("addTreatment"))
 						addTreatment();
-					
+					if (messageFromClient.equals("updateTreatment"))
+						updateTreatment();
+					if (messageFromClient.equals("deleteTreatment"))
+						deleteTreatment();
+					if (messageFromClient.equals("searchTreatment"))
+						searchTreatment();
+					if (messageFromClient.equals("addMedication"))
+						addMedication();
+					if (messageFromClient.equals("updateMedication"))
+						updateMedication();
+					if (messageFromClient.equals("deleteMedication"))
+						deleteMedication();
+					if (messageFromClient.equals("searchMedication"))
+						searchMedication();
 					
 				}
 
