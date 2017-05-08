@@ -3,10 +3,10 @@
 // ---------
 Attended Daily Consultations
 
-String MyDate="2017-05-05";
-String MyDate="2017-05-14";
+String MyDate="'2017-05-05'";
+String MyDate="'2017-05-14'";
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='1' AND Consultation.Date=MyDate
 AND Patient.PatientID=Consultation.PatientID 
@@ -15,7 +15,7 @@ AND Consultation.StaffID=Staff.StaffID;
 // ---------
 Attended General Consultations
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='1'
 AND Patient.PatientID=Consultation.PatientID 
@@ -24,10 +24,10 @@ AND Consultation.StaffID=Staff.StaffID;
 // ---------
 Non Attended Daily Consultations
 
-String MyDate="2017-05-05";
-String MyDate="2017-05-14";
+String MyDate="'2017-05-05'";
+String MyDate="'2017-05-14'";
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='0' AND Consultation.Date=MyDate
 AND Patient.PatientID=Consultation.PatientID 
@@ -36,7 +36,7 @@ AND Consultation.StaffID=Staff.StaffID;
 // ---------
 Non Attended General Consultations
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='0'
 AND Patient.PatientID=Consultation.PatientID 
@@ -45,9 +45,9 @@ AND Consultation.StaffID=Staff.StaffID;
 // ---------
 Non Updated Daily Medical Records
 
-String MyDate="2017-05-14";
+String MyDate="'2017-05-14'";
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='1' AND Consultation.Date=MyDate
 AND Consultation.MedicalRecordUpdated='0'
@@ -57,12 +57,14 @@ AND Consultation.StaffID=Staff.StaffID;
 // ---------
 Non Updated General Medical Records
 
-Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
+Select Consultation.ConsultationID, Consultation.Subject, Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated
 From Patient, Consultation, Staff
 Where Consultation.Attended='1'
 AND Consultation.MedicalRecordUpdated='0'
 AND Patient.PatientID=Consultation.PatientID 
 AND Consultation.StaffID=Staff.StaffID;
+
 
 // --- Patient Reports  Menu
 
@@ -87,7 +89,7 @@ Group By Patient.PatientID;
 // ---------
 Patients with specific Treatment/Medication
 
-String medName="Medication 1";
+String medName="'Medication 1'";
 
 Select Patient.* 
 From Patient, Treatment, TreatmentMedication, Medication
