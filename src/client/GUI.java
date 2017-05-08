@@ -1230,7 +1230,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblendDate.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldiagnosis = new JLabel("              Diagnosis");
 		lbldiagnosis.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbldescription = new JLabel("Description");
+		JLabel lbldescription = new JLabel("            Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblstaffid = new JLabel("   Staff's Username");
 		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1240,11 +1240,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JDateChooser endDate = new JDateChooser();
 		endDate.setDateFormatString("yyyy-MM-dd");
 		JTextField diagnosis = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
-		JScrollPane scrollPane = new JScrollPane(description);
+		JTextField description = new JTextField(15);
 		JTextField staffid = new JTextField(15);
 		JButton addTreatment = new JButton("Add");
-
 		treatmentpanel.add(lblpatientid);
 		treatmentpanel.add(patientid);
 		treatmentpanel.add(lblstartDate);
@@ -1254,32 +1252,42 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.add(lbldiagnosis);
 		treatmentpanel.add(diagnosis);
 		treatmentpanel.add(lbldescription);
-		treatmentpanel.add(scrollPane);
+		treatmentpanel.add(description);
 		treatmentpanel.add(lblstaffid);
 		treatmentpanel.add(staffid);
 		treatmentpanel.add(addTreatment);
 		addTreatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.addTreatment(patientid.getText(), DateFormat.getDateInstance().format(startDate.getDate()),
-							DateFormat.getDateInstance().format(endDate.getDate()), diagnosis.getText(),
-							description.getText(), staffid.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully added the treatment!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setForeground(Color.blue);
-					message.setBounds(340, 470, 350, 50);
-					getContentPane().add(treatmentForm());
-					getContentPane().add(message);
-					revalidate();
-					repaint();
-					pack();
+					out.println("addTreatment");
+					out.println(patientid.getText());
+					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+					out.println(dateFormat.format(startDate.getDate()));
+					out.println(dateFormat.format(endDate.getDate()));
+					out.println(diagnosis.getText());
+					out.println(description.getText());
+					out.println(staffid.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("treatmentAdded")) {
+							JLabel message = new JLabel("You have successfully added the treatment!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(340, 470, 350, 50);
+							getContentPane().add(treatmentForm());
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
 			}
 		});
-		treatmentpanel.setBounds(350, 150, 350, 250);
+		treatmentpanel.setBounds(350, 150, 350, 200);
 		treatmentpanel.setOpaque(false);
 		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return treatmentpanel;
