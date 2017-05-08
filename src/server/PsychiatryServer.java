@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
+import entities.MedicationReaction;
 
 public class PsychiatryServer implements java.io.Serializable {
 	/**
@@ -44,6 +44,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	Treatment treatment;
 	Medication medication;
 	Consultation consultation;
+	MedicationReaction reaction;
 
 
 	/*
@@ -536,6 +537,64 @@ public class PsychiatryServer implements java.io.Serializable {
 			System.out.println("search after");
 			
 		}
+	
+	void addReaction() throws IOException{
+			String patientid = inFromClient.readLine();
+			int medicationid = Integer.parseInt(inFromClient.readLine());
+			String reactionType = inFromClient.readLine();
+			String description = inFromClient.readLine();
+			jdbc.addMedicationReaction(patientid, medicationid, reactionType, description);
+			
+			file.print("reaction of patient with username "+patientid+" added with medication id "+medicationid+"... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("reactionAdded");//add patient
+			outToClient.flush();
+			System.out.println("telos");
+		}
+		
+		void updateReaction() throws IOException, SQLException{
+			String patientid = inFromClient.readLine();
+			int medicationid = Integer.parseInt(inFromClient.readLine());
+			String reactionType = inFromClient.readLine();
+			String description = inFromClient.readLine();
+			System.out.println("update before");
+			jdbc.updateMedicationReaction(patientid, medicationid, reactionType, description);
+			System.out.println("update after");
+			
+			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" updated ... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("reactionUpdated");//updated patient
+			outToClient.flush();
+			ResultSet rs=jdbc.printMedicationReaction(patientid, medicationid);
+			List<MedicationReaction> ls = reaction.convertRsToList(rs);
+			outObject.writeObject(ls);	}
+		
+		void searchReaction() throws IOException, SQLException{
+			String patientid = inFromClient.readLine();
+			int medicationid = Integer.parseInt(inFromClient.readLine());
+			ResultSet rs=jdbc.printMedicationReaction(patientid, medicationid);
+			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("reactionSearched");//searched patient
+			outToClient.flush();
+			List<MedicationReaction> ls = reaction.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("search after");
+		}
+		void deleteReaction()throws IOException, SQLException{
+			String patientid = inFromClient.readLine();
+			int medicationid = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteMedicationReaction(patientid, medicationid);
+			
+			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("reactionDeleted");//deleted patient
+			outToClient.flush();
+		}	
 		
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -557,6 +616,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				treatment=new Treatment();
 				medication=new Medication();
 				consultation=new Consultation();
+				reaction=new MedicationReaction();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -620,6 +680,14 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteConsultation();
 					if (messageFromClient.equals("searchConsultation"))
 						searchConsultation();
+					if (messageFromClient.equals("addReaction"))
+						addReaction();
+					if (messageFromClient.equals("searchReaction"))
+						searchReaction();
+					if (messageFromClient.equals("updateReaction"))
+						updateReaction();
+					if (messageFromClient.equals("deleteReaction"))
+						deleteReaction();
 					
 				}
 
