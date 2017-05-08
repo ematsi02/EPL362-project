@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import entities.Comment;
 import entities.Consultation;
 import entities.Incident;
 import entities.Medication;
@@ -45,6 +47,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	Medication medication;
 	Consultation consultation;
 	MedicationReaction reaction;
+	Comment comment;
 
 
 	/*
@@ -595,7 +598,55 @@ public class PsychiatryServer implements java.io.Serializable {
 			outToClient.println("reactionDeleted");//deleted patient
 			outToClient.flush();
 		}	
-		
+		void addComment() throws IOException{
+			String patientid = inFromClient.readLine();
+			String staffid = inFromClient.readLine();
+			String subject = inFromClient.readLine();
+			String comment = inFromClient.readLine();
+			jdbc.addComment(patientid, staffid, subject, comment);
+			file.print("comment for patient with username "+patientid+" added...");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("commentAdded");//add patient
+			outToClient.flush();
+		}
+		void updateComment() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			String patientid = inFromClient.readLine();
+			String staffid = inFromClient.readLine();
+			String subject = inFromClient.readLine();
+			String comm = inFromClient.readLine();
+			jdbc.updateComment(id,patientid, staffid, subject, comm);
+			file.print("comment for patient with username "+patientid+" updated ... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("commentUpdated");//updated patient
+			outToClient.flush();
+			ResultSet rs=jdbc.printComment(id);
+			List<Comment> ls = comment.convertRsToList(rs);
+			outObject.writeObject(ls);	
+			}
+		void deleteComment()throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());
+			jdbc.deleteComment(id);
+			file.print("comment "+id+" deleted... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("commentDeleted");//deleted patient
+			outToClient.flush();
+		}	
+		void searchComment() throws IOException, SQLException{
+			int id = Integer.parseInt(inFromClient.readLine());			
+			ResultSet rs=jdbc.printComment(id);
+			file.print("Comment with id "+id+" searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("commentSearched");//searched medication
+			outToClient.flush();
+			List<Comment> ls = comment.convertRsToList(rs);
+			outObject.writeObject(ls);
+			System.out.println("search after");
+		}
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -617,6 +668,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				medication=new Medication();
 				consultation=new Consultation();
 				reaction=new MedicationReaction();
+				comment = new Comment();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -688,7 +740,14 @@ public class PsychiatryServer implements java.io.Serializable {
 						updateReaction();
 					if (messageFromClient.equals("deleteReaction"))
 						deleteReaction();
-					
+					if (messageFromClient.equals("addComment"))
+						addComment();
+					if (messageFromClient.equals("updateComment"))
+						updateComment();
+					if (messageFromClient.equals("deleteComment"))
+						deleteComment();
+					if (messageFromClient.equals("searchComment"))
+						searchComment();
 				}
 
 			}
