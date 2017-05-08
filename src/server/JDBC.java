@@ -391,11 +391,11 @@ public class JDBC {
 		}
 	}
 
-	public void addMedication(String brand, String name, String description, String effects) {
+	public void addMedication(String brand, String name, String description, String effects,int dose) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Medication (Brand, Name, Description, KnownSideEffects) VALUES ('" + brand
-					+ "', '" + name + "', '" + description + "', '" + effects + "');";
+			String query = "INSERT INTO Medication (Brand, Name, Description, KnownSideEffects,MaxDose) VALUES ('" + brand
+					+ "', '" + name + "', '" + description + "', '" + effects + "', "+dose+");";
 			stmt.executeUpdate(query);
 
 		} catch (SQLException e) {
@@ -407,11 +407,12 @@ public class JDBC {
 		}
 	}
 
-	public void updateMedication(int medicationid, String brand, String name, String description, String effects) {
+	public void updateMedication(int medicationid, String brand, String name, String description,
+			String effects,int dose) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "UPDATE Medication SET Brand='" + brand + "', Name='" + name + "', Description='"
-					+ description + "', KnownSideEffects='" + effects + "' WHERE MedicationID=" + medicationid + ";";
+					+ description + "', KnownSideEffects='" + effects + "', MaxDose=" + dose + " WHERE MedicationID=" + medicationid + ";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -442,6 +443,25 @@ public class JDBC {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Medication WHERE MedicationID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public ResultSet erasmia() {
+		try {
+			Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			String q = "SELECT Consultation.ConsultationID, Consultation.Subject, "
+					+ "Consultation.Date, Consultation.Time, Patient.PatientID, Patient.Name, "
+					+ "Patient.Surname, Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated "
+					+ "FROM Patient, Consultation, Staff "
+					+ "WHERE Consultation.Attended='0' AND Consultation.Date='2017-05-14' "
+					+ "AND Patient.PatientID=Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
+			q = "Select * from Patient, Consultation, Staff where Patient.PatientID=Consultation.PatientID AND Consultation.StaffID=Staff.StaffID;";
+			ResultSet rs = stmt.executeQuery("Select * from Patient;");
+			return rs;
+		} catch (SQLException e) {
+			System.out.println("throw exception from jdbc");
 			System.out.println(e.getMessage());
 			return null;
 		}
