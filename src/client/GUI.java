@@ -291,8 +291,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForManagement());
-						} else if (messageFromServer.equals("6")) {// user is
-																	// management
+						} else if (messageFromServer.equals("Patient")) {// user is
+																	// patient
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForPatient());
