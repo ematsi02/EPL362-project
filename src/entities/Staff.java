@@ -69,6 +69,7 @@ public class Staff implements java.io.Serializable {
 			Staff patient = new Staff();
 			patient.StaffID = rs.getString("StaffID");
 			patient.Password = rs.getString("Password");
+			patient.StaffType = rs.getString("StaffType");
 			patient.Name = rs.getString("Name");
 			patient.Surname = rs.getString("Surname");
 			patient.Phone = rs.getInt("Phone");
@@ -84,6 +85,7 @@ public class Staff implements java.io.Serializable {
 		ArrayList<String> columnNames = new ArrayList<String>();
 		columnNames.add("StaffID");
 		columnNames.add("Password");
+		columnNames.add("StaffType");
 		columnNames.add("Name");
 		columnNames.add("Surname");
 		columnNames.add("Phone");
