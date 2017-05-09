@@ -705,12 +705,15 @@ public class JDBC {
 	/**
 	 * This function returns the ResultSet of four reports, depending on the
 	 * parameters : (A) Non Updated Daily Medical Records; if myDate!=null and
-	 * (B) Non Updated General Medical Records; myDate==null
+	 * (B) Non Updated General Medical Records; myDate==null. The ResultSet
+	 * returned gets info about ConsultationReport records (object).
 	 * 
 	 * @param String
 	 *            myDate : the date of the consultations in the form
 	 *            "yyyy-mm-dd", or null if general instead of daily report is
 	 *            requested
+	 *            
+	 * @return ResultSet : Values, the result of the query
 	 */
 	public ResultSet getUpdatedMedicalRecordsReport(String myDate) {
 		try {
@@ -733,7 +736,7 @@ public class JDBC {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * This function returns the ResultSet of three reports, depending on the
 	 * parameters : (A) Changes of Patient Profiles; if option==1 and
@@ -751,6 +754,8 @@ public class JDBC {
 	 *            value : null if option 1 is selected, Name of a condition if
 	 *            option 2 is selected, Name of a Medication if option 3 is
 	 *            selected
+	 *  
+	 * @return ResultSet : Values, the result of the query
 	 * 
 	 */
 	public ResultSet getPatientReport(int option, String value) {
@@ -783,4 +788,44 @@ public class JDBC {
 			return null;
 		}
 	}
-}
+
+	/**
+	 * // --------- Number of Patients Attended
+	 * 
+	 * int, String
+	 * 
+	 * Select COUNT(Consultation.PatientID), Consultation.Date From Consultation
+	 * Where Consultation.Attended='1' Group By Consultation.Date Order By
+	 * COUNT(Consultation.PatientID);
+	 * 
+	 * @return ResultSet : Values, the result of the query
+	 */
+	public ResultSet getNumPatientsAttendedReport() {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * 
+	 * @return ResultSet : Values, the result of the query
+	 */
+	public ResultSet getNumPatientsConditionReport() {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
