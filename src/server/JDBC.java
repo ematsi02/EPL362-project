@@ -793,7 +793,7 @@ public class JDBC {
 		}
 	}
 	
-	public void viewWarningLetters(String PatientID) {
+	public ResultSet viewWarningLetters(String PatientID) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "";
@@ -801,7 +801,10 @@ public class JDBC {
 				query += "Select * From InformRelatives Where PatientID='" + PatientID + "';";
 			else
 				query += "Select * From InformRelatives";
-			stmt.executeUpdate(query);
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			return rs;
 
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -810,6 +813,7 @@ public class JDBC {
 			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
 		}
+		return null;
 	}
 	
 	// REPORTS
