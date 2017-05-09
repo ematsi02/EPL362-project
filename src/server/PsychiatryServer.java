@@ -754,6 +754,20 @@ public class PsychiatryServer implements java.io.Serializable {
 			List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
 			outObject.writeObject(ls);
 		}
+	void consultationReportMedical() throws IOException, SQLException{
+		String date = inFromClient.readLine();
+		if (date.equals("null"))
+		date=null;
+		ResultSet rs = jdbc.getUpdatedMedicalRecordsReport(date);
+		file.print("Consultation report for Medical Records printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicalReport");
+		outToClient.flush();
+		List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+	
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -868,6 +882,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						searchComment();
 					if (messageFromClient.equals("consultationReport"))
 						consultationReport();
+					if (messageFromClient.equals("consultationReportMedical"))
+						consultationReportMedical();
 				}
 
 			}
