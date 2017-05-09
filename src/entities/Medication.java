@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Medication implements java.io.Serializable   {
+import javax.swing.table.DefaultTableModel;
+
+public class Medication implements java.io.Serializable {
 	/**
 	 * 
 	 */
@@ -18,30 +20,66 @@ public class Medication implements java.io.Serializable   {
 	public int MaxDose;
 	public static ArrayList<String> columnNames = fillColumnNames();
 
-	public List<Medication> convertRsToList(ResultSet rs) throws SQLException{
-		List<Medication> Medication=new ArrayList<Medication>();
-		while(rs.next()) {
-			Medication medication=new Medication();
-			medication.MedicationID=rs.getInt("MedicationID");
-			medication.Brand=rs.getString("Brand");
-			medication.Name=rs.getString("Name");
-			medication.Description=rs.getString("Description");
-			medication.KnownSideEffects=rs.getString("KnownSideEffects");
-			medication.MaxDose=rs.getInt("MaxDose");
-			
+	public String getfield(int i) {
+		switch (i) {
+		case 0:
+			return Integer.toString(MedicationID);
+		case 1:
+			return Brand;
+		case 2:
+			return Name;
+		case 3:
+			return Description;
+		case 4:
+			return KnownSideEffects;
+		default:
+			return Integer.toString(MaxDose);
+		}
+	}
+
+	public static DefaultTableModel buildTableModel(List<Relative> list, ArrayList<String> columnNames)
+			throws SQLException {
+		int columnCount = columnNames.size();
+		String[] columns = new String[columnCount];
+		for (int column = 0; column < columnCount; column++) {
+			columns[column] = columnNames.get(column);
+		}
+		int i = 0;
+		String[][] data = new String[list.size()][columnCount];
+		while (i < list.size()) {
+			Relative t = list.get(i);
+			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+				data[i][columnIndex] = t.getfield(columnIndex);
+			}
+			i++;
+		}
+		return new DefaultTableModel(data, columns);
+	}
+
+	public List<Medication> convertRsToList(ResultSet rs) throws SQLException {
+		List<Medication> Medication = new ArrayList<Medication>();
+		while (rs.next()) {
+			Medication medication = new Medication();
+			medication.MedicationID = rs.getInt("MedicationID");
+			medication.Brand = rs.getString("Brand");
+			medication.Name = rs.getString("Name");
+			medication.Description = rs.getString("Description");
+			medication.KnownSideEffects = rs.getString("KnownSideEffects");
+			medication.MaxDose = rs.getInt("MaxDose");
+
 			Medication.add(medication);
-		} 
+		}
 		return Medication;
 	}
-	
-	private static ArrayList<String> fillColumnNames(){
+
+	private static ArrayList<String> fillColumnNames() {
 		ArrayList<String> columnNames = new ArrayList<String>();
 		columnNames.add("MedicationID");
 		columnNames.add("Brand");
 		columnNames.add("Name");
 		columnNames.add("Description");
-		columnNames.add("KnownSideEffects");	
-		columnNames.add("MaxDose");		
+		columnNames.add("KnownSideEffects");
+		columnNames.add("MaxDose");
 		return columnNames;
 	}
 }
