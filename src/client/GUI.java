@@ -47,6 +47,7 @@ import entities.Medication;
 import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
+import entities.WarningLetter;
 import entities.MedicationReaction;
 import entities.MedicationReport;
 import entities.MedicationPrescription;
@@ -516,6 +517,37 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.repaint();
 			this.pack();
 		}
+		else if (btnLabel.equals("View Warning Letters")) {
+			this.getContentPane().removeAll();
+			JPanel namePanel = new JPanel();
+			JLabel lblname = new JLabel("Patient username");
+			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField value = new JTextField(15);
+			JButton search = new JButton("Search");
+			search.setFont(new Font("Arial", Font.PLAIN, 14));
+			search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			try {
+				getContentPane().add(warningLetters(value.getText()));
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
+			});
+			namePanel.add(lblname);
+			namePanel.add(value);
+			namePanel.add(search);
+			namePanel.setBounds(350, 130, 250, 100);
+			namePanel.setOpaque(false);
+			namePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+			this.getContentPane().add(namePanel);
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} 
 		
 	}
 
@@ -3303,6 +3335,35 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					MedicationPrescription mr = new MedicationPrescription();
 					try {
 						JTable results = new JTable(mr.buildTableModel(ls, mr.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 150, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private JScrollPane warningLetters(String id) throws ClassNotFoundException {
+		out.println("warningLetters");
+		out.println(id);
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("warningLetters")) {
+					List<WarningLetter> ls = (List<WarningLetter>) inObject.readObject();
+					WarningLetter wl = new WarningLetter();
+					try {
+						JTable results = new JTable(wl.buildTableModel(ls, wl.columnNames));
 						JScrollPane resultspanel = new JScrollPane(results);
 						resultspanel.setBounds(50, 150, 900, 300);
 						return resultspanel;
