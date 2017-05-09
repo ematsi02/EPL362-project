@@ -38,11 +38,11 @@ public class Patient implements java.io.Serializable  {
 		   patient.Email=rs.getString("Email");
 		   patient.Address=rs.getString("Address");
 		   patient.NumOfIncidents=rs.getInt("NumOfIncidents");
-		   patient.SelfHarmRisk=rs.getBoolean("SelfHarmRisk");
-		   patient.OthersHarmRisk=rs.getBoolean("OthersHarmRisk");
+		   patient.SelfHarmRisk=rs.getInt("SelfHarmRisk");
+		   patient.OthersHarmRisk=rs.getInt("OthersHarmRisk");
 		   patient.RiskStatus=rs.getString("RiskStatus");
-		   patient.ChangedByPatient=rs.getBoolean("ChangedByPatient");
-		   patient.DeadReadOnly=rs.getBoolean("DeadReadOnly");
+		   patient.ChangedByPatient=rs.getInt("ChangedByPatient");
+		   patient.DeadReadOnly=rs.getInt("DeadReadOnly");
 
 		  Patients.add(patient);
 		} 
