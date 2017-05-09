@@ -150,6 +150,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
+		} else if (btnLabel.equals("Search Treatment")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(searchRenewTreatmentForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
 		} else if (btnLabel.equals("Add New Medication")) {
 			this.getContentPane().removeAll();
 			this.getContentPane().add(medicationForm());
@@ -210,22 +216,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}  else if (btnLabel.equals("Update Harm Risk Record")) {
-//			try {
-//				this.getContentPane().removeAll();
-//				ResultSet rs = SADB.erasmia();
-//				if (rs==null){
-//					System.out.println("eimai idiotropo");
-//				}
-//				JScrollPane r;
-//				r = resultsForm(rs);
-//				r.setBounds(50, 150, 900, 600);
-//				this.getContentPane().add(r);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				System.out.println("harm risk");
-//				e.printStackTrace();
-//			}
+		} else if (btnLabel.equals("Update Harm Risk Record")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(searchPatientForHarmRiskForm());
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -782,6 +775,124 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			return null;
 		}
 	}
+	
+	private JPanel harmRiskForm(List<Patient> patients) {
+		try {
+			JPanel patientpanel = new JPanel();
+			JLabel lblusername = new JLabel("Patient's Username");
+			lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblname = new JLabel("Name");
+			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblsurname = new JLabel("Surname");
+			lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblincidents = new JLabel("Number Of Incidents");
+			lblincidents.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblself = new JLabel("Self Harm Risk");
+			lblself.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblothers = new JLabel("Others Harm Risk");
+			lblothers.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstatus = new JLabel("Risk Status");
+			lblstatus.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField username = new JTextField(patients.get(0).PatientID);
+			username.setEditable(false);
+			JTextField name = new JTextField(patients.get(0).Name);
+			name.setEditable(false);
+			JTextField surname = new JTextField(patients.get(0).Surname);
+			surname.setEditable(false);
+			JTextField incidents = new JTextField(Integer.toString(patients.get(0).NumOfIncidents));
+			incidents.setEditable(false);
+			JTextField self = new JTextField(Integer.toString(patients.get(0).SelfHarmRisk));
+			JTextField others = new JTextField(Integer.toString(patients.get(0).OthersHarmRisk));
+			JTextField status = new JTextField(patients.get(0).RiskStatus);
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				@SuppressWarnings("unchecked")
+				public void actionPerformed(ActionEvent e) {
+					try {
+						out.println("updateHarmRisk");
+						out.println(username.getText());
+						out.println(Integer.parseInt(self.getText()));
+						out.println(Integer.parseInt(others.getText()));
+						out.println(status.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("harmRiskUpdated")) {
+								getContentPane().add(searchPatientForHarmRiskForm());
+								List<Patient> ls = new ArrayList<Patient>();
+								ls = (List<Patient>) inObject.readObject();
+								getContentPane().add(harmRiskForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			patientpanel.add(lblusername);
+			patientpanel.add(username);
+			patientpanel.add(lblname);
+			patientpanel.add(name);
+			patientpanel.add(lblsurname);
+			patientpanel.add(surname);
+			patientpanel.add(lblincidents);
+			patientpanel.add(incidents);
+			patientpanel.add(lblself);
+			patientpanel.add(self);
+			patientpanel.add(lblothers);
+			patientpanel.add(others);
+			patientpanel.add(lblstatus);
+			patientpanel.add(status);
+			patientpanel.add(update);
+			patientpanel.setBounds(350, 300, 250, 250);
+			patientpanel.setOpaque(false);
+			return patientpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchPatientForHarmRiskForm() {
+		JPanel patientpanel = new JPanel();
+		JLabel lblid = new JLabel("Search Patient with Username: ");
+		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField id = new JTextField(15);
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("searchHarmRisk");
+					out.println(id.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("harmRiskSearched")) {
+							getContentPane().add(searchPatientForHarmRiskForm());
+							List<Patient> ls = (List<Patient>) inObject.readObject();
+							getContentPane().add(harmRiskForm(ls));
+						}
+
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		patientpanel.add(lblid);
+		patientpanel.add(id);
+		patientpanel.add(search);
+		patientpanel.setBounds(50, 150, 900, 150);
+		patientpanel.setOpaque(false);
+		return patientpanel;
+	}
 
 	private JPanel searchPatientForm() {
 		JPanel patientpanel = new JPanel();
@@ -1265,7 +1376,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblendDate.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldiagnosis = new JLabel("              Diagnosis");
 		lbldiagnosis.setFont(new Font("Arial", Font.PLAIN, 14));
-		JLabel lbldescription = new JLabel("            Description");
+		JLabel lbldescription = new JLabel("Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblstaffid = new JLabel("   Staff's Username");
 		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1275,7 +1386,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JDateChooser endDate = new JDateChooser();
 		endDate.setDateFormatString("yyyy-MM-dd");
 		JTextField diagnosis = new JTextField(15);
-		JTextField description = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(description);
 		JTextField staffid = new JTextField(15);
 		JButton addTreatment = new JButton("Add");
 		treatmentpanel.add(lblpatientid);
@@ -1287,7 +1399,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.add(lbldiagnosis);
 		treatmentpanel.add(diagnosis);
 		treatmentpanel.add(lbldescription);
-		treatmentpanel.add(description);
+		treatmentpanel.add(scrollPane);
 		treatmentpanel.add(lblstaffid);
 		treatmentpanel.add(staffid);
 		treatmentpanel.add(addTreatment);
@@ -1309,8 +1421,70 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							JLabel message = new JLabel("You have successfully added the treatment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
-							message.setBounds(340, 470, 350, 50);
-							getContentPane().add(treatmentForm());
+							message.setBounds(380, 380, 350, 50);
+							List<Treatment> ls = new ArrayList<Treatment>();
+							ls = (List<Treatment>) inObject.readObject();
+							getContentPane().add(treatmentMedicationForm(ls));
+							getContentPane().add(message);
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		treatmentpanel.setBounds(350, 150, 350, 250);
+		treatmentpanel.setOpaque(false);
+		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		return treatmentpanel;
+	}
+	
+	private JPanel treatmentMedicationForm(List<Treatment> treatment) {
+		JPanel treatmentpanel = new JPanel();
+		JLabel lbltreatmentid = new JLabel("               Treatment's ID          ");
+		lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lblmedicationid = new JLabel("             Medication's ID");
+		lblmedicationid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldose = new JLabel("                            Dose");
+		lbldose.setFont(new Font("Arial", Font.PLAIN, 14));
+		JLabel lbldescription = new JLabel("Dose Description");
+		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField treatmentid = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+		treatmentid.setEditable(false);
+		JTextField medicationid = new JTextField(15);
+		JTextField dose = new JTextField(15);
+		JTextArea description = new JTextArea(5, 20);
+		JScrollPane scrollPane = new JScrollPane(description);
+		JButton addTreatment = new JButton("Add");
+		treatmentpanel.add(lbltreatmentid);
+		treatmentpanel.add(treatmentid);
+		treatmentpanel.add(lblmedicationid);
+		treatmentpanel.add(medicationid);
+		treatmentpanel.add(lbldose);
+		treatmentpanel.add(dose);
+		treatmentpanel.add(lbldescription);
+		treatmentpanel.add(scrollPane);
+		treatmentpanel.add(addTreatment);
+		addTreatment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("addTreatmentMedication");
+					out.println(treatmentid.getText());
+					out.println(medicationid.getText());
+					out.println(dose.getText());
+					out.println(description.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("treatmentMedicationAdded")) {
+							JLabel message = new JLabel("You have successfully added the medication to the treatment!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(360, 380, 400, 50);
+							getContentPane().add(treatmentMedicationForm(treatment));
 							getContentPane().add(message);
 						}
 						revalidate();
@@ -1448,6 +1622,118 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							getContentPane().add(searchTreatmentForm());
 							List<Treatment> ls = (List<Treatment>) inObject.readObject();
 							getContentPane().add(treatmentsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		treatmentpanel.add(lblid);
+		treatmentpanel.add(id);
+		treatmentpanel.add(search);
+		treatmentpanel.setBounds(50, 150, 900, 150);
+		treatmentpanel.setOpaque(false);
+		return treatmentpanel;
+	}
+	
+	private JPanel renewTreatmentsForm(List<Treatment> treatment) {
+		try {
+			JPanel treatmentpanel = new JPanel();
+			JLabel lblid = new JLabel("ID");
+			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpatientid = new JLabel("Patient's Username");
+			lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstartDate = new JLabel("Start Date");
+			lblstartDate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblendDate = new JLabel("End Date");
+			lblendDate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblnotes = new JLabel("Notes");
+			lblnotes.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstaffid = new JLabel("Staff ID");
+			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+			id.setEditable(false);
+			JTextField patientid = new JTextField(treatment.get(0).PatientID);
+			patientid.setEditable(false);
+			JTextField startDate = new JTextField(treatment.get(0).StartDate);
+			JTextField endDate = new JTextField(treatment.get(0).EndDate);
+			JTextArea notes = new JTextArea(5, 20);
+			JScrollPane scrollPane = new JScrollPane(notes);
+			JTextField staffid = new JTextField(treatment.get(0).StaffID);
+			JButton renew = new JButton("Renew");
+			renew.setFont(new Font("Arial", Font.PLAIN, 14));
+			renew.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						out.println("renewTreatment");
+						out.println(Integer.parseInt(id.getText()));
+						out.println(patientid.getText());
+						out.println(startDate.getText());
+						out.println(endDate.getText());
+						out.println(notes.getText());
+						out.println(staffid.getText());
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("treatmentRenewed")) {
+								getContentPane().add(searchRenewTreatmentForm());
+								List<Treatment> ls = new ArrayList<Treatment>();
+								ls = (List<Treatment>) inObject.readObject();
+								getContentPane().add(renewTreatmentsForm(ls));
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			treatmentpanel.add(lblid);
+			treatmentpanel.add(id);
+			treatmentpanel.add(lblpatientid);
+			treatmentpanel.add(patientid);
+			treatmentpanel.add(lblstartDate);
+			treatmentpanel.add(startDate);
+			treatmentpanel.add(lblendDate);
+			treatmentpanel.add(endDate);
+			treatmentpanel.add(lblnotes);
+			treatmentpanel.add(scrollPane);
+			treatmentpanel.add(lblstaffid);
+			treatmentpanel.add(staffid);
+			treatmentpanel.add(renew);
+			treatmentpanel.setBounds(350, 250, 250, 250);
+			treatmentpanel.setOpaque(false);
+			return treatmentpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+
+	private JPanel searchRenewTreatmentForm() {
+		JPanel treatmentpanel = new JPanel();
+		JLabel lblid = new JLabel("Search Treatment with ID: ");
+		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField id = new JTextField(15);
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("searchRenewTreatment");
+					out.println(Integer.parseInt(id.getText()));
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("renewTreatmentSearched")) {
+							getContentPane().add(searchRenewTreatmentForm());
+							List<Treatment> ls = (List<Treatment>) inObject.readObject();
+							getContentPane().add(renewTreatmentsForm(ls));
 						}
 						revalidate();
 						repaint();
