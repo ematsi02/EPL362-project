@@ -142,6 +142,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("Add New Treatment")) {
 			this.getContentPane().removeAll();
+			this.getContentPane().add(searchPreviousTreatmentForm());
 			this.getContentPane().add(treatmentForm());
 			this.revalidate();
 			this.repaint();
@@ -1579,12 +1580,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 				}
 			}
 		});
-		treatmentpanel.setBounds(350, 150, 350, 250);
+		treatmentpanel.setBounds(450, 150, 350, 250);
 		treatmentpanel.setOpaque(false);
 		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return treatmentpanel;
 	}
-	
+
 	private JPanel treatmentMedicationForm(List<Treatment> treatment) {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lbltreatmentid = new JLabel("               Treatment's ID          ");
@@ -1623,12 +1624,28 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
 						if (messageFromServer.equals("treatmentMedicationAdded")) {
+							String warning = messageFromServer = in.readLine();
 							JLabel message = new JLabel("You have successfully added the medication to the treatment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
 							message.setBounds(360, 380, 400, 50);
 							getContentPane().add(treatmentMedicationForm(treatment));
 							getContentPane().add(message);
+							if (!messageFromServer.equals("None")) {
+								int dialogButton = JOptionPane.showConfirmDialog(null,
+										warning + " Do you want to continue?", "WARNING", JOptionPane.YES_NO_OPTION);
+								if (dialogButton == JOptionPane.YES_OPTION) {
+									out.println("overruleWarning");
+									out.println(Integer.parseInt(treatmentid.getText()));
+									out.println(Integer.parseInt(medicationid.getText()));
+								}
+								if (dialogButton == JOptionPane.NO_OPTION) {
+									out.println("deleteTreatmentMedication");
+									out.println(Integer.parseInt(treatmentid.getText()));
+									out.println(Integer.parseInt(medicationid.getText()));
+								}
+								messageFromServer = in.readLine();
+							}
 						}
 						revalidate();
 						repaint();
@@ -1644,7 +1661,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return treatmentpanel;
 	}
-
+	
 	private JPanel treatmentsForm(List<Treatment> treatment) {
 		try {
 			JPanel treatmentpanel = new JPanel();
@@ -1746,6 +1763,60 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 	}
 
+	private JPanel previousTreatmentsForm(List<Treatment> treatment) {
+		try {
+			JPanel treatmentpanel = new JPanel();
+			JLabel lblid = new JLabel("    ID");
+			lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpatientid = new JLabel("Patient's Username");
+			lblpatientid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstartDate = new JLabel("Start Date");
+			lblstartDate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblendDate = new JLabel("End Date");
+			lblendDate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldiagnosis = new JLabel("Diagnosis");
+			lbldiagnosis.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldescription = new JLabel("Description");
+			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblstaffid = new JLabel("Staff ID");
+			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+			id.setEditable(false);
+			JTextField patientid = new JTextField(treatment.get(0).PatientID);
+			patientid.setEditable(false);
+			JTextField startDate = new JTextField(treatment.get(0).StartDate);
+			startDate.setEditable(false);
+			JTextField endDate = new JTextField(treatment.get(0).EndDate);
+			endDate.setEditable(false);
+			JTextField diagnosis = new JTextField(treatment.get(0).Diagnosis);
+			diagnosis.setEditable(false);
+			JTextField description = new JTextField(treatment.get(0).Description);
+			description.setEditable(false);
+			JTextField staffid = new JTextField(treatment.get(0).StaffID);
+			staffid.setEditable(false);
+			treatmentpanel.add(lblid);
+			treatmentpanel.add(id);
+			treatmentpanel.add(lblpatientid);
+			treatmentpanel.add(patientid);
+			treatmentpanel.add(lblstartDate);
+			treatmentpanel.add(startDate);
+			treatmentpanel.add(lblendDate);
+			treatmentpanel.add(endDate);
+			treatmentpanel.add(lbldiagnosis);
+			treatmentpanel.add(diagnosis);
+			treatmentpanel.add(lbldescription);
+			treatmentpanel.add(description);
+			treatmentpanel.add(lblstaffid);
+			treatmentpanel.add(staffid);
+			treatmentpanel.setBounds(200, 200, 250, 250);
+			treatmentpanel.setOpaque(false);
+			return treatmentpanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+	
 	private JPanel searchTreatmentForm() {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Treatment with ID: ");
@@ -1779,6 +1850,44 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.add(id);
 		treatmentpanel.add(search);
 		treatmentpanel.setBounds(50, 150, 900, 150);
+		treatmentpanel.setOpaque(false);
+		return treatmentpanel;
+	}
+	
+	private JPanel searchPreviousTreatmentForm() {
+		JPanel treatmentpanel = new JPanel();
+		JLabel lblid = new JLabel("Search Previous Treatment with Patient's Username: ");
+		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
+		JTextField id = new JTextField(15);
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					out.println("searchPreviousTreatment");
+					out.println(id.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("previousTreatmentSearched")) {
+							getContentPane().add(searchPreviousTreatmentForm());
+							List<Treatment> ls = (List<Treatment>) inObject.readObject();
+							getContentPane().add(treatmentForm());
+							getContentPane().add(previousTreatmentsForm(ls));
+						}
+						revalidate();
+						repaint();
+						pack();
+					}
+				} catch (Exception er) {
+					// Ignore the error and continues
+				}
+			}
+		});
+		treatmentpanel.add(lblid);
+		treatmentpanel.add(id);
+		treatmentpanel.add(search);
+		treatmentpanel.setBounds(50, 100, 900, 150);
 		treatmentpanel.setOpaque(false);
 		return treatmentpanel;
 	}
