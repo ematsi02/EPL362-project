@@ -37,21 +37,21 @@ public class JDBC {
 		return conn;
 	}
 
-	public static DefaultTableModel buildTableModel(ArrayList<Object> list, ArrayList<String> columnNames) throws SQLException {
+	public static DefaultTableModel buildTableModel(List<ConsultationReport> list, ArrayList<String> columnNames)
+			throws SQLException {
 		int columnCount = columnNames.size();
-		int i = 0;
-		Vector<String> columns = new Vector<String>();
-		for (int column = 1; column <= columnCount; column++) {
-			columns.add(columnNames.get(i-1));
+		String[] columns = new String[columnCount];
+		for (int column = 0; column < columnCount; column++) {
+			columns[column] = columnNames.get(column);
 		}
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		while (i<columnCount) {
-			Object element = list.get(i);
-			Vector<Object> vector = new Vector<Object>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				vector.add(element);
+		int i = 0;
+		String[][] data = new String[list.size()][columnCount];
+		while (i < list.size()) {
+			ConsultationReport t = list.get(i);
+			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+				data[i][columnIndex] = t.getfield(columnIndex);
 			}
-			data.add(vector);
+			i++;
 		}
 		return new DefaultTableModel(data, columns);
 	}
