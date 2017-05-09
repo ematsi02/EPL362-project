@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.imageio.ImageIO;
@@ -37,6 +38,7 @@ import java.io.PrintWriter;
 
 import entities.Comment;
 import entities.Consultation;
+import entities.ConsultationReport;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
@@ -223,6 +225,100 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.repaint();
 			this.pack();
 		}
+		 else if (btnLabel.equals("Attended Daily Consultations")) {
+			this.getContentPane().removeAll();
+			JPanel datePanel = new JPanel();
+			JLabel lbldate = new JLabel("Date");
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JDateChooser date = new JDateChooser();
+			date.setDateFormatString("yyyy-MM-dd");
+			JButton search = new JButton("Search");
+			search.setFont(new Font("Arial", Font.PLAIN, 14));
+			search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReports(1,dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
+			});
+			datePanel.add(lbldate);
+			datePanel.add(date);
+			datePanel.add(search);
+			datePanel.setBounds(350, 130, 250, 100);
+			datePanel.setOpaque(false);
+			datePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+			this.getContentPane().add(datePanel);
+			this.revalidate();
+			this.repaint();
+			this.pack();
+			
+		}
+		else if (btnLabel.equals("Attended General Consultations")) {
+			this.getContentPane().removeAll();
+			try {
+				this.getContentPane().add(consultationReports(1,"null"));
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.revalidate();
+			this.repaint();
+			this.pack();
+			}
+		
+		else if (btnLabel.equals("Non Attended Daily Consultations")) {
+			this.getContentPane().removeAll();
+			JPanel datePanel = new JPanel();
+			JLabel lbldate = new JLabel("Date");
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JDateChooser date = new JDateChooser();
+			date.setDateFormatString("yyyy-MM-dd");
+			JButton search = new JButton("Search");
+			search.setFont(new Font("Arial", Font.PLAIN, 14));
+			search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReports(0,dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
+			});
+			datePanel.add(lbldate);
+			datePanel.add(date);
+			datePanel.add(search);
+			datePanel.setBounds(350, 130, 250, 100);
+			datePanel.setOpaque(false);
+			datePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+			this.getContentPane().add(datePanel);
+			this.revalidate();
+			this.repaint();
+			this.pack();
+			
+		} else if (btnLabel.equals("Non Attended General Consultations")) {
+			this.getContentPane().removeAll();
+			try {
+				this.getContentPane().add(consultationReports(0,"null"));
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} 		
 	}
 
 	class MyPanel extends JPanel implements java.io.Serializable {
@@ -2613,6 +2709,40 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		informpanel.setOpaque(false);
 		informpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return informpanel;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JScrollPane consultationReports(int attent,String daily) throws ClassNotFoundException {
+		out.println("consultationReport");
+		out.println(attent);
+		out.println(daily);
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("report")) {
+
+					List<ConsultationReport> ls = (List<ConsultationReport>) inObject.readObject();
+
+					ConsultationReport cr = new ConsultationReport();
+					try {
+						JTable results = new JTable(cr.buildTableModel(ls, cr.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 150, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
