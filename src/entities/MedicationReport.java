@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.table.DefaultTableModel;
+
 public class MedicationReport implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -24,6 +26,25 @@ public class MedicationReport implements java.io.Serializable {
 		}
 	}
 
+	public static DefaultTableModel buildTableModel(List<MedicationReport> list, ArrayList<String> columnNames)
+			throws SQLException {
+		int columnCount = columnNames.size();
+		String[] columns = new String[columnCount];
+		for (int column = 0; column < columnCount; column++) {
+			columns[column] = columnNames.get(column);
+		}
+		int i = 0;
+		String[][] data = new String[list.size()][columnCount];
+		while (i < list.size()) {
+			MedicationReport t = list.get(i);
+			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+				data[i][columnIndex] = t.getfield(columnIndex);
+			}
+			i++;
+		}
+		return new DefaultTableModel(data, columns);
+	}
+	
 	public List<MedicationReport> convertRsToList(ResultSet rs) throws SQLException {
 		List<MedicationReport> MedReport = new ArrayList<MedicationReport>();
 		while (rs.next()) {
