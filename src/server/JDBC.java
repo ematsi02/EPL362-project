@@ -848,12 +848,12 @@ public class JDBC {
 	}
 
 	/**
-	 * This function returns the result set of the report which shows the number
+	 * Number of Patients Attended. This function returns the result set of the report which shows the number
 	 * of patients who attended the clinic for each day.
 	 * 
 	 * @return ResultSet : Values, the result of the query (int, String-Date)
 	 */
-	public ResultSet getNumPatientsAttendedReport() {
+	public ResultSet getAttendanceReport() {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "Select COUNT(Consultation.PatientID), Consultation.Date "
@@ -869,13 +869,13 @@ public class JDBC {
 	}
 
 	/**
-	 * This function returns the result set of the report which shows the number
+	 * Number of Patients by Condition. This function returns the result set of the report which shows the number
 	 * of patients who were marked with the same diagnosis/condition, for each
 	 * one of them.
 	 * 
 	 * @return ResultSet : Values, the result of the query (int, String)
 	 */
-	public ResultSet getNumPatientsConditionReport() {
+	public ResultSet getConditionReport() {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "Select COUNT(Treatment.PatientID), Treatment.Diagnosis "
@@ -890,13 +890,13 @@ public class JDBC {
 	}
 
 	/**
-	 * This function returns the result set of the report which shows the number
+	 * Number of Patients by Treatment/Medication, Report. This function returns the result set of the report which shows the number
 	 * of patients who were prescribed with the same medication (of the same
 	 * brand), for each one of them.
 	 * 
 	 * @return ResultSet : Values, the result of the query (int, int, String)
 	 */
-	public ResultSet getNumPatientsMedicationReport() {
+	public ResultSet getMedicationReport() {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "Select COUNT(Treatment.PatientID), Medication.MedicationID, Medication.Name "
@@ -914,7 +914,7 @@ public class JDBC {
 	}
 
 	/**
-	 * This function returns the result set of the report which shows a summary
+	 * Medication prescriptions summary. This function returns the result set of the report which shows a summary
 	 * of the medication prescriptions from all treatment records of the clinic.
 	 * 
 	 * @return ResultSet : Values, the result of the query (Entity used is
