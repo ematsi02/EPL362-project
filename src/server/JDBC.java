@@ -903,8 +903,8 @@ public class JDBC {
 					+ "From Treatment, TreatmentMedication, Medication Where "
 					+ "Treatment.TreatmentID=TreatmentMedication.TreatmentID AND "
 					+ "TreatmentMedication.MedicationID=Medication.MedicationID "
-					+ "Group By Treatment.PatientID Order By COUNT(Treatment.PatientID) DESC;";
-
+					+ "Group By Medication.MedicationID Order By COUNT(Treatment.PatientID) DESC;";
+			
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException e) {
