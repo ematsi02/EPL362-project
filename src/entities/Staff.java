@@ -31,7 +31,7 @@ public class Staff implements java.io.Serializable {
 			return Password;
 		case 2:
 			return StaffType;
-		case 32:
+		case 3:
 			return Name;
 		case 4:
 			return Surname;
