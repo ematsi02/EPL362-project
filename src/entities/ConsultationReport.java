@@ -51,6 +51,14 @@ public class ConsultationReport implements java.io.Serializable {
 		}
 		return ReportList;
 	}
+	
+	public String getfield(int i){
+		switch (i){
+		case 0: return ((Integer)Consultation_ConsultationID).toString();
+		case 1: return Consultation_Date;
+		// TODO continue with the rest columns
+		}
+	}
 
 	private static ArrayList<String> fillColumnNames() {
 		ArrayList<String> columnNames = new ArrayList<String>();
