@@ -162,6 +162,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
+		} else if (btnLabel.equals("Add Medication Reaction")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(medicationReactionForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} else if (btnLabel.equals("View/Search Medication Reaction")) {
+			this.getContentPane().removeAll();
+			this.getContentPane().add(searchMedicationReactionForm());
+			this.revalidate();
+			this.repaint();
+			this.pack();
 		} else if (btnLabel.equals("Add New Incident")) {
 			this.getContentPane().removeAll();
 			this.getContentPane().add(incidentForm());
