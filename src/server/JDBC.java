@@ -852,14 +852,14 @@ public class JDBC {
 	 * report which shows the number of patients who attended the clinic for
 	 * each day.
 	 * 
-	 * @return ResultSet : Values, the result of the query (int, String-Date)
+	 * @return ResultSet : Values, the result of the query (Entity
+	 *         AttendanceReport, fields: int, String-Date)
 	 */
 	public ResultSet getAttendanceReport() {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "Select COUNT(Consultation.PatientID), Consultation.Date "
-					+ "From Consultation Where Consultation.Attended='1' Group By "
-					+ "Consultation.Date Order By COUNT(Consultation.PatientID);";
+			String query = "Select COUNT(PatientID), Date From Consultation "
+					+ "Where Attended='1' Group By Date Order By COUNT(PatientID);";
 
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
@@ -874,13 +874,14 @@ public class JDBC {
 	 * the report which shows the number of patients who were marked with the
 	 * same diagnosis/condition, for each one of them.
 	 * 
-	 * @return ResultSet : Values, the result of the query (int, String)
+	 * @return ResultSet : Values, the result of the query (Entity
+	 *         ConditionReport, fields: int, String)
 	 */
 	public ResultSet getConditionReport() {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "Select COUNT(Treatment.PatientID), Treatment.Diagnosis "
-					+ "From Treatment Group By Treatment.Diagnosis Order By COUNT(PatientID) DESC";
+			String query = "Select COUNT(PatientID), Diagnosis From Treatment "
+					+ "Group By Diagnosis Order By COUNT(PatientID) DESC";
 
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
