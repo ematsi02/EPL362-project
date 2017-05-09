@@ -425,7 +425,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
-	
+
 	void addTreatmentMedication() throws IOException, SQLException {
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
@@ -436,6 +436,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		file.println(dtf.format(now));
 		file.flush();
 		outToClient.println("treatmentMedicationAdded");// added treatment
+		outToClient.flush();
+		outToClient.println(jdbc.checkForWarning(treatmentid, medicationid));
 		outToClient.flush();
 	}
 
@@ -469,6 +471,17 @@ public class PsychiatryServer implements java.io.Serializable {
 			outToClient.flush();
 		}
 	
+	void deleteTreatmentMedication() throws IOException {
+		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteTreatmentMedication(treatmentid, medicationid);
+		file.print("treatment with id " + treatmentid + " and medication id " + medicationid + " record deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("treatmentMedicationDeleted");// deleted treatment
+		outToClient.flush();
+	}
+	
 	void renewTreatment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
@@ -488,6 +501,17 @@ public class PsychiatryServer implements java.io.Serializable {
 		System.out.println("esteila kai to resultset");
 	}	
 	
+	void overruleWarning() throws IOException, SQLException {
+		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		jdbc.overruleWarning(treatmentid, medicationid);
+		file.print("warning overruled for treatment with id " + treatmentid + " and medication id " + medicationid + " updated ... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("overruledWarning");// overruled warning
+		outToClient.flush();
+	}
+	
 		void searchTreatment() throws IOException, SQLException {
 			int id = Integer.parseInt(inFromClient.readLine());			
 			ResultSet rs=jdbc.printTreatment(id);
@@ -500,6 +524,19 @@ public class PsychiatryServer implements java.io.Serializable {
 			outObject.writeObject(ls);
 			System.out.println("incident search after");			
 		}
+	
+	void searchPreviousTreatment() throws IOException, SQLException {
+		String id = inFromClient.readLine();
+		ResultSet rs = jdbc.findPreviousTreatment(id);
+		file.print("treatment with patient's username " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("previousTreatmentSearched");// searched treatment
+		outToClient.flush();
+		List<Treatment> ls = treatment.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("previous treatment search after");
+	}
 	
 	void searchRenewTreatment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
@@ -844,8 +881,14 @@ public class PsychiatryServer implements java.io.Serializable {
 						renewTreatment();
 					if (messageFromClient.equals("deleteTreatment"))
 						deleteTreatment();
+					if (messageFromClient.equals("deleteTreatmentMedication"))
+						deleteTreatmentMedication();
+					if (messageFromClient.equals("overruleWarning"))
+						overruleWarning();
 					if (messageFromClient.equals("searchTreatment"))
 						searchTreatment();
+					if (messageFromClient.equals("searchPreviousTreatment"))
+						searchPreviousTreatment();
 					if (messageFromClient.equals("searchRenewTreatment"))
 						searchRenewTreatment();
 					if (messageFromClient.equals("addMedication"))
@@ -880,10 +923,6 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteComment();
 					if (messageFromClient.equals("searchComment"))
 						searchComment();
-					if (messageFromClient.equals("consultationReport"))
-						consultationReport();
-					if (messageFromClient.equals("consultationReportMedical"))
-						consultationReportMedical();
 				}
 
 			}
