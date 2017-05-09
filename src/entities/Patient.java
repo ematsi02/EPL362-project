@@ -45,12 +45,14 @@ public class Patient implements java.io.Serializable {
 		case 6:
 			return Address;
 		case 7:
-			return Integer.toString(SelfHarmRisk);
+			return Integer.toString(NumOfIncidents);
 		case 8:
-			return Integer.toString(OthersHarmRisk);
+			return Integer.toString(SelfHarmRisk);
 		case 9:
-			return RiskStatus;
+			return Integer.toString(OthersHarmRisk);
 		case 10:
+			return RiskStatus;
+		case 11:
 			return Integer.toString(ChangedByPatient);
 		default:
 			return Integer.toString(DeadReadOnly);
