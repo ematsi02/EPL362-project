@@ -33,10 +33,6 @@ public class ConsultationReport implements java.io.Serializable {
 	public int Consultation_MedicalRecordUpdated;
 	public ArrayList<String> columnNames = fillColumnNames();
 
-	public String toString() {
-		return ("I am toString of Consultation Report\n");
-	}
-
 	public String getfield(int i) {
 		switch (i) {
 		case 0:
