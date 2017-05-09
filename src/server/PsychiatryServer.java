@@ -29,6 +29,7 @@ import entities.Medication;
 import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
+import entities.WarningLetter;
 import entities.MedicationReaction;
 import entities.MedicationReport;
 import entities.MedicationPrescription;
@@ -60,6 +61,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	ConditionReport conditionReport;
 	MedicationReport medicationReport;
 	MedicationPrescription medicationPrescription;
+	WarningLetter letter;
 
 	/*
 	 * Server gets username, password and role from client,checks if user
@@ -941,6 +943,17 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<MedicationPrescription> ls = medicationPrescription.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
+	void warningLetters() throws IOException, SQLException{
+		String id = inFromClient.readLine();
+		ResultSet rs = jdbc.viewWarningLetters(id);
+		file.print("Warning Letters printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("warningLetters");
+		outToClient.flush();
+		List<WarningLetter> ls = letter.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
 
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -971,6 +984,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				medicationReport = new MedicationReport();
 				medicationPrescription = new MedicationPrescription();
 				consultationReport = new ConsultationReport();
+				letter = new WarningLetter();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -1084,6 +1098,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						medicationReport();
 					if (messageFromClient.equals("medicationPrescription"))
 						medicationPrescription();
+					if (messageFromClient.equals("warningLetters"))
+						warningLetters();
 				}
 
 			}
