@@ -27,6 +27,7 @@ import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
 import entities.MedicationReaction;
+import entities.Staff;
 
 public class PsychiatryServer implements java.io.Serializable {
 	/**
@@ -49,12 +50,13 @@ public class PsychiatryServer implements java.io.Serializable {
 	Consultation consultation;
 	MedicationReaction reaction;
 	Comment comment;
+	Staff staff;
 	ConsultationReport consultationReport;
 
-
 	/*
-	 * Server gets username, password and role from client,checks if user exists,
-	 * sends message accordingly role and writes in log file the action and the datetime.
+	 * Server gets username, password and role from client,checks if user
+	 * exists, sends message accordingly role and writes in log file the action
+	 * and the datetime.
 	 */
 	void login() throws Exception {
 		System.out.println("mpika sto login");
@@ -73,8 +75,7 @@ public class PsychiatryServer implements java.io.Serializable {
 					file.flush();
 					outToClient.println("Patient");
 					outToClient.flush();
-				}
-				else {
+				} else {
 					String roleGUI = rs.getString("StaffType");
 					if (roleGUI.equals("Doctor")) {
 						file.print(username + " log in as Doctor... ");
@@ -83,7 +84,7 @@ public class PsychiatryServer implements java.io.Serializable {
 						outToClient.println("Doctor");
 						outToClient.flush();
 					} else if (roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor")) {
-						file.print(username + " log in as "+ roleGUI+"... ");
+						file.print(username + " log in as " + roleGUI + "... ");
 						file.println(dtf.format(now));
 						file.flush();
 						outToClient.println("Nurse-HealthVisitor");
@@ -122,8 +123,9 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/*
-	 * Server gets some fields from client, add the new user with those fields in database,
-	 * sends successful or not message and writes in log file the action and the datetime.
+	 * Server gets some fields from client, add the new user with those fields
+	 * in database, sends successful or not message and writes in log file the
+	 * action and the datetime.
 	 */
 	void signup() throws Exception {
 		String username = inFromClient.readLine();
@@ -151,9 +153,10 @@ public class PsychiatryServer implements java.io.Serializable {
 			// Ignore the error and continues
 		}
 	}
-	
+
 	/*
-	 * When client log outs, server writes in log file that a user with "username" have just log out at this time.
+	 * When client log outs, server writes in log file that a user with
+	 * "username" have just log out at this time.
 	 */
 	void logout() {
 		try {
@@ -169,8 +172,9 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/*
-	 * Server gets username, old password and new password from client, checks if username exists,
-	 * changes old password with new password and writes in log file the action and the datetime.
+	 * Server gets username, old password and new password from client, checks
+	 * if username exists, changes old password with new password and writes in
+	 * log file the action and the datetime.
 	 */
 	void changePassword() throws IOException {
 		String username = inFromClient.readLine();
@@ -189,10 +193,14 @@ public class PsychiatryServer implements java.io.Serializable {
 			if (rs.next()) {
 				jdbc.changepassword(username, oldpassword, newpassword, role);
 				System.out.println("allaksa ton kwdiko");
-				outToClient.println("passwordChanged");//send to client the message password changed
+				outToClient.println("passwordChanged");// send to client the
+														// message password
+														// changed
 				outToClient.flush();
 			} else {
-				outToClient.println("wrongPassword");//send to client the message wrong password
+				outToClient.println("wrongPassword");// send to client the
+														// message wrong
+														// password
 				outToClient.flush();
 			}
 		} catch (SQLException e) {
@@ -200,7 +208,47 @@ public class PsychiatryServer implements java.io.Serializable {
 		}
 	}
 
-	void addPatient() throws IOException{
+	void updateProfile() throws IOException, SQLException {
+		String name = inFromClient.readLine();
+		String surname = inFromClient.readLine();
+		String username = inFromClient.readLine();
+		int phone = Integer.parseInt(inFromClient.readLine());
+		String email = inFromClient.readLine();
+		String address = inFromClient.readLine();
+		String role = inFromClient.readLine();
+		System.out.println("update before");
+		jdbc.updateProfile(name, surname, username, phone, email, address, role);
+		System.out.println("update after");
+
+		file.print("user with name " + name + " " + surname + " updated profile... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("profileUpdated");// updated patient
+		outToClient.flush();
+		ResultSet rs = jdbc.printProfile(username, role);
+		if (role.equals("Patient")) {
+			List<Patient> ls = patient.convertRsToList(rs);
+			outObject.writeObject(ls);
+		} else {
+			List<Staff> ls = staff.convertRsToList(rs);
+			outObject.writeObject(ls);
+		}
+	}
+
+	void printProfile() throws IOException, SQLException {
+		String username = inFromClient.readLine();
+		String role = inFromClient.readLine();
+		ResultSet rs = jdbc.printProfile(username, role);
+		if (role.equals("Patient")) {
+			List<Patient> ls = patient.convertRsToList(rs);
+			outObject.writeObject(ls);
+		} else {
+			List<Staff> ls = staff.convertRsToList(rs);
+			outObject.writeObject(ls);
+		}
+	}
+
+	void addPatient() throws IOException {
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
 		String username = inFromClient.readLine();
@@ -208,36 +256,36 @@ public class PsychiatryServer implements java.io.Serializable {
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
-		jdbc.addPatient(name,surname,username,password,phone,email,address);
-		
-		file.print("patient "+name+" "+surname+" added with username "+username+"... ");
+		jdbc.addPatient(name, surname, username, password, phone, email, address);
+
+		file.print("patient " + name + " " + surname + " added with username " + username + "... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientAdded");//add patient
+		outToClient.println("patientAdded");// add patient
 		outToClient.flush();
 	}
-	
-	void updatePatient() throws IOException, SQLException{
+
+	void updatePatient() throws IOException, SQLException {
 		String username = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
-		String address = inFromClient.readLine();		
+		String address = inFromClient.readLine();
 		System.out.println("update before");
-		jdbc.updatePatient(username, name, surname,phone, email, address);
+		jdbc.updatePatient(username, name, surname, phone, email, address);
 		System.out.println("update after");
-		
-		file.print("patient with name "+name+" "+surname+" updated... ");
+
+		file.print("patient with name " + name + " " + surname + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientUpdated");//updated patient
+		outToClient.println("patientUpdated");// updated patient
 		outToClient.flush();
-		ResultSet rs=jdbc.printPatient(username);
+		ResultSet rs = jdbc.printPatient(username);
 		List<Patient> ls = patient.convertRsToList(rs);
-		outObject.writeObject(ls);	
+		outObject.writeObject(ls);
 	}
-	
+
 	void updateHarmRisk() throws IOException, SQLException {
 		String username = inFromClient.readLine();
 		int self = Integer.parseInt(inFromClient.readLine());
@@ -256,20 +304,20 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
-	void searchPatient() throws IOException, SQLException{
+
+	void searchPatient() throws IOException, SQLException {
 		String username = inFromClient.readLine();
-		ResultSet rs=jdbc.printPatient(username);
-		file.print("patient with username "+username+" searched... ");
+		ResultSet rs = jdbc.printPatient(username);
+		file.print("patient with username " + username + " searched... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientSearched");//searched patient
+		outToClient.println("patientSearched");// searched patient
 		outToClient.flush();
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
-	
+
 	void searchHarmRisk() throws IOException, SQLException {
 		String username = inFromClient.readLine();
 		ResultSet rs = jdbc.printPatient(username);
@@ -282,18 +330,19 @@ public class PsychiatryServer implements java.io.Serializable {
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
-	
-	void deletePatient()throws IOException, SQLException{
+
+	void deletePatient() throws IOException, SQLException {
 		String username = inFromClient.readLine();
 		jdbc.deletePatient(username);
-		
-		file.print("patient with username "+username+" deleted... ");
+
+		file.print("patient with username " + username + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientDeleted");//deleted patient
+		outToClient.println("patientDeleted");// deleted patient
 		outToClient.flush();
-	}	
-	void addRelative()throws IOException{
+	}
+
+	void addRelative() throws IOException {
 		String patientusername = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
@@ -301,113 +350,118 @@ public class PsychiatryServer implements java.io.Serializable {
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
 		String relationship = inFromClient.readLine();
-		jdbc.addRelative(patientusername,name,surname,phone,email,address,relationship);
-		file.print(relationship+" of "+patientusername+" added... ");
+		jdbc.addRelative(patientusername, name, surname, phone, email, address, relationship);
+		file.print(relationship + " of " + patientusername + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("success");//successfully added relative!
+		outToClient.println("success");// successfully added relative!
 		outToClient.flush();
 	}
-	void updateRelative() throws IOException, SQLException{		
+
+	void updateRelative() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
-		System.out.println("id: "+id);
+		System.out.println("id: " + id);
 		String patientid = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
-		String address = inFromClient.readLine();		
-		String relationship = inFromClient.readLine();	
-		jdbc.updateRelative(id,patientid,name,surname,phone,email,address,relationship);
-		file.print(relationship+" of "+patientid+" updated... ");
+		String address = inFromClient.readLine();
+		String relationship = inFromClient.readLine();
+		jdbc.updateRelative(id, patientid, name, surname, phone, email, address, relationship);
+		file.print(relationship + " of " + patientid + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("relativeUpdated");//updated relative
+		outToClient.println("relativeUpdated");// updated relative
 		outToClient.flush();
-		ResultSet rs=jdbc.printRelative(id);
+		ResultSet rs = jdbc.printRelative(id);
 		List<Relative> ls = relative.convertRsToRelatList(rs);
-		outObject.writeObject(ls);	
+		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
-		}
-	
-		void searchRelative() throws IOException, SQLException {
-			int id = Integer.parseInt(inFromClient.readLine());
-			ResultSet rs=jdbc.printRelative(id);
-			file.print("relative with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("relativeSearched");//searched relative
-			outToClient.flush();
-			List<Relative> ls = relative.convertRsToRelatList(rs);
-			outObject.writeObject(ls);
-			System.out.println("relative search after");			
-		}
+	}
 
-		void deleteRelative() throws IOException {
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteRelative(id);
-			
-			file.print("relative with id "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("relativeDeleted");//deleted relative
-			outToClient.flush();
-		}
-		void addincident() throws IOException{
-			String patientid = inFromClient.readLine();
-			String type = inFromClient.readLine();
-			String shortDescription = inFromClient.readLine();
-			String description = inFromClient.readLine();
-			String date = inFromClient.readLine();			
-			jdbc.addIncident(patientid,type,shortDescription,description,date);
-			file.print("Incident for "+patientid+" added... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("success");//add incident
-			outToClient.flush();
-		}
-		void updateIncident() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			String patientid = inFromClient.readLine();
-			String type = inFromClient.readLine();
-			String shortDescription = inFromClient.readLine();
-			String description = inFromClient.readLine();		
-			String date = inFromClient.readLine();	
-			jdbc.updateIncident(id,patientid,type,shortDescription,description,date);
-			file.print(patientid+"incident's "+id+" updated... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("incidentUpdated");//updated incident
-			outToClient.flush();
-			ResultSet rs=jdbc.printIncident(id);
-			List<Incident> ls = incident.convertRsToList(rs);
-			outObject.writeObject(ls);	
-			System.out.println("esteila kai to resultset");
-		}
-		void deleteIncident() throws IOException {
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteIncident(id);
-			
-			file.print("incident with id "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("incidentDeleted");//deleted incident
-			outToClient.flush();
-		}
-		void searchIncident() throws IOException, SQLException {
-			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printIncident(id);
-			file.print("incident with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("incidentSearched");//searched incident
-			outToClient.flush();
-			List<Incident> ls = incident.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("incident search after");			
-		}
+	void searchRelative() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printRelative(id);
+		file.print("relative with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("relativeSearched");// searched relative
+		outToClient.flush();
+		List<Relative> ls = relative.convertRsToRelatList(rs);
+		outObject.writeObject(ls);
+		System.out.println("relative search after");
+	}
 
-		void addTreatment() throws IOException, SQLException {
+	void deleteRelative() throws IOException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteRelative(id);
+
+		file.print("relative with id " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("relativeDeleted");// deleted relative
+		outToClient.flush();
+	}
+
+	void addincident() throws IOException {
+		String patientid = inFromClient.readLine();
+		String type = inFromClient.readLine();
+		String shortDescription = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		String date = inFromClient.readLine();
+		jdbc.addIncident(patientid, type, shortDescription, description, date);
+		file.print("Incident for " + patientid + " added... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("success");// add incident
+		outToClient.flush();
+	}
+
+	void updateIncident() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		String patientid = inFromClient.readLine();
+		String type = inFromClient.readLine();
+		String shortDescription = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		String date = inFromClient.readLine();
+		jdbc.updateIncident(id, patientid, type, shortDescription, description, date);
+		file.print(patientid + "incident's " + id + " updated... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("incidentUpdated");// updated incident
+		outToClient.flush();
+		ResultSet rs = jdbc.printIncident(id);
+		List<Incident> ls = incident.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("esteila kai to resultset");
+	}
+
+	void deleteIncident() throws IOException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteIncident(id);
+
+		file.print("incident with id " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("incidentDeleted");// deleted incident
+		outToClient.flush();
+	}
+
+	void searchIncident() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printIncident(id);
+		file.print("incident with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("incidentSearched");// searched incident
+		outToClient.flush();
+		List<Incident> ls = incident.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("incident search after");
+	}
+
+	void addTreatment() throws IOException, SQLException {
 		String patientid = inFromClient.readLine();
 		String startDate = inFromClient.readLine();
 		String endDate = inFromClient.readLine();
@@ -441,36 +495,37 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.flush();
 	}
 
-		void updateTreatment() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			String patientid = inFromClient.readLine();
-			String startDate = inFromClient.readLine();
-			String endDate = inFromClient.readLine();
-			String diagnosis = inFromClient.readLine();
-			String description = inFromClient.readLine();		
-			String staffid = inFromClient.readLine();
-			jdbc.updateTreatment(id,patientid,startDate,endDate,diagnosis,description,staffid);
-			file.print(patientid+"treatment's "+id+" updated... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("treatmentUpdated");//updated treatment
-			outToClient.flush();
-			ResultSet rs=jdbc.printTreatment(id);
-			List<Treatment> ls = treatment.convertRsToList(rs);
-			outObject.writeObject(ls);	
-			System.out.println("esteila kai to resultset");
-		}
-		void deleteTreatment() throws IOException {
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteTreatment(id);
-			
-			file.print("treatment with id "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("treatmentDeleted");//deleted treatment
-			outToClient.flush();
-		}
-	
+	void updateTreatment() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		String patientid = inFromClient.readLine();
+		String startDate = inFromClient.readLine();
+		String endDate = inFromClient.readLine();
+		String diagnosis = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		jdbc.updateTreatment(id, patientid, startDate, endDate, diagnosis, description, staffid);
+		file.print(patientid + "treatment's " + id + " updated... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("treatmentUpdated");// updated treatment
+		outToClient.flush();
+		ResultSet rs = jdbc.printTreatment(id);
+		List<Treatment> ls = treatment.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("esteila kai to resultset");
+	}
+
+	void deleteTreatment() throws IOException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteTreatment(id);
+
+		file.print("treatment with id " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("treatmentDeleted");// deleted treatment
+		outToClient.flush();
+	}
+
 	void deleteTreatmentMedication() throws IOException {
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
@@ -481,7 +536,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.println("treatmentMedicationDeleted");// deleted treatment
 		outToClient.flush();
 	}
-	
+
 	void renewTreatment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
@@ -499,32 +554,33 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
-	}	
-	
+	}
+
 	void overruleWarning() throws IOException, SQLException {
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
 		jdbc.overruleWarning(treatmentid, medicationid);
-		file.print("warning overruled for treatment with id " + treatmentid + " and medication id " + medicationid + " updated ... ");
+		file.print("warning overruled for treatment with id " + treatmentid + " and medication id " + medicationid
+				+ " updated ... ");
 		file.println(dtf.format(now));
 		file.flush();
 		outToClient.println("overruledWarning");// overruled warning
 		outToClient.flush();
 	}
-	
-		void searchTreatment() throws IOException, SQLException {
-			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printTreatment(id);
-			file.print("treatment with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("treatmentSearched");//searched treatment
-			outToClient.flush();
-			List<Treatment> ls = treatment.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("incident search after");			
-		}
-	
+
+	void searchTreatment() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printTreatment(id);
+		file.print("treatment with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("treatmentSearched");// searched treatment
+		outToClient.flush();
+		List<Treatment> ls = treatment.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("incident search after");
+	}
+
 	void searchPreviousTreatment() throws IOException, SQLException {
 		String id = inFromClient.readLine();
 		ResultSet rs = jdbc.findPreviousTreatment(id);
@@ -537,7 +593,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		outObject.writeObject(ls);
 		System.out.println("previous treatment search after");
 	}
-	
+
 	void searchRenewTreatment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
 		ResultSet rs = jdbc.printTreatment(id);
@@ -550,251 +606,269 @@ public class PsychiatryServer implements java.io.Serializable {
 		outObject.writeObject(ls);
 		System.out.println("incident search after");
 	}
-		
-		void addMedication()throws IOException{
-			String brand=inFromClient.readLine();
-			String name=inFromClient.readLine();
-			String description=inFromClient.readLine();
-			String effects=inFromClient.readLine();
-			int dose=Integer.parseInt(inFromClient.readLine());				
-			jdbc.addMedication(brand,name,description, effects,dose);
-			file.print("Medication with name "+name+" added... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("medicationAdded");//added medication
-		}
-		
-		void updateMedication() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			String brand = inFromClient.readLine();
-			String name = inFromClient.readLine();
-			String description = inFromClient.readLine();		
-			String effects = inFromClient.readLine();
-			int dose = Integer.parseInt(inFromClient.readLine());
-			jdbc.updateMedication(id,brand,name,description,effects,dose);
-			file.print("Medication "+id+" updated... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("medicationUpdated");//updated medication
-			outToClient.flush();
-			ResultSet rs=jdbc.printTreatment(id);
-			List<Medication> ls = medication.convertRsToList(rs);
-			outObject.writeObject(ls);	
-			System.out.println("esteila kai to resultset");
-		}
-		void deleteMedication() throws IOException {
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteMedication(id);
-			
-			file.print("medication with id "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("medicationDeleted");//deleted medication
-			outToClient.flush();
-		}
-		void searchMedication() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printMedication(id);
-			file.print("Medication with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("medicationSearched");//searched medication
-			outToClient.flush();
-			List<Medication> ls = medication.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("search after");
-		}
-		
-		void addConsultation()throws IOException{
-			String patientid=inFromClient.readLine();
-			String staffid=inFromClient.readLine();
-			String subject=inFromClient.readLine();
-			String dateBooked=inFromClient.readLine();
-			String date=inFromClient.readLine();
-			String time=inFromClient.readLine();
-			int treatmentid=Integer.parseInt(inFromClient.readLine());
-			jdbc.addConsultation(patientid,staffid,subject, dateBooked,date,time,treatmentid);
-			file.print("Consultation for patient with username "+patientid+" with"+staffid+" added... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("consultationAdded");//added consultation
-		}
-		void updateConsultation() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			String patientid = inFromClient.readLine();
-			String staffid = inFromClient.readLine();
-			String subject = inFromClient.readLine();		
-			String dateBooked = inFromClient.readLine();
-			String date = inFromClient.readLine();		
-			String time = inFromClient.readLine();	
-			int attended = Integer.parseInt(inFromClient.readLine());
-			int updated = Integer.parseInt(inFromClient.readLine());
-			int treatmentid = Integer.parseInt(inFromClient.readLine());			
-			jdbc.updateConsultation(id,patientid,staffid,subject,dateBooked,date,time,attended,updated,treatmentid);
-			file.print("Consultation "+id+" updated... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("consultationUpdated");//updated Consultation
-			outToClient.flush();
-			ResultSet rs=jdbc.printConsultation(id);
-			List<Consultation> ls = consultation.convertRsToList(rs);
-			outObject.writeObject(ls);	
-			System.out.println("esteila kai to resultset");
-			
-		}
-		void deleteConsultation() throws IOException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteConsultation(id);
-			file.print("Consultation with id "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("consultationDeleted");//deleted medication
-			outToClient.flush();
-			
-		}
-		void searchConsultation() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printConsultation(id);
-			file.print("Consultation with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("consultationSearched");//searched Consultation
-			outToClient.flush();
-			List<Consultation> ls = consultation.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("search after");
-			
-		}
-	
-	void addReaction() throws IOException{
-			String patientid = inFromClient.readLine();
-			int medicationid = Integer.parseInt(inFromClient.readLine());
-			String reactionType = inFromClient.readLine();
-			String description = inFromClient.readLine();
-			jdbc.addMedicationReaction(patientid, medicationid, reactionType, description);
-			
-			file.print("reaction of patient with username "+patientid+" added with medication id "+medicationid+"... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("reactionAdded");//add patient
-			outToClient.flush();
-			System.out.println("telos");
-		}
-		
-		void updateReaction() throws IOException, SQLException{
-			String patientid = inFromClient.readLine();
-			int medicationid = Integer.parseInt(inFromClient.readLine());
-			String reactionType = inFromClient.readLine();
-			String description = inFromClient.readLine();
-			System.out.println("update before");
-			jdbc.updateMedicationReaction(patientid, medicationid, reactionType, description);
-			System.out.println("update after");
-			
-			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" updated ... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("reactionUpdated");//updated patient
-			outToClient.flush();
-			ResultSet rs=jdbc.printMedicationReaction(patientid, medicationid);
-			List<MedicationReaction> ls = reaction.convertRsToList(rs);
-			outObject.writeObject(ls);	}
-		
-		void searchReaction() throws IOException, SQLException{
-			String patientid = inFromClient.readLine();
-			int medicationid = Integer.parseInt(inFromClient.readLine());
-			ResultSet rs=jdbc.printMedicationReaction(patientid, medicationid);
-			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("reactionSearched");//searched patient
-			outToClient.flush();
-			List<MedicationReaction> ls = reaction.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("search after");
-		}
-		void deleteReaction()throws IOException, SQLException{
-			String patientid = inFromClient.readLine();
-			int medicationid = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteMedicationReaction(patientid, medicationid);
-			
-			file.print("reaction of patient with username "+patientid+" and medication id "+medicationid+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("reactionDeleted");//deleted patient
-			outToClient.flush();
-		}	
-		void addComment() throws IOException{
-			String patientid = inFromClient.readLine();
-			String staffid = inFromClient.readLine();
-			String subject = inFromClient.readLine();
-			String comment = inFromClient.readLine();
-			jdbc.addComment(patientid, staffid, subject, comment);
-			file.print("comment for patient with username "+patientid+" added...");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("commentAdded");//add patient
-			outToClient.flush();
-		}
-		void updateComment() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			String patientid = inFromClient.readLine();
-			String staffid = inFromClient.readLine();
-			String subject = inFromClient.readLine();
-			String comm = inFromClient.readLine();
-			jdbc.updateComment(id,patientid, staffid, subject, comm);
-			file.print("comment for patient with username "+patientid+" updated ... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("commentUpdated");//updated patient
-			outToClient.flush();
-			ResultSet rs=jdbc.printComment(id);
-			List<Comment> ls = comment.convertRsToList(rs);
-			outObject.writeObject(ls);	
-			}
-		void deleteComment()throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());
-			jdbc.deleteComment(id);
-			file.print("comment "+id+" deleted... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("commentDeleted");//deleted patient
-			outToClient.flush();
-		}	
-		void searchComment() throws IOException, SQLException{
-			int id = Integer.parseInt(inFromClient.readLine());			
-			ResultSet rs=jdbc.printComment(id);
-			file.print("Comment with id "+id+" searched... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("commentSearched");//searched medication
-			outToClient.flush();
-			List<Comment> ls = comment.convertRsToList(rs);
-			outObject.writeObject(ls);
-			System.out.println("search after");
-		}
-	void consultationReport() throws IOException, SQLException{
-			boolean attendbool;
-			int attend = Integer.parseInt(inFromClient.readLine());
-			if (attend==1)
-				attendbool=true;
-			else
-				attendbool=false;
-			String date = inFromClient.readLine();
-			if (date.equals("null"))
-			date=null;
-			ResultSet rs = jdbc.getConsultationReport(attendbool,date);
-			file.print("Consultation report printed... ");
-			file.println(dtf.format(now));
-			file.flush();
-			outToClient.println("report");
-			outToClient.flush();
-			List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
-			outObject.writeObject(ls);
-		}
-	void consultationReportMedical() throws IOException, SQLException{
+
+	void addMedication() throws IOException {
+		String brand = inFromClient.readLine();
+		String name = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		String effects = inFromClient.readLine();
+		int dose = Integer.parseInt(inFromClient.readLine());
+		jdbc.addMedication(brand, name, description, effects, dose);
+		file.print("Medication with name " + name + " added... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationAdded");// added medication
+	}
+
+	void updateMedication() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		String brand = inFromClient.readLine();
+		String name = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		String effects = inFromClient.readLine();
+		int dose = Integer.parseInt(inFromClient.readLine());
+		jdbc.updateMedication(id, brand, name, description, effects, dose);
+		file.print("Medication " + id + " updated... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationUpdated");// updated medication
+		outToClient.flush();
+		ResultSet rs = jdbc.printTreatment(id);
+		List<Medication> ls = medication.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("esteila kai to resultset");
+	}
+
+	void deleteMedication() throws IOException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteMedication(id);
+
+		file.print("medication with id " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationDeleted");// deleted medication
+		outToClient.flush();
+	}
+
+	void searchMedication() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printMedication(id);
+		file.print("Medication with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationSearched");// searched medication
+		outToClient.flush();
+		List<Medication> ls = medication.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("search after");
+	}
+
+	void addConsultation() throws IOException {
+		String patientid = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		String subject = inFromClient.readLine();
+		String dateBooked = inFromClient.readLine();
+		String date = inFromClient.readLine();
+		String time = inFromClient.readLine();
+		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		jdbc.addConsultation(patientid, staffid, subject, dateBooked, date, time, treatmentid);
+		file.print("Consultation for patient with username " + patientid + " with" + staffid + " added... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("consultationAdded");// added consultation
+	}
+
+	void updateConsultation() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		String patientid = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		String subject = inFromClient.readLine();
+		String dateBooked = inFromClient.readLine();
+		String date = inFromClient.readLine();
+		String time = inFromClient.readLine();
+		int attended = Integer.parseInt(inFromClient.readLine());
+		int updated = Integer.parseInt(inFromClient.readLine());
+		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		jdbc.updateConsultation(id, patientid, staffid, subject, dateBooked, date, time, attended, updated,
+				treatmentid);
+		file.print("Consultation " + id + " updated... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("consultationUpdated");// updated Consultation
+		outToClient.flush();
+		ResultSet rs = jdbc.printConsultation(id);
+		List<Consultation> ls = consultation.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("esteila kai to resultset");
+
+	}
+
+	void deleteConsultation() throws IOException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteConsultation(id);
+		file.print("Consultation with id " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("consultationDeleted");// deleted medication
+		outToClient.flush();
+
+	}
+
+	void searchConsultation() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printConsultation(id);
+		file.print("Consultation with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("consultationSearched");// searched Consultation
+		outToClient.flush();
+		List<Consultation> ls = consultation.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("search after");
+
+	}
+
+	void addReaction() throws IOException {
+		String patientid = inFromClient.readLine();
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		String reactionType = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		jdbc.addMedicationReaction(patientid, medicationid, reactionType, description);
+
+		file.print("reaction of patient with username " + patientid + " added with medication id " + medicationid
+				+ "... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("reactionAdded");// add patient
+		outToClient.flush();
+		System.out.println("telos");
+	}
+
+	void updateReaction() throws IOException, SQLException {
+		String patientid = inFromClient.readLine();
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		String reactionType = inFromClient.readLine();
+		String description = inFromClient.readLine();
+		System.out.println("update before");
+		jdbc.updateMedicationReaction(patientid, medicationid, reactionType, description);
+		System.out.println("update after");
+
+		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
+				+ " updated ... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("reactionUpdated");// updated patient
+		outToClient.flush();
+		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
+		List<MedicationReaction> ls = reaction.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+
+	void searchReaction() throws IOException, SQLException {
+		String patientid = inFromClient.readLine();
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
+		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
+				+ " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("reactionSearched");// searched patient
+		outToClient.flush();
+		List<MedicationReaction> ls = reaction.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("search after");
+	}
+
+	void deleteReaction() throws IOException, SQLException {
+		String patientid = inFromClient.readLine();
+		int medicationid = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteMedicationReaction(patientid, medicationid);
+
+		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
+				+ " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("reactionDeleted");// deleted patient
+		outToClient.flush();
+	}
+
+	void addComment() throws IOException {
+		String patientid = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		String subject = inFromClient.readLine();
+		String comment = inFromClient.readLine();
+		jdbc.addComment(patientid, staffid, subject, comment);
+		file.print("comment for patient with username " + patientid + " added...");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("commentAdded");// add patient
+		outToClient.flush();
+	}
+
+	void updateComment() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		String patientid = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		String subject = inFromClient.readLine();
+		String comm = inFromClient.readLine();
+		jdbc.updateComment(id, patientid, staffid, subject, comm);
+		file.print("comment for patient with username " + patientid + " updated ... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("commentUpdated");// updated patient
+		outToClient.flush();
+		ResultSet rs = jdbc.printComment(id);
+		List<Comment> ls = comment.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+
+	void deleteComment() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		jdbc.deleteComment(id);
+		file.print("comment " + id + " deleted... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("commentDeleted");// deleted patient
+		outToClient.flush();
+	}
+
+	void searchComment() throws IOException, SQLException {
+		int id = Integer.parseInt(inFromClient.readLine());
+		ResultSet rs = jdbc.printComment(id);
+		file.print("Comment with id " + id + " searched... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("commentSearched");// searched medication
+		outToClient.flush();
+		List<Comment> ls = comment.convertRsToList(rs);
+		outObject.writeObject(ls);
+		System.out.println("search after");
+	}
+
+	void consultationReport() throws IOException, SQLException {
+		boolean attendbool;
+		int attend = Integer.parseInt(inFromClient.readLine());
+		if (attend == 1)
+			attendbool = true;
+		else
+			attendbool = false;
 		String date = inFromClient.readLine();
 		if (date.equals("null"))
-		date=null;
+			date = null;
+		ResultSet rs = jdbc.getConsultationReport(attendbool, date);
+		file.print("Consultation report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("report");
+		outToClient.flush();
+		List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+
+	void consultationReportMedical() throws IOException, SQLException {
+		String date = inFromClient.readLine();
+		if (date.equals("null"))
+			date = null;
 		ResultSet rs = jdbc.getUpdatedMedicalRecordsReport(date);
 		file.print("Consultation report for Medical Records printed... ");
 		file.println(dtf.format(now));
@@ -804,7 +878,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
+
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -819,15 +893,16 @@ public class PsychiatryServer implements java.io.Serializable {
 				outToClient = new PrintWriter(socket.getOutputStream(), true);
 				outObject = new ObjectOutputStream(socket.getOutputStream());
 				file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
-				patient=new Patient();
-				relative=new Relative();
-				incident=new Incident();
-				treatment=new Treatment();
-				medication=new Medication();
-				consultation=new Consultation();
-				reaction=new MedicationReaction();
+				patient = new Patient();
+				relative = new Relative();
+				incident = new Incident();
+				treatment = new Treatment();
+				medication = new Medication();
+				consultation = new Consultation();
+				reaction = new MedicationReaction();
 				comment = new Comment();
-				consultationReport=new ConsultationReport();
+				staff = new Staff();
+				consultationReport = new ConsultationReport();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -843,6 +918,10 @@ public class PsychiatryServer implements java.io.Serializable {
 						logout();
 					if (messageFromClient.equals("changePassword"))
 						changePassword();
+					if (messageFromClient.equals("printProfile"))
+						printProfile();
+					if (messageFromClient.equals("updateProfile"))
+						updateProfile();
 					if (messageFromClient.equals("addPatient"))
 						addPatient();
 					if (messageFromClient.equals("searchPatient"))
@@ -936,8 +1015,6 @@ public class PsychiatryServer implements java.io.Serializable {
 		}
 
 	}
-
-
 
 	public static void main(String[] args) throws IOException {
 		PsychiatryServer s = new PsychiatryServer();
