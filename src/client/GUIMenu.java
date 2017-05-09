@@ -102,6 +102,10 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
+		menuItem = new JMenuItem("View Warning Letters");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
 		return menu;
 	}
 
@@ -309,6 +313,22 @@ public class GUIMenu {
 		menu.add(menuItem);
 		return menu;
 	}
+	
+	/*
+	 * Menu for the Patient. This method generates the menu that a patient can
+	 * see. The patient can only see the user profile and change some data.
+	 */
+	public JMenuBar menuForPatient() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = AccountMenu();
+		JMenuItem menuItem;
+		menuItem = new JMenuItem("View My Appointments");
+		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		menuItem.addActionListener(al);
+		menu.add(menuItem);
+		menuBar.add(menu);
+		return menuBar;
+	}
 
 	/*
 	 * Menu for Doctor. This method generates the menu that a user with the role
@@ -323,22 +343,6 @@ public class GUIMenu {
 		menuBar.add(PatientsMenu());
 		menuBar.add(RelativesMenu());
 		menuBar.add(MedicationMenu());
-		return menuBar;
-	}
-
-	/*
-	 * Menu for the Patient. This method generates the menu that a patient can
-	 * see. The patient can only see the user profile and change some data.
-	 */
-	public JMenuBar menuForPatient() {
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = AccountMenu();
-		JMenuItem menuItem;
-		menuItem = new JMenuItem("View My Appointments");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
-		menuBar.add(menu);
 		return menuBar;
 	}
 
