@@ -19,11 +19,11 @@ public class Patient implements java.io.Serializable  {
 	public String Email;
 	public String Address;
 	public int NumOfIncidents;
-	public boolean SelfHarmRisk;
-	public boolean OthersHarmRisk;
+	public int SelfHarmRisk;
+	public int OthersHarmRisk;
 	public String RiskStatus;
-	public boolean ChangedByPatient;
-	public boolean DeadReadOnly;
+	public int ChangedByPatient;
+	public int DeadReadOnly;
 	public static ArrayList<String> columnNames = fillColumnNames();
 	
 	public List<Patient> convertRsToList(ResultSet rs) throws SQLException{
