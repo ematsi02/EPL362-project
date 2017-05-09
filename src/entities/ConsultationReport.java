@@ -33,26 +33,37 @@ public class ConsultationReport implements java.io.Serializable {
 	public int Consultation_MedicalRecordUpdated;
 	public ArrayList<String> columnNames = fillColumnNames();
 
-	public String toString(){
+	public String toString() {
 		return ("I am toString of Consultation Report\n");
 	}
 
-	public String getfield(int i){
-		switch (i){
-		case 0: return ((Integer)Consultation_ConsultationID).toString();
-		case 1: return Consultation_Subject;
-		case 2: return Consultation_Date;
-		case 3: return Consultation_Time;
-		case 4: return Patient_PatientID;
-		case 5: return Patient_Name;
-		case 6: return Patient_Surname;
-		case 7: return Staff_StaffID;
-		case 8: return Staff_Name;
-		case 9: return Staff_Surname;
-		default: return ((Integer)Consultation_MedicalRecordUpdated).toString();
+	public String getfield(int i) {
+		switch (i) {
+		case 0:
+			return Integer.toString(Consultation_ConsultationID);
+		case 1:
+			return Consultation_Subject;
+		case 2:
+			return Consultation_Date;
+		case 3:
+			return Consultation_Time;
+		case 4:
+			return Patient_PatientID;
+		case 5:
+			return Patient_Name;
+		case 6:
+			return Patient_Surname;
+		case 7:
+			return Staff_StaffID;
+		case 8:
+			return Staff_Name;
+		case 9:
+			return Staff_Surname;
+		default:
+			return Integer.toString(Consultation_MedicalRecordUpdated);
 		}
 	}
-	
+
 	public static DefaultTableModel buildTableModel(List<ConsultationReport> list, ArrayList<String> columnNames)
 			throws SQLException {
 		int columnCount = columnNames.size();
@@ -71,7 +82,7 @@ public class ConsultationReport implements java.io.Serializable {
 		}
 		return new DefaultTableModel(data, columns);
 	}
-	
+
 	public List<ConsultationReport> convertRsToList(ResultSet rs) throws SQLException {
 		List<ConsultationReport> ReportList = new ArrayList<ConsultationReport>();
 		while (rs.next()) {
