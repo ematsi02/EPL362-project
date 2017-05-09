@@ -706,6 +706,25 @@ public class JDBC {
 		}
 	}
 	
+	public void viewWarningLetters(String PatientID) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "";
+			if (PatientID != null)
+				query += "Select * From InformRelatives Where PatientID='" + PatientID + "';";
+			else
+				query += "Select * From InformRelatives";
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	// REPORTS
 
 	/**
