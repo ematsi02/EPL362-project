@@ -134,3 +134,11 @@ Select *
 From Treatment, TreatmentMedication, Medication
 Where Treatment.TreatmentID=TreatmentMedication.TreatmentID
 AND TreatmentMedication.MedicationID=Medication.MedicationID;
+
+// Select top row, latest date
+
+SELECT * 
+FROM `Treatment` 
+WHERE `PatientID`='un'
+order by StartDate desc
+Limit 1
