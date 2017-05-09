@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -2245,7 +2246,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							JLabel message = new JLabel("You have successfully added the reaction!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
-							message.setBounds(340, 470, 350, 50);
+							message.setBounds(340, 470, 370, 50);
 							getContentPane().add(medicationReactionForm());
 							getContentPane().add(message);
 						}
@@ -2452,7 +2453,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							JLabel message = new JLabel("You have successfully added the consultation!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
-							message.setBounds(340, 470, 350, 50);
+							message.setBounds(380, 380, 350, 50);
 							getContentPane().add(consultationForm());
 							getContentPane().add(message);
 						}
@@ -2670,7 +2671,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							JLabel message = new JLabel("You have successfully added the comment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
-							message.setBounds(340, 470, 350, 50);
+							message.setBounds(380, 380, 350, 50);
 							getContentPane().add(commentForm());
 							getContentPane().add(message);
 						}			
@@ -2930,14 +2931,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 
-	}
-
-
-	private JScrollPane resultsForm(ResultSet rs) throws Exception {
-		JTable results = new JTable(JDBC.buildTableModel(rs));
-		JScrollPane resultspanel = new JScrollPane(results);
-		resultspanel.setBounds(50, 400, 900, 300);
-		return resultspanel;
 	}
 
 	public static void main(String[] args) throws IOException {
