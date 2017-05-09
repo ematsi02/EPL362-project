@@ -319,6 +319,53 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.repaint();
 			this.pack();
 		} 		
+		else if (btnLabel.equals("Non Updated Daily Medical Records")) {
+			this.getContentPane().removeAll();
+			JPanel datePanel = new JPanel();
+			JLabel lbldate = new JLabel("Date");
+			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+			JDateChooser date = new JDateChooser();
+			date.setDateFormatString("yyyy-MM-dd");
+			JButton search = new JButton("Search");
+			search.setFont(new Font("Arial", Font.PLAIN, 14));
+			search.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReportMedical(dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
+			});
+			datePanel.add(lbldate);
+			datePanel.add(date);
+			datePanel.add(search);
+			datePanel.setBounds(350, 130, 250, 100);
+			datePanel.setOpaque(false);
+			datePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+			this.getContentPane().add(datePanel);
+			this.revalidate();
+			this.repaint();
+			this.pack();
+			
+		} else if (btnLabel.equals("Non Updated General Medical Records")) {
+			this.getContentPane().removeAll();
+			try {
+				this.getContentPane().add(consultationReportMedical("null"));
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} 
+		
 	}
 
 	class MyPanel extends JPanel implements java.io.Serializable {
@@ -2744,6 +2791,38 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return null;
 
 	}
+	
+	@SuppressWarnings("unchecked")
+	private JScrollPane consultationReportMedical(String daily) throws ClassNotFoundException {
+		out.println("consultationReportMedical");
+		out.println(daily);
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("medicalReport")) {
+					List<ConsultationReport> ls = (List<ConsultationReport>) inObject.readObject();
+					ConsultationReport cr = new ConsultationReport();
+					try {
+						JTable results = new JTable(cr.buildTableModel(ls, cr.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 150, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 
 	private JScrollPane resultsForm(ResultSet rs) throws Exception {
 		JTable results = new JTable(JDBC.buildTableModel(rs));
