@@ -18,7 +18,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import entities.Staff;
+import entities.AttendanceReport;
 import entities.Comment;
+import entities.ConditionReport;
 import entities.Consultation;
 import entities.ConsultationReport;
 import entities.Incident;
@@ -27,7 +30,8 @@ import entities.Patient;
 import entities.Relative;
 import entities.Treatment;
 import entities.MedicationReaction;
-import entities.Staff;
+import entities.MedicationReport;
+import entities.MedicationPrescription;
 
 public class PsychiatryServer implements java.io.Serializable {
 	/**
@@ -52,6 +56,10 @@ public class PsychiatryServer implements java.io.Serializable {
 	Comment comment;
 	Staff staff;
 	ConsultationReport consultationReport;
+	AttendanceReport attendanceReport;
+	ConditionReport conditionReport;
+	MedicationReport medicationReport;
+	MedicationPrescription medicationPrescription;
 
 	/*
 	 * Server gets username, password and role from client,checks if user
@@ -878,6 +886,61 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
+	void patientReport() throws IOException, SQLException{
+		int option = Integer.parseInt(inFromClient.readLine());
+		String value = inFromClient.readLine();
+		ResultSet rs = jdbc.getPatientReport(option,value);
+		file.print("Patient report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("patientReport");
+		outToClient.flush();
+		List<Patient> ls = patient.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+	
+	void AttendanceReport() throws IOException, SQLException{
+		ResultSet rs = jdbc.getAttendanceReport();
+		file.print("Attendance report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("attendanceReport");
+		outToClient.flush();
+		List<AttendanceReport> ls = attendanceReport.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+	
+	void conditionReport() throws IOException, SQLException{
+		ResultSet rs = jdbc.getConditionReport();
+		file.print("Condition report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("conditionReport");
+		outToClient.flush();
+		List<ConditionReport> ls = conditionReport.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+	
+	void medicationReport() throws IOException, SQLException{
+		ResultSet rs = jdbc.getMedicationReport();
+		file.print("Medication report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationReport");
+		outToClient.flush();
+		List<MedicationReport> ls = medicationReport.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
+	void medicationPrescription() throws IOException, SQLException{
+		ResultSet rs = jdbc.getMedicationPrescriptionsSummary();
+		file.print("medication Prescription report printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("medicationPrescription");
+		outToClient.flush();
+		List<MedicationPrescription> ls = medicationPrescription.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
 
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -902,6 +965,11 @@ public class PsychiatryServer implements java.io.Serializable {
 				reaction = new MedicationReaction();
 				comment = new Comment();
 				staff = new Staff();
+				consultationReport=new ConsultationReport();
+				attendanceReport=new AttendanceReport();
+				conditionReport = new ConditionReport();
+				medicationReport = new MedicationReport();
+				medicationPrescription = new MedicationPrescription();
 				consultationReport = new ConsultationReport();
 				file.print("Start... ");
 				file.println(dtf.format(now));
@@ -1002,6 +1070,20 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteComment();
 					if (messageFromClient.equals("searchComment"))
 						searchComment();
+					if (messageFromClient.equals("consultationReport"))
+						consultationReport();
+					if (messageFromClient.equals("consultationReportMedical"))
+						consultationReportMedical();
+					if (messageFromClient.equals("patientReport"))
+						patientReport();
+					if (messageFromClient.equals("attendanceReport"))
+						AttendanceReport();
+					if (messageFromClient.equals("conditionReport"))
+						conditionReport();
+					if (messageFromClient.equals("medicationReport"))
+						medicationReport();
+					if (messageFromClient.equals("medicationPrescription"))
+						medicationPrescription();
 				}
 
 			}
