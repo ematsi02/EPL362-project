@@ -677,6 +677,12 @@ public class JDBC {
 	 *            myDate : the date of the consultations in the form
 	 *            "yyyy-mm-dd", or null if general instead of daily report is
 	 *            requested
+	 * 
+	 * @return ResultSet : Values, the result of the query (Fields from entity
+	 *         ConsultationReport, Fields: Consultation.ConsultationID,
+	 *         Consultation.Subject, Consultation.Date, Consultation.Time,
+	 *         Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID,
+	 *         Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated)
 	 */
 	public ResultSet getConsultationReport(boolean attended, String myDate) {
 		try {
@@ -712,8 +718,12 @@ public class JDBC {
 	 *            myDate : the date of the consultations in the form
 	 *            "yyyy-mm-dd", or null if general instead of daily report is
 	 *            requested
-	 *            
-	 * @return ResultSet : Values, the result of the query
+	 * 
+	 * @return ResultSet : Values, the result of the query (Fields from entity
+	 *         ConsultationReport, Fields: Consultation.ConsultationID,
+	 *         Consultation.Subject, Consultation.Date, Consultation.Time,
+	 *         Patient.PatientID, Patient.Name, Patient.Surname, Staff.StaffID,
+	 *         Staff.Name, Staff.Surname, Consultation.MedicalRecordUpdated)
 	 */
 	public ResultSet getUpdatedMedicalRecordsReport(String myDate) {
 		try {
@@ -754,8 +764,9 @@ public class JDBC {
 	 *            value : null if option 1 is selected, Name of a condition if
 	 *            option 2 is selected, Name of a Medication if option 3 is
 	 *            selected
-	 *  
-	 * @return ResultSet : Values, the result of the query
+	 * 
+	 * @return ResultSet : Values, the result of the query (Fields of Patient
+	 *         entity)
 	 * 
 	 */
 	public ResultSet getPatientReport(int option, String value) {
@@ -767,8 +778,8 @@ public class JDBC {
 				query = "Select * From Patient Where ChangedByPatient='1';";
 				break;
 
-			case 2: // Patients with specific Condition,
-					// so value = condition name
+			case 2: // Patients with specific Condition/Diagnosis,
+					// so value = condition/diagnosis name
 				query = "Select Patient.* From Patient, Treatment Where Treatment.Diagnosis='" + value
 						+ "' AND Patient.PatientID=Treatment.PatientID Group By Patient.PatientID;";
 				break;
@@ -790,20 +801,17 @@ public class JDBC {
 	}
 
 	/**
-	 * // --------- Number of Patients Attended
+	 * This function returns the result set of the report which shows the number
+	 * of patients who attended the clinic for each day.
 	 * 
-	 * int, String
-	 * 
-	 * Select COUNT(Consultation.PatientID), Consultation.Date From Consultation
-	 * Where Consultation.Attended='1' Group By Consultation.Date Order By
-	 * COUNT(Consultation.PatientID);
-	 * 
-	 * @return ResultSet : Values, the result of the query
+	 * @return ResultSet : Values, the result of the query (int, String-Date)
 	 */
 	public ResultSet getNumPatientsAttendedReport() {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "";
+			String query = "Select COUNT(Consultation.PatientID), Consultation.Date "
+					+ "From Consultation Where Consultation.Attended='1' Group By "
+					+ "Consultation.Date Order By COUNT(Consultation.PatientID);";
 
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
@@ -814,13 +822,17 @@ public class JDBC {
 	}
 
 	/**
+	 * This function returns the result set of the report which shows the number
+	 * of patients who were marked with the same diagnosis/condition, for each
+	 * one of them.
 	 * 
-	 * @return ResultSet : Values, the result of the query
+	 * @return ResultSet : Values, the result of the query (int, String)
 	 */
 	public ResultSet getNumPatientsConditionReport() {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "";
+			String query = "Select COUNT(Treatment.PatientID), Treatment.Diagnosis "
+					+ "From Treatment Group By Treatment.Diagnosis Order By COUNT(PatientID) DESC";
 
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
@@ -829,4 +841,52 @@ public class JDBC {
 			return null;
 		}
 	}
+
+	/**
+	 * This function returns the result set of the report which shows the number
+	 * of patients who were prescribed with the same medication (of the same
+	 * brand), for each one of them.
+	 * 
+	 * @return ResultSet : Values, the result of the query (int, int, String)
+	 */
+	public ResultSet getNumPatientsMedicationReport() {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "Select COUNT(Treatment.PatientID), Medication.MedicationID, Medication.Name "
+					+ "From Treatment, TreatmentMedication, Medication Where "
+					+ "Treatment.TreatmentID=TreatmentMedication.TreatmentID AND "
+					+ "TreatmentMedication.MedicationID=Medication.MedicationID "
+					+ "Group By Treatment.PatientID Order By COUNT(Treatment.PatientID) DESC;";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * This function returns the result set of the report which shows a summary
+	 * of the medication prescriptions from all treatment records of the clinic.
+	 * 
+	 * @return ResultSet : Values, the result of the query (Entity used is
+	 *         MedicationPrescription, which contains fields from 3 entities:
+	 *         Treatment, TreatmentMedication, Medication)
+	 */
+	public ResultSet getMedicationPrescriptionsSummary() {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "Select * From Treatment, TreatmentMedication, Medication "
+					+ "Where Treatment.TreatmentID=TreatmentMedication.TreatmentID "
+					+ "AND TreatmentMedication.MedicationID=Medication.MedicationID;";
+
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
 }
