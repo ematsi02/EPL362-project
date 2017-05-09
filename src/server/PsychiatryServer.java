@@ -578,7 +578,7 @@ public class PsychiatryServer implements java.io.Serializable {
 			file.print("Consultation for patient with username "+patientid+" with"+staffid+" added... ");
 			file.println(dtf.format(now));
 			file.flush();
-			outToClient.println("consulationAdded");//added consultation
+			outToClient.println("consultationAdded");//added consultation
 		}
 		void updateConsultation() throws IOException, SQLException{
 			int id = Integer.parseInt(inFromClient.readLine());
