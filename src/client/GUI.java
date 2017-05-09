@@ -50,6 +50,7 @@ import entities.Treatment;
 import entities.MedicationReaction;
 import entities.MedicationReport;
 import entities.MedicationPrescription;
+import entities.Staff;
 
 public class GUI extends JFrame implements ActionListener, java.io.Serializable {
 	/**
@@ -89,11 +90,33 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		if (btnLabel.equals("View/Edit Profile")) {
+		} else if (btnLabel.equals("View/Edit Profile")) {
 			this.getContentPane().removeAll();
-			ResultSet rs = SADB.printProfile(usernameGUI, roleGUI);
-			this.getContentPane().add(profileForm(rs));
+			out.println("printProfile");
+			out.flush();
+			out.println(usernameGUI);
+			out.flush();
+			out.println(roleGUI);
+			out.flush();
+			if (roleGUI.equals("Patient")) {
+				List<Patient> ls = new ArrayList<Patient>();
+				try {
+					ls = (List<Patient>) inObject.readObject();
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.getContentPane().add(profilePatientForm(ls));
+			} else {
+				List<Staff> ls = new ArrayList<Staff>();
+				try {
+					ls = (List<Staff>) inObject.readObject();
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.getContentPane().add(profileStaffForm(ls));
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -629,7 +652,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return loginpanel;
 	}
 
-	private JPanel profileForm(ResultSet rs) {
+	private JPanel profilePatientForm(List<Patient> patients) {
 		try {
 			JPanel profilepanel = new JPanel();
 			JLabel lblname = new JLabel("Name");
@@ -646,31 +669,128 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbladdress = new JLabel("Address");
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField name = new JTextField(rs.getString("Name"));
-			JTextField surname = new JTextField(rs.getString("Surname"));
-			JTextField username;
-			if (roleGUI.equals("Patient"))
-				username = new JTextField(rs.getString("PatientID"));
-			else
-				username = new JTextField(rs.getString("StaffID"));
+			JTextField name = new JTextField(patients.get(0).Name);
+			JTextField surname = new JTextField(patients.get(0).Surname);
+			JTextField username = new JTextField(patients.get(0).PatientID);
 			username.setEditable(false);
-			JTextField password = new JPasswordField(rs.getString("Password"));
+			JTextField password = new JPasswordField(patients.get(0).Password);
 			password.setEditable(false);
-			JTextField phone = new JTextField(rs.getString("Phone"));
-			JTextField email = new JTextField(rs.getString("Email"));
-			JTextField address = new JTextField(rs.getString("Address"));
+			JTextField phone = new JTextField(Integer.toString(patients.get(0).Phone));
+			JTextField email = new JTextField(patients.get(0).Email);
+			JTextField address = new JTextField(patients.get(0).Address);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
-						SADB.updateProfile(name.getText(), surname.getText(), username.getText(),
-								Integer.parseInt(phone.getText()), email.getText(), address.getText(), roleGUI);
-						getContentPane().removeAll();
-						getContentPane().add(profileForm(SADB.printProfile(username.getText(), roleGUI)));
-						revalidate();
-						repaint();
-						pack();
+						out.println("updateProfile");
+						out.println(name.getText());
+						out.println(surname.getText());
+						out.println(username.getText());
+						out.println(Integer.parseInt(phone.getText()));
+						out.println(email.getText());
+						out.println(address.getText());
+						out.println(roleGUI);
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("profileUpdated")) {
+								JLabel message = new JLabel("You have successfully updated your profile!");
+								message.setFont(new Font("Arial", Font.PLAIN, 14));
+								message.setBounds(340, 350, 350, 50);
+								message.setForeground(Color.blue);
+								List<Patient> ls = new ArrayList<Patient>();
+								ls = (List<Patient>) inObject.readObject();
+								getContentPane().add(profilePatientForm(ls));
+								getContentPane().add(message);
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
+					} catch (Exception er) {
+						// Ignore the error and continues
+					}
+				}
+			});
+			profilepanel.add(lblname);
+			profilepanel.add(name);
+			profilepanel.add(lblsurname);
+			profilepanel.add(surname);
+			profilepanel.add(lblusername);
+			profilepanel.add(username);
+			profilepanel.add(lblpassword);
+			profilepanel.add(password);
+			profilepanel.add(lblphone);
+			profilepanel.add(phone);
+			profilepanel.add(lblemail);
+			profilepanel.add(email);
+			profilepanel.add(lbladdress);
+			profilepanel.add(address);
+			profilepanel.add(update);
+			profilepanel.setBounds(350, 150, 250, 250);
+			profilepanel.setOpaque(false);
+			return profilepanel;
+		} catch (Exception er) {
+			// Ignore the error and continues
+			return null;
+		}
+	}
+	
+	private JPanel profileStaffForm(List<Staff> staff) {
+		try {
+			JPanel profilepanel = new JPanel();
+			JLabel lblname = new JLabel("Name");
+			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblsurname = new JLabel("Surname");
+			lblsurname.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblusername = new JLabel("Username");
+			lblusername.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblpassword = new JLabel("Password");
+			lblpassword.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblphone = new JLabel("Phone");
+			lblphone.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lblemail = new JLabel("Email");
+			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbladdress = new JLabel("Address");
+			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
+			JTextField name = new JTextField(staff.get(0).Name);
+			JTextField surname = new JTextField(staff.get(0).Surname);
+			JTextField username = new JTextField(staff.get(0).StaffID);
+			username.setEditable(false);
+			JTextField password = new JPasswordField(staff.get(0).Password);
+			password.setEditable(false);
+			JTextField phone = new JTextField(Integer.toString(staff.get(0).Phone));
+			JTextField email = new JTextField(staff.get(0).Email);
+			JTextField address = new JTextField(staff.get(0).Address);
+			JButton update = new JButton("Update");
+			update.setFont(new Font("Arial", Font.PLAIN, 14));
+			update.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						out.println("updateProfile");
+						out.println(name.getText());
+						out.println(surname.getText());
+						out.println(username.getText());
+						out.println(Integer.parseInt(phone.getText()));
+						out.println(email.getText());
+						out.println(address.getText());
+						out.println(roleGUI);
+						if ((messageFromServer = in.readLine()) != null) {
+							getContentPane().removeAll();
+							if (messageFromServer.equals("profileUpdated")) {
+								JLabel message = new JLabel("You have successfully updated your profile!");
+								message.setFont(new Font("Arial", Font.PLAIN, 14));
+								message.setBounds(340, 350, 350, 50);
+								message.setForeground(Color.blue);
+								List<Staff> ls = new ArrayList<Staff>();
+								ls = (List<Staff>) inObject.readObject();
+								getContentPane().add(profileStaffForm(ls));
+								getContentPane().add(message);
+							}
+							revalidate();
+							repaint();
+							pack();
+						}
 					} catch (Exception er) {
 						// Ignore the error and continues
 					}
