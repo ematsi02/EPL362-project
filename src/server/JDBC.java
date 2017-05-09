@@ -203,6 +203,21 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	public void updateHarmRisk(String patientid, int self, int others, String status) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "UPDATE Patient SET SelfHarmRisk=" + self + ", OthersHarmRisk=" + others + ", RiskStatus='"
+					+ status + "' WHERE PatientID='" + patientid + "';";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
 
 	public void deletePatient(String username) {
 		try {
@@ -367,6 +382,22 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	public void addTreatmentMedication(int treatmentid, int medicationid, int dose, String description) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "INSERT INTO TreatmentMedication (TreatmentID, MedicationID, Dose, DoseDescription) VALUES ("
+					+ treatmentid + ", " + medicationid + ", " + dose + ", '" + description + "');";
+			stmt.executeUpdate(query);
+
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
 
 	public void updateTreatment(int treatmentid, String patientid, String startDate, String endDate, String diagnosis,
 			String description, String staffid) {
@@ -375,6 +406,41 @@ public class JDBC {
 			String query = "UPDATE Treatment SET PatientID='" + patientid + "', StartDate='" + startDate
 					+ "', EndDate='" + endDate + "', Diagnosis='" + diagnosis + "', Description='" + description
 					+ "', StaffID='" + staffid + "' WHERE TreatmentID=" + treatmentid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public ResultSet findTreatment(String patientid, String startDate, String endDate, String diagnosis, String description,
+			String staffid) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Treatment WHERE PatientID='" + patientid
+					+ "' AND StartDate='" + startDate + "' AND EndDate='" + endDate + "' AND Diagnosis='" + diagnosis
+					+ "' AND Description='" + description + "' AND StaffID='" + staffid + "';");
+			return rs;
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
+	public void renewTreatment(int treatmentid, String patientid, String startDate, String endDate, String notes,
+			String staffid) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "INSERT INTO RenewTreatment (TreatmentID, PatientID, StartDate, EndDate, Notes, StaffID) VALUES ("
+					+ treatmentid + ", '" + patientid + "', '" + startDate + "', '" + endDate + "', '" + notes + "', '"
+					+ staffid + "');";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
