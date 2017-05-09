@@ -370,13 +370,54 @@ public class JDBC {
 			String query = "INSERT INTO TreatmentMedication (TreatmentID, MedicationID, Dose, DoseDescription) VALUES ("
 					+ treatmentid + ", " + medicationid + ", " + dose + ", '" + description + "');";
 			stmt.executeUpdate(query);
-
+			Statement stmt2 = conn.createStatement();
+			ResultSet rs2 = stmt2.executeQuery("SELECT * FROM Medication WHERE MedicationID=" + medicationid + ";");
+			rs2.next();
+			Statement stmt4 = conn.createStatement();
+			ResultSet rs4 = stmt4.executeQuery("SELECT * FROM Treatment WHERE TreatmentID=" + treatmentid + ";");
+			rs4.next();
+			ResultSet rs5 = stmt4.executeQuery("SELECT * FROM MedicationReaction WHERE PatientID='"
+					+ rs4.getString("PatientID") + "' AND MedicationID=" + medicationid + ";");
+			int x = 1;
+			if (!rs5.next())
+				x = 0;
+			if (dose > rs2.getInt("MaxDose") || x == 1) {
+				String query3;
+				Statement stmt3 = conn.createStatement();
+				if (dose > rs2.getInt("MaxDose") && x == 1)
+					query3 = "UPDATE TreatmentMedication SET WarningMessage='Prescription is overdosed and patient is allergic to medication!' WHERE TreatmentID="
+							+ treatmentid + " AND MedicationID=" + medicationid + ";";
+				else if (dose > rs2.getInt("MaxDose"))
+					query3 = "UPDATE TreatmentMedication SET WarningMessage='Prescription is overdosed!' WHERE TreatmentID="
+							+ treatmentid + " AND MedicationID=" + medicationid + ";";
+				else
+					query3 = "UPDATE TreatmentMedication SET WarningMessage='Patient is allergic to medication!' WHERE TreatmentID="
+							+ treatmentid + " AND MedicationID=" + medicationid + ";";
+				stmt3.executeUpdate(query3);
+			}
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
 			System.out.print(e.getErrorCode());
 			System.out.print("\nSQL State: ");
 			System.out.println(e.getSQLState());
 			System.out.println(e.getMessage());
+		}
+	}
+	
+		public String checkForWarning(int treatmentid, int medicationid) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM TreatmentMedication WHERE TreatmentID=" + treatmentid
+					+ " AND MedicationID=" + medicationid + ";");
+			rs.next();
+			return rs.getString("WarningMessage");
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 
@@ -415,6 +456,22 @@ public class JDBC {
 		}
 	}
 	
+	public ResultSet findPreviousTreatment(String patientid) {
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(
+					"SELECT * FROM Treatment WHERE PatientID='" + patientid + "' ORDER BY StartDate DESC LIMIT 1");
+			return rs;
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
 	public void renewTreatment(int treatmentid, String patientid, String startDate, String endDate, String notes,
 			String staffid) {
 		try {
@@ -436,6 +493,36 @@ public class JDBC {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "DELETE FROM Treatment WHERE TreatmentID=" + treatmentid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void deleteTreatmentMedication(int treatmentid, int medicationid) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "DELETE FROM TreatmentMedication WHERE TreatmentID=" + treatmentid + " AND MedicationID="
+					+ medicationid + ";";
+			stmt.executeUpdate(query);
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	public void overruleWarning(int treatmentid, int medicationid) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "UPDATE TreatmentMedication SET OverruledWarning=1 WHERE TreatmentID=" + treatmentid
+					+ " AND MedicationID=" + medicationid + ";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
