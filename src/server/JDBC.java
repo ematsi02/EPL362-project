@@ -848,8 +848,9 @@ public class JDBC {
 	}
 
 	/**
-	 * Number of Patients Attended. This function returns the result set of the report which shows the number
-	 * of patients who attended the clinic for each day.
+	 * Number of Patients Attended. This function returns the result set of the
+	 * report which shows the number of patients who attended the clinic for
+	 * each day.
 	 * 
 	 * @return ResultSet : Values, the result of the query (int, String-Date)
 	 */
@@ -869,9 +870,9 @@ public class JDBC {
 	}
 
 	/**
-	 * Number of Patients by Condition. This function returns the result set of the report which shows the number
-	 * of patients who were marked with the same diagnosis/condition, for each
-	 * one of them.
+	 * Number of Patients by Condition. This function returns the result set of
+	 * the report which shows the number of patients who were marked with the
+	 * same diagnosis/condition, for each one of them.
 	 * 
 	 * @return ResultSet : Values, the result of the query (int, String)
 	 */
@@ -890,11 +891,13 @@ public class JDBC {
 	}
 
 	/**
-	 * Number of Patients by Treatment/Medication, Report. This function returns the result set of the report which shows the number
-	 * of patients who were prescribed with the same medication (of the same
-	 * brand), for each one of them.
+	 * Number of Patients by Treatment/Medication, Report. This function returns
+	 * the result set of the report which shows the number of patients who were
+	 * prescribed with the same medication (of the same brand), for each one of
+	 * them.
 	 * 
-	 * @return ResultSet : Values, the result of the query (int, int, String)
+	 * @return ResultSet : Values, the result of the query (Entity
+	 *         MedicationReport, fields: int, int, String)
 	 */
 	public ResultSet getMedicationReport() {
 		try {
@@ -904,7 +907,7 @@ public class JDBC {
 					+ "Treatment.TreatmentID=TreatmentMedication.TreatmentID AND "
 					+ "TreatmentMedication.MedicationID=Medication.MedicationID "
 					+ "Group By Medication.MedicationID Order By COUNT(Treatment.PatientID) DESC;";
-			
+
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException e) {
@@ -914,8 +917,9 @@ public class JDBC {
 	}
 
 	/**
-	 * Medication prescriptions summary. This function returns the result set of the report which shows a summary
-	 * of the medication prescriptions from all treatment records of the clinic.
+	 * Medication prescriptions summary. This function returns the result set of
+	 * the report which shows a summary of the medication prescriptions from all
+	 * treatment records of the clinic.
 	 * 
 	 * @return ResultSet : Values, the result of the query (Entity used is
 	 *         MedicationPrescription, which contains fields from 3 entities:
