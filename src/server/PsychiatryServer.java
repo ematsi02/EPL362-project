@@ -20,6 +20,7 @@ import java.util.List;
 
 import entities.Comment;
 import entities.Consultation;
+import entities.ConsultationReport;
 import entities.Incident;
 import entities.Medication;
 import entities.Patient;
@@ -48,6 +49,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	Consultation consultation;
 	MedicationReaction reaction;
 	Comment comment;
+	ConsultationReport consultationReport;
 
 
 	/*
@@ -733,6 +735,25 @@ public class PsychiatryServer implements java.io.Serializable {
 			outObject.writeObject(ls);
 			System.out.println("search after");
 		}
+	void consultationReport() throws IOException, SQLException{
+			boolean attendbool;
+			int attend = Integer.parseInt(inFromClient.readLine());
+			if (attend==1)
+				attendbool=true;
+			else
+				attendbool=false;
+			String date = inFromClient.readLine();
+			if (date.equals("null"))
+			date=null;
+			ResultSet rs = jdbc.getConsultationReport(attendbool,date);
+			file.print("Consultation report printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+			outToClient.println("report");
+			outToClient.flush();
+			List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
+			outObject.writeObject(ls);
+		}
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
 		if (jdbc.conn == null) {
@@ -755,6 +776,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				consultation=new Consultation();
 				reaction=new MedicationReaction();
 				comment = new Comment();
+				consultationReport=new ConsultationReport();
 				file.print("Start... ");
 				file.println(dtf.format(now));
 				file.flush();
@@ -844,6 +866,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteComment();
 					if (messageFromClient.equals("searchComment"))
 						searchComment();
+					if (messageFromClient.equals("consultationReport"))
+						consultationReport();
 				}
 
 			}
