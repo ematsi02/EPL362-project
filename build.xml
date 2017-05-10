@@ -46,7 +46,7 @@
 		<javac includeantruntime="false" />
 	</presetdef>
 
-	<!-- Compiles the java code (including the usage of library for JUnit) -->
+	<!-- Compiles the java code (including the usage of external jars) -->
 	<target name="compile" depends="clean, makedir">
 
 		<javac srcdir="${entities.dir}" destdir="${build.dir}">
