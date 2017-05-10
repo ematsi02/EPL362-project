@@ -301,8 +301,9 @@ public class PsychiatryServer implements java.io.Serializable {
 		int self = Integer.parseInt(inFromClient.readLine());
 		int others = Integer.parseInt(inFromClient.readLine());
 		String status = inFromClient.readLine();
+		int dead = Integer.parseInt(inFromClient.readLine());
 		System.out.println("update before");
-		jdbc.updateHarmRisk(username, self, others, status);
+		jdbc.updateHarmRisk(username, self, others, status, dead);
 		System.out.println("update after");
 
 		file.print("patient's harm risk with username " + username + " updated... ");
