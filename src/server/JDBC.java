@@ -189,7 +189,8 @@ public class JDBC {
 			String query;
 			if (role.equals("Patient"))
 				query = "UPDATE Patient SET Name='" + name + "', Surname='" + surname + "', Phone=" + phone
-						+ ", Email='" + email + "', Address='" + address + "', ChangedByPatient=1 WHERE PatientID='" + username + "';";
+						+ ", Email='" + email + "', Address='" + address + "', ChangedByPatient=1 WHERE PatientID='"
+						+ username + "';";
 			else
 				query = "UPDATE Staff SET Name='" + name + "', Surname='" + surname + "', Phone=" + phone + ", Email='"
 						+ email + "', Address='" + address + "' WHERE StaffID='" + username + "';";
@@ -1673,9 +1674,16 @@ public class JDBC {
 	public ResultSet getMedicationPrescriptionsSummary() {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "Select * From Treatment, TreatmentMedication, Medication "
-					+ "Where Treatment.TreatmentID=TreatmentMedication.TreatmentID "
-					+ "AND TreatmentMedication.MedicationID=Medication.MedicationID;";
+			String query = "Select Treatment.TreatmentID, Treatment.PatientID, Treatment.StartDate, "
+					+ "Treatment.EndDate, Treatment.Diagnosis, Treatment.Description, "
+					+ "Treatment.StaffID, TreatmentMedication.TreatmentID, TreatmentMedication."
+					+ "MedicationID, TreatmentMedication.Dose, TreatmentMedication.DoseDescription, "
+					+ "TreatmentMedication.OverruledWarning, TreatmentMedication.WarningMessage, "
+					+ "Medication.MedicationID, Medication.Brand, Medication.Name, Medication."
+					+ "Description, Medication.KnownSideEffects, Medication.MaxDose From Treatment, "
+					+ "TreatmentMedication, Medication Where Treatment.TreatmentID="
+					+ "TreatmentMedication.TreatmentID AND TreatmentMedication.MedicationID"
+					+ "=Medication.MedicationID;";
 
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
