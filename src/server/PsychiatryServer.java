@@ -1458,6 +1458,19 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<WarningLetter> ls = letter.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
+	void todaysAppointments() throws IOException, SQLException{
+		String date = inFromClient.readLine();
+		if (date.equals("null"))
+			date = null;
+		ResultSet rs = jdbc.viewTodaysAppointments(date);
+		file.print("Today appontments printed... ");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("todaysAppointments");
+		outToClient.flush();
+		List<Consultation> ls = consultation.convertRsToList(rs);
+		outObject.writeObject(ls);
+	}
 
 	void start() throws IOException {
 		jdbc.conn = jdbc.getDBConnection();
@@ -1606,6 +1619,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						medicationPrescription();
 					if (messageFromClient.equals("warningLetters"))
 						warningLetters();
+					if (messageFromClient.equals("todaysAppointments"))
+						todaysAppointments();
 				}
 
 			}
