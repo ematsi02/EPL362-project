@@ -1,5 +1,15 @@
+/**
+ * This class implements the graphical user interface (GUI) that the users will be able
+ * to see and use to interact with the system. The users of the system are:
+ * Clinical Staff (Doctors, Nurses, Health Visitors), Receptionists, Medical Records
+ * Staff, Health Service Management.
+ * 
+ * @author Sotia Gregoriou, Elena Matsi, Erasmia Shimitra
+ */
+
 package client;
 
+// Libraries
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -36,7 +46,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.PrintWriter;
-
 import entities.AttendanceReport;
 import entities.Comment;
 import entities.Consultation;
@@ -54,9 +63,6 @@ import entities.MedicationPrescription;
 import entities.Staff;
 
 public class GUI extends JFrame implements ActionListener, java.io.Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	BufferedImage image;
 	public MyPanel contentPane = new MyPanel();
@@ -70,10 +76,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 	String messageFromServer = null;
 	GUIMenu myMenu = null;
 
+	// Constructor
 	public GUI() {
 		BufferedImage image;
 		try {
-			image = ImageIO.read(getClass().getResource("/health.png"));
+			image = ImageIO.read(getClass().getResource("/health.png")); // Icon
 			this.setIconImage(image);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -254,8 +261,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		 else if (btnLabel.equals("Attended Daily Consultations")) {
+		} else if (btnLabel.equals("Attended Daily Consultations")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -265,18 +271,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			try {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				getContentPane().add(consultationReports(1,dateFormat.format(date.getDate())));
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			revalidate();
-			repaint();
-			pack();
-			}
+				public void actionPerformed(ActionEvent e) {
+					try {
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						getContentPane().add(consultationReports(1, dateFormat.format(date.getDate())));
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					revalidate();
+					repaint();
+					pack();
+				}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -288,12 +294,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-			
-		}
-		else if (btnLabel.equals("Attended General Consultations")) {
+		} else if (btnLabel.equals("Attended General Consultations")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(consultationReports(1,"null"));
+				this.getContentPane().add(consultationReports(1, "null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -301,9 +305,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-			}
-		
-		else if (btnLabel.equals("Non Attended Daily Consultations")) {
+		} else if (btnLabel.equals("Non Attended Daily Consultations")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -313,18 +315,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			try {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				getContentPane().add(consultationReports(0,dateFormat.format(date.getDate())));
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			revalidate();
-			repaint();
-			pack();
-			}
+				public void actionPerformed(ActionEvent e) {
+					try {
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						getContentPane().add(consultationReports(0, dateFormat.format(date.getDate())));
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					revalidate();
+					repaint();
+					pack();
+				}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -336,11 +338,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-			
 		} else if (btnLabel.equals("Non Attended General Consultations")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(consultationReports(0,"null"));
+				this.getContentPane().add(consultationReports(0, "null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -348,8 +349,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 		
-		else if (btnLabel.equals("Non Updated Daily Medical Records")) {
+		} else if (btnLabel.equals("Non Updated Daily Medical Records")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -359,18 +359,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			try {
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-				getContentPane().add(consultationReportMedical(dateFormat.format(date.getDate())));
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			revalidate();
-			repaint();
-			pack();
-			}
+				public void actionPerformed(ActionEvent e) {
+					try {
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						getContentPane().add(consultationReportMedical(dateFormat.format(date.getDate())));
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					revalidate();
+					repaint();
+					pack();
+				}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -382,7 +382,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-			
 		} else if (btnLabel.equals("Non Updated General Medical Records")) {
 			this.getContentPane().removeAll();
 			try {
@@ -397,7 +396,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		} else if (btnLabel.equals("Changes of Patient Profiles")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(patientReport(1,"null"));
+				this.getContentPane().add(patientReport(1, "null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -405,8 +404,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
-		else if (btnLabel.equals("Patients with specific Condition")) {
+		} else if (btnLabel.equals("Patients with specific Condition")) {
 			this.getContentPane().removeAll();
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Condition");
@@ -415,17 +413,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			try {
-				getContentPane().add(patientReport(2,value.getText()));
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			revalidate();
-			repaint();
-			pack();
-			}
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().add(patientReport(2, value.getText()));
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					revalidate();
+					repaint();
+					pack();
+				}
 			});
 			namePanel.add(lblname);
 			namePanel.add(value);
@@ -437,8 +435,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
-		else if (btnLabel.equals("Patients with specific Treatment/Medication")) {
+		} else if (btnLabel.equals("Patients with specific Treatment/Medication")) {
 			this.getContentPane().removeAll();
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Treatment/Medication");
@@ -447,16 +444,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			try {
-				getContentPane().add(patientReport(3,value.getText()));
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			revalidate();
-			repaint();
-			pack();
-			}
+				public void actionPerformed(ActionEvent e) {
+					try {
+						getContentPane().add(patientReport(3, value.getText()));
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+					revalidate();
+					repaint();
+					pack();
+				}
 			});
 			namePanel.add(lblname);
 			namePanel.add(value);
@@ -468,8 +465,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
-		else if (btnLabel.equals("Number of Patients Attended")) {
+		} else if (btnLabel.equals("Number of Patients Attended")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(AttendanceReport());
@@ -480,8 +476,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		else if (btnLabel.equals("Number of Patients by Condition")) {
+		} else if (btnLabel.equals("Number of Patients by Condition")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(ConditionReport());
@@ -492,8 +487,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		else if (btnLabel.equals("Number of Patients by Treatment/Medication")) {
+		} else if (btnLabel.equals("Number of Patients by Treatment/Medication")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(MedicationReport());
@@ -504,8 +498,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		else if (btnLabel.equals("Medication Prescriptions Summary")) {
+		} else if (btnLabel.equals("Medication Prescriptions Summary")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(medicationPrescription());
@@ -516,8 +509,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
-		else if (btnLabel.equals("View Warning Letters")) {
+		} else if (btnLabel.equals("View Warning Letters")) {
 			try {
 				getContentPane().add(warningLetters("null"));
 			} catch (ClassNotFoundException e2) {
@@ -527,10 +519,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
-		
+		}
 	}
 
+	/**
+	 * This class is used to insert a background image.
+	 */
 	class MyPanel extends JPanel implements java.io.Serializable {
 		private BufferedImage image;
 
@@ -555,7 +549,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 	}
 
 	public void connectToServer() throws IOException {
-
 		// Make connection and initialize streams
 		socket = new Socket("localhost", 8080);
 		in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -563,6 +556,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		inObject = new ObjectInputStream(socket.getInputStream());
 	}
 
+	/**
+	 * This function implements the action of the log in. Only users can log in
+	 * to the system (Staff: Clinical, Medical Records, Receptionists, Health
+	 * Service and Patients)
+	 * 
+	 * @return JPanel the panel for the log in
+	 */
 	private JPanel loginForm() {
 		String[] roles = { "Staff", "Patient" };
 		JPanel loginpanel = new JPanel();
@@ -580,7 +580,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-
+					// Send data to server
 					out.flush();
 					out.println("login");
 					out.flush();
@@ -591,47 +591,42 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.flush();
 					out.println(role.getSelectedItem().toString());
 					out.flush();
-
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("Doctor")) {// user is
-																	// doctor
+						// User is doctor
+						if (messageFromServer.equals("Doctor")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForDoctor());
-						} else if (messageFromServer.equals("Nurse-HealthVisitor")) {// user
-																						// is
-							// nurse or health visitor
+							// User is nurse or health visitor
+						} else if (messageFromServer.equals("Nurse-HealthVisitor")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForClinicalStaff());
-						} else if (messageFromServer.equals("Receptionist")) {// user
-																				// is
-																				// receptionist
+							// User is receptionist
+						} else if (messageFromServer.equals("Receptionist")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForReceptionist());
-						} else if (messageFromServer.equals("MedicalRecords")) {// user
-																				// is
-																				// medical
-																				// records
+							// User is medical records
+						} else if (messageFromServer.equals("MedicalRecords")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForMedicalRecords());
-						} else if (messageFromServer.equals("Management")) {// user
-																			// is
-																			// management
+							// User is management
+						} else if (messageFromServer.equals("Management")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForManagement());
-						} else if (messageFromServer.equals("Patient")) {// user is
-																	// patient
+							// User is patient
+						} else if (messageFromServer.equals("Patient")) {
 							usernameGUI = username.getText();
 							roleGUI = role.getSelectedItem().toString();
 							setJMenuBar(myMenu.menuForPatient());
-						} else if (messageFromServer.equals("wrong")) {// incorrect
-																		// user
+							// Not authenticated user
+						} else if (messageFromServer.equals("wrong")) {
 							JLabel message = new JLabel("* Username or Password incorrect!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -646,8 +641,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
-					System.out.println("exception in logn");
+					System.out.println("Exception: login");
 				}
 			}
 		});
@@ -664,6 +658,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return loginpanel;
 	}
 
+	/**
+	 * This function shows the profile of the patient that is logged in and
+	 * gives the opportunity to change his/her personal information.
+	 * 
+	 * @return JPanel the panel for profile if the user is patient
+	 */
 	private JPanel profilePatientForm(List<Patient> patients) {
 		try {
 			JPanel profilepanel = new JPanel();
@@ -695,6 +695,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateProfile");
 						out.println(name.getText());
 						out.println(surname.getText());
@@ -703,13 +704,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(email.getText());
 						out.println(address.getText());
 						out.println(roleGUI);
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("profileUpdated")) {
 								JLabel message = new JLabel("You have successfully updated your profile!");
 								message.setFont(new Font("Arial", Font.PLAIN, 14));
 								message.setBounds(340, 350, 350, 50);
 								message.setForeground(Color.blue);
+								// Get data from server
 								List<Patient> ls = new ArrayList<Patient>();
 								ls = (List<Patient>) inObject.readObject();
 								getContentPane().add(profilePatientForm(ls));
@@ -720,7 +724,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: profilePatientForm");
 					}
 				}
 			});
@@ -743,11 +747,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			profilepanel.setOpaque(false);
 			return profilepanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: profilePatientForm");
 			return null;
 		}
 	}
-	
+
+	/**
+	 * This function shows the profile of the staff that is logged in and gives
+	 * the opportunity to change his/her personal information.
+	 * 
+	 * @return JPanel the panel for profile if the user is staff
+	 */
 	private JPanel profileStaffForm(List<Staff> staff) {
 		try {
 			JPanel profilepanel = new JPanel();
@@ -779,6 +789,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateProfile");
 						out.println(name.getText());
 						out.println(surname.getText());
@@ -787,13 +798,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(email.getText());
 						out.println(address.getText());
 						out.println(roleGUI);
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("profileUpdated")) {
 								JLabel message = new JLabel("You have successfully updated your profile!");
 								message.setFont(new Font("Arial", Font.PLAIN, 14));
 								message.setBounds(340, 350, 350, 50);
 								message.setForeground(Color.blue);
+								// Get data from server
 								List<Staff> ls = new ArrayList<Staff>();
 								ls = (List<Staff>) inObject.readObject();
 								getContentPane().add(profileStaffForm(ls));
@@ -804,7 +818,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: profileStaffForm");
 					}
 				}
 			});
@@ -827,11 +841,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			profilepanel.setOpaque(false);
 			return profilepanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: profileStaffForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to the user that is logged in to
+	 * change his/her password.
+	 * 
+	 * @return JPanel the panel for changing password form
+	 */
 	private JPanel changePasswordForm() {
 		JPanel m = new JPanel();
 		JLabel lbloldpassword = new JLabel(" Old Password");
@@ -845,6 +865,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		changepassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("changePassword");
 					out.flush();
 					out.println(usernameGUI);
@@ -855,12 +876,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.flush();
 					out.println(roleGUI);
 					out.flush();
-
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
-						if (messageFromServer.equals("passwordChanged")) {// password
-																			// changed
+						// Successful update
+						if (messageFromServer.equals("passwordChanged")) {
 							System.out.println(messageFromServer + "allagi");
 							JLabel message = new JLabel("You have successfully changed your password!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -869,8 +890,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							getContentPane().add(changePasswordForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("wrongPassword")) {// wrong
-																		// password
+						// Unsuccessful update
+						if (messageFromServer.equals("wrongPassword")) {
 							JLabel message = new JLabel("* Wrong password! Give again!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -883,7 +904,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 					out.flush();
-				} catch (Exception er) { // Ignore the error and continues
+				} catch (Exception er) {
+					System.out.println("Exception: changePasswordForm");
 				}
 			}
 		});
@@ -898,6 +920,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return m;
 	}
 
+	/**
+	 * This function gives the opportunity to new staff of the system to sign up
+	 * (as a Doctor, Nurse, Health Visitor, Receptionist, Medical Records or
+	 * Management).
+	 * 
+	 * @return JPanel the panel for signing up form
+	 */
 	JPanel signupForm() {
 		String[] roles = { "Doctor", "Nurse", "Health Visitor", "Receptionist", "Medical Records", "Management" };
 		JPanel signuppanel = new JPanel();
@@ -932,6 +961,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		signup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("signup");
 					out.println(username.getText());
 					out.println(password.getText());
@@ -942,11 +972,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(email.getText());
 					out.println(address.getText());
 					out.flush();
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
-						if (messageFromServer.equals("success")) {// successful
-																	// sign
-																	// up
+						// Successful sign up
+						if (messageFromServer.equals("success")) {
 							JLabel message = new JLabel("You have successfully signed up!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
@@ -955,9 +985,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							getContentPane().add(signupForm());
 							getContentPane().add(message);
 						}
-						if (messageFromServer.equals("alreadyExists")) {// username
-																		// already
-																		// exists
+						// Unsuccessful sign up
+						if (messageFromServer.equals("alreadyExists")) {
 							JLabel message = new JLabel("* Username already exists! Give a different one!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.red);
@@ -971,7 +1000,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: signupForm");
 				}
 			}
 		});
@@ -999,6 +1028,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return signuppanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new patients.
+	 * 
+	 * @return JPanel the panel for adding patients form
+	 */
 	private JPanel patientForm() {
 		JPanel patientpanel = new JPanel();
 		JLabel lblname = new JLabel("        Name");
@@ -1023,7 +1057,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextField email = new JTextField(15);
 		JTextField address = new JTextField(15);
 		JButton addPatient = new JButton("Add");
-
 		patientpanel.add(lblname);
 		patientpanel.add(name);
 		patientpanel.add(lblsurname);
@@ -1042,6 +1075,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addPatient.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addPatient");
 					out.println(name.getText());
 					out.println(surname.getText());
@@ -1050,8 +1084,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(Integer.parseInt(phone.getText()));
 					out.println(email.getText());
 					out.println(address.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("patientAdded")) {
 							JLabel message = new JLabel("You have successfully added the patient!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1065,7 +1101,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: patientForm");
 				}
 			}
 		});
@@ -1075,6 +1111,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return patientpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit patients.
+	 * 
+	 * @return JPanel the panel for editing patients form
+	 */
 	private JPanel patientsForm(List<Patient> patients) {
 		try {
 			JPanel patientpanel = new JPanel();
@@ -1108,6 +1149,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updatePatient");
 						out.println(username.getText());
 						out.println(name.getText());
@@ -1115,10 +1157,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(Integer.parseInt(phone.getText()));
 						out.println(email.getText());
 						out.println(address.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("patientUpdated")) {
 								getContentPane().add(searchPatientForm());
+								// Get data from server
 								List<Patient> ls = new ArrayList<Patient>();
 								ls = (List<Patient>) inObject.readObject();
 								getContentPane().add(patientsForm(ls));
@@ -1128,7 +1173,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: patientsForm");
 					}
 				}
 			});
@@ -1137,20 +1182,22 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deletePatient");
 						out.println(username.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("patientDeleted")) {
 								getContentPane().add(searchPatientForm());
 							}
-
 							revalidate();
 							repaint();
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: patientsForm");
 					}
 				}
 			});
@@ -1174,11 +1221,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			patientpanel.setOpaque(false);
 			return patientpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: patientsForm");
 			return null;
 		}
 	}
-	
+
+	/**
+	 * This function gives the opportunity update harm risk records for
+	 * patients.
+	 * 
+	 * @return JPanel the panel for editing harm risk records form
+	 */
 	private JPanel harmRiskForm(List<Patient> patients) {
 		try {
 			JPanel patientpanel = new JPanel();
@@ -1216,16 +1269,20 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateHarmRisk");
 						out.println(username.getText());
 						out.println(Integer.parseInt(self.getText()));
 						out.println(Integer.parseInt(others.getText()));
 						out.println(status.getText());
 						out.println(Integer.parseInt(dead.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("harmRiskUpdated")) {
 								getContentPane().add(searchPatientForHarmRiskForm());
+								// Get data from server
 								List<Patient> ls = new ArrayList<Patient>();
 								ls = (List<Patient>) inObject.readObject();
 								getContentPane().add(harmRiskForm(ls));
@@ -1235,7 +1292,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: harmRiskForm");
 					}
 				}
 			});
@@ -1260,11 +1317,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			patientpanel.setOpaque(false);
 			return patientpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: harmRiskForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search harm risk records.
+	 * 
+	 * @return JPanel the panel for searching harm risk records form
+	 */
 	private JPanel searchPatientForHarmRiskForm() {
 		JPanel patientpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Patient with Username: ");
@@ -1275,23 +1337,26 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchHarmRisk");
 					out.println(id.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("harmRiskSearched")) {
 							getContentPane().add(searchPatientForHarmRiskForm());
+							// Get data from server
 							List<Patient> ls = (List<Patient>) inObject.readObject();
 							getContentPane().add(harmRiskForm(ls));
 						}
-
 						revalidate();
 						repaint();
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchPatientForHarmRiskForm");
 				}
 			}
 		});
@@ -1303,6 +1368,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return patientpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to search patients.
+	 * 
+	 * @return JPanel the panel for searching patients form
+	 */
 	private JPanel searchPatientForm() {
 		JPanel patientpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Patient with Username: ");
@@ -1313,23 +1383,26 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchPatient");
 					out.println(id.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("patientSearched")) {
 							getContentPane().add(searchPatientForm());
+							// Get data from server
 							List<Patient> ls = (List<Patient>) inObject.readObject();
 							getContentPane().add(patientsForm(ls));
 						}
-
 						revalidate();
 						repaint();
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchPatientForm");
 				}
 			}
 		});
@@ -1341,6 +1414,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return patientpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new relatives.
+	 * 
+	 * @return JPanel the panel for adding relatives form
+	 */
 	private JPanel relativeForm() {
 		JPanel relativepanel = new JPanel();
 		JLabel lblpatientusername = new JLabel("Patient's Username");
@@ -1383,6 +1461,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addRelative.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("relativeForm");
 					out.println(patientusername.getText());
 					out.println(name.getText());
@@ -1391,9 +1470,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(email.getText());
 					out.println(address.getText());
 					out.println(relationship.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("success")) {
 							JLabel message = new JLabel("You have successfully added the relative!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1407,7 +1488,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: relativeForm");
 				}
 			}
 		});
@@ -1417,6 +1498,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return relativepanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit relatives.
+	 * 
+	 * @return JPanel the panel for editing relatives form
+	 */
 	private JPanel relativesForm(List<Relative> relatives) {
 		try {
 			JPanel relativepanel = new JPanel();
@@ -1451,6 +1537,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 				@SuppressWarnings("unchecked")
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateRelative");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -1460,10 +1547,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(email.getText());
 						out.println(address.getText());
 						out.println(relationship.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Succesful update
 							if (messageFromServer.equals("relativeUpdated")) {
 								getContentPane().add(searchRelativeForm());
+								// Get data from server
 								List<Relative> ls = new ArrayList<Relative>();
 								ls = (List<Relative>) inObject.readObject();
 								getContentPane().add(relativesForm(ls));
@@ -1473,7 +1563,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: relativesForm");
 					}
 				}
 			});
@@ -1482,21 +1572,23 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteRelative");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("relativeDeleted")) {
 								getContentPane().add(searchRelativeForm());
 							}
-
 							revalidate();
 							repaint();
 							pack();
 						}
 
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: relativesForm");
 					}
 				}
 			});
@@ -1522,11 +1614,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			relativepanel.setOpaque(false);
 			return relativepanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: relativesForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search relatives.
+	 * 
+	 * @return JPanel the panel for searching relatives form
+	 */
 	private JPanel searchRelativeForm() {
 		JPanel relativepanel = new JPanel();
 		JLabel lblid = new JLabel("Search Relative with ID: ");
@@ -1537,25 +1634,28 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.flush();
 					out.println("searchRelative");
 					out.flush();
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("relativeSearched")) {
 							getContentPane().add(searchRelativeForm());
+							// Get data from server
 							List<Relative> ls = (List<Relative>) inObject.readObject();
 							getContentPane().add(relativesForm(ls));
 						}
-
 						revalidate();
 						repaint();
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchRelativeForm");
 				}
 			}
 		});
@@ -1567,6 +1667,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return relativepanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new incidents.
+	 * 
+	 * @return JPanel the panel for adding incidents form
+	 */
 	private JPanel incidentForm() {
 		String[] types = { "Accidental Treatment Incident", "Deliberate Incident", "Threat" };
 		JPanel incidentpanel = new JPanel();
@@ -1590,7 +1695,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JDateChooser date = new JDateChooser();
 		date.setDateFormatString("yyyy-MM-dd");
 		JButton addIncident = new JButton("Add");
-
 		incidentpanel.add(lblpatientid);
 		incidentpanel.add(patientid);
 		incidentpanel.add(lbltype);
@@ -1607,6 +1711,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addIncident.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("incidentForm");
 					out.println(patientid.getText());
 					out.println(type.getSelectedItem().toString());
@@ -1614,8 +1719,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(description.getText());
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					out.println(dateFormat.format(date.getDate()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("success")) {
 							JLabel message = new JLabel("You have successfully added the incident!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1630,7 +1737,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					}
 
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: incidentForm");
 				}
 			}
 		});
@@ -1640,6 +1747,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return incidentpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit incidents.
+	 * 
+	 * @return JPanel the panel for editing incidents form
+	 */
 	private JPanel incidentsForm(List<Incident> incident) {
 		try {
 			JPanel incidentpanel = new JPanel();
@@ -1667,6 +1779,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateIncident");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -1674,10 +1787,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(shortDescription.getText());
 						out.println(description.getText());
 						out.println(date.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("incidentUpdated")) {
 								getContentPane().add(searchIncidentForm());
+								// Get data from server
 								List<Incident> ls = new ArrayList<Incident>();
 								ls = (List<Incident>) inObject.readObject();
 								getContentPane().add(incidentsForm(ls));
@@ -1688,7 +1804,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						}
 
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: incidentsForm");
 					}
 				}
 			});
@@ -1697,10 +1813,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteIncident");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("incidentDeleted")) {
 								getContentPane().add(searchIncidentForm());
 							}
@@ -1709,7 +1828,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: incidentsForm");
 					}
 				}
 			});
@@ -1731,11 +1850,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			incidentpanel.setOpaque(false);
 			return incidentpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: incidentsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search incidents.
+	 * 
+	 * @return JPanel the panel for searching incidents form
+	 */
 	private JPanel searchIncidentForm() {
 		JPanel incidentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Incident with ID: ");
@@ -1746,24 +1870,27 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchIncident");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("incidentSearched")) {
 							getContentPane().add(searchIncidentForm());
+							// Get data from server
 							List<Incident> ls = (List<Incident>) inObject.readObject();
 							getContentPane().add(incidentsForm(ls));
 						}
-
 						revalidate();
 						repaint();
 						pack();
 					}
 
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchIncidentForm");
 				}
 			}
 		});
@@ -1775,6 +1902,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return incidentpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new treatments.
+	 * 
+	 * @return JPanel the panel for adding treatments form
+	 */
 	private JPanel treatmentForm() {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
@@ -1815,6 +1947,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addTreatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addTreatment");
 					out.println(patientid.getText());
 					DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -1823,14 +1956,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(diagnosis.getText());
 					out.println(description.getText());
 					out.println(staffid.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("treatmentAdded")) {
 							JLabel message = new JLabel("You have successfully added the treatment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
 							message.setBounds(380, 380, 350, 50);
+							// Get data from server
 							List<Treatment> ls = new ArrayList<Treatment>();
 							ls = (List<Treatment>) inObject.readObject();
 							getContentPane().add(treatmentMedicationForm(ls));
@@ -1841,7 +1977,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: treatmentForm");
 				}
 			}
 		});
@@ -1851,6 +1987,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return treatmentpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add medications to a treatment.
+	 * 
+	 * @return JPanel the panel for adding medications form
+	 */
 	private JPanel treatmentMedicationForm(List<Treatment> treatment) {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lbltreatmentid = new JLabel("               Treatment's ID          ");
@@ -1880,15 +2021,19 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addTreatment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addTreatmentMedication");
 					out.println(treatmentid.getText());
 					out.println(medicationid.getText());
 					out.println(dose.getText());
 					out.println(description.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("treatmentMedicationAdded")) {
+							// Get data from server
 							String warning = messageFromServer = in.readLine();
 							JLabel message = new JLabel("You have successfully added the medication to the treatment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -1896,19 +2041,23 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							message.setBounds(360, 380, 400, 50);
 							getContentPane().add(treatmentMedicationForm(treatment));
 							getContentPane().add(message);
+							// Warning issued
 							if (!messageFromServer.equals("None")) {
 								int dialogButton = JOptionPane.showConfirmDialog(null,
 										warning + " Do you want to continue?", "WARNING", JOptionPane.YES_NO_OPTION);
+								// Overruled Warning
 								if (dialogButton == JOptionPane.YES_OPTION) {
 									out.println("overruleWarning");
 									out.println(Integer.parseInt(treatmentid.getText()));
 									out.println(Integer.parseInt(medicationid.getText()));
 								}
+								// Accepted Warning
 								if (dialogButton == JOptionPane.NO_OPTION) {
 									out.println("deleteTreatmentMedication");
 									out.println(Integer.parseInt(treatmentid.getText()));
 									out.println(Integer.parseInt(medicationid.getText()));
 								}
+								// Get data from server
 								messageFromServer = in.readLine();
 							}
 						}
@@ -1917,7 +2066,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: treatmentMedicationForm");
 				}
 			}
 		});
@@ -1926,7 +2075,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return treatmentpanel;
 	}
-	
+
+	/**
+	 * This function gives the opportunity to view and edit treatments.
+	 * 
+	 * @return JPanel the panel for editing treatments form
+	 */
 	private JPanel treatmentsForm(List<Treatment> treatment) {
 		try {
 			JPanel treatmentpanel = new JPanel();
@@ -1957,6 +2111,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateTreatment");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -1965,20 +2120,23 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(diagnosis.getText());
 						out.println(description.getText());
 						out.println(staffid.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("treatmentUpdated")) {
 								getContentPane().add(searchTreatmentForm());
+								// Get data from server
 								List<Treatment> ls = new ArrayList<Treatment>();
 								ls = (List<Treatment>) inObject.readObject();
 								getContentPane().add(treatmentsForm(ls));
 							}
-						revalidate();
-						repaint();
-						pack();
+							revalidate();
+							repaint();
+							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: treatmentsForm");
 					}
 				}
 			});
@@ -1987,19 +2145,22 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteTreatment");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("treatmentDeleted")) {
 								getContentPane().add(searchTreatmentForm());
 							}
 							revalidate();
 							repaint();
 							pack();
-						}						
+						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: treatmentsForm");
 					}
 				}
 			});
@@ -2023,11 +2184,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			treatmentpanel.setOpaque(false);
 			return treatmentpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: treatmentsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to view a previous treatment.
+	 * 
+	 * @return JPanel the panel for viewing previous treatment form
+	 */
 	private JPanel previousTreatmentsForm(List<Treatment> treatment) {
 		try {
 			JPanel treatmentpanel = new JPanel();
@@ -2077,11 +2243,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			treatmentpanel.setOpaque(false);
 			return treatmentpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: previousTreatmentsForm");
 			return null;
 		}
 	}
-	
+
+	/**
+	 * This function gives the opportunity to search treatments.
+	 * 
+	 * @return JPanel the panel for searching treatments form
+	 */
 	private JPanel searchTreatmentForm() {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Treatment with ID: ");
@@ -2092,13 +2263,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchTreatment");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("treatmentSearched")) {
 							getContentPane().add(searchTreatmentForm());
+							// Get data from server
 							List<Treatment> ls = (List<Treatment>) inObject.readObject();
 							getContentPane().add(treatmentsForm(ls));
 						}
@@ -2107,7 +2282,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchTreatmentForm");
 				}
 			}
 		});
@@ -2118,7 +2293,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.setOpaque(false);
 		return treatmentpanel;
 	}
-	
+
+	/**
+	 * This function gives the opportunity to search a previous treatment.
+	 * 
+	 * @return JPanel the panel for searching previous treatment form
+	 */
 	private JPanel searchPreviousTreatmentForm() {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Previous Treatment with Patient's Username: ");
@@ -2129,13 +2309,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchPreviousTreatment");
 					out.println(id.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Succesful search
 						if (messageFromServer.equals("previousTreatmentSearched")) {
 							getContentPane().add(searchPreviousTreatmentForm());
+							// Get data from server
 							List<Treatment> ls = (List<Treatment>) inObject.readObject();
 							getContentPane().add(treatmentForm());
 							getContentPane().add(previousTreatmentsForm(ls));
@@ -2145,7 +2329,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchPreviousTreatmentForm");
 				}
 			}
 		});
@@ -2156,7 +2340,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		treatmentpanel.setOpaque(false);
 		return treatmentpanel;
 	}
-	
+
+	/**
+	 * This function gives the opportunity to renew a treatment.
+	 * 
+	 * @return JPanel the panel for renewing treatment form
+	 */
 	private JPanel renewTreatmentsForm(List<Treatment> treatment) {
 		try {
 			JPanel treatmentpanel = new JPanel();
@@ -2186,6 +2375,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			renew.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("renewTreatment");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -2193,10 +2383,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(endDate.getText());
 						out.println(notes.getText());
 						out.println(staffid.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful addition
 							if (messageFromServer.equals("treatmentRenewed")) {
 								getContentPane().add(searchRenewTreatmentForm());
+								// Get data from server
 								List<Treatment> ls = new ArrayList<Treatment>();
 								ls = (List<Treatment>) inObject.readObject();
 								getContentPane().add(renewTreatmentsForm(ls));
@@ -2206,7 +2399,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: renewTreatmentsForm");
 					}
 				}
 			});
@@ -2227,11 +2420,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			treatmentpanel.setOpaque(false);
 			return treatmentpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: renewTreatmentsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search renewed treatments.
+	 * 
+	 * @return JPanel the panel for searching renewed treatments form
+	 */
 	private JPanel searchRenewTreatmentForm() {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Treatment with ID: ");
@@ -2242,13 +2440,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchRenewTreatment");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("renewTreatmentSearched")) {
 							getContentPane().add(searchRenewTreatmentForm());
+							// Get data from server
 							List<Treatment> ls = (List<Treatment>) inObject.readObject();
 							getContentPane().add(renewTreatmentsForm(ls));
 						}
@@ -2257,7 +2459,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchRenewTreatmentForm");
 				}
 			}
 		});
@@ -2269,6 +2471,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return treatmentpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new medications.
+	 * 
+	 * @return JPanel the panel for adding medications form
+	 */
 	private JPanel medicationForm() {
 		JPanel medicationpanel = new JPanel();
 		JLabel lblbrand = new JLabel("                     Brand");
@@ -2288,9 +2495,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextArea effects = new JTextArea(5, 20);
 		JScrollPane scrollPane2 = new JScrollPane(effects);
 		JTextField dose = new JTextField(15);
-		
 		JButton addMedication = new JButton("Add");
-
 		medicationpanel.add(lblbrand);
 		medicationpanel.add(brand);
 		medicationpanel.add(lblname);
@@ -2305,15 +2510,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addMedication.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addMedication");
 					out.println(brand.getText());
 					out.println(name.getText());
 					out.println(description.getText());
 					out.println(effects.getText());
 					out.println(dose.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("medicationAdded")) {
 							JLabel message = new JLabel("You have successfully added the medication!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -2327,7 +2535,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: medicationForm");
 				}
 			}
 		});
@@ -2337,6 +2545,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return medicationpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit medications.
+	 * 
+	 * @return JPanel the panel for editing medications form
+	 */
 	private JPanel medicationsForm(List<Medication> medication) {
 		try {
 			JPanel medicationpanel = new JPanel();
@@ -2364,6 +2577,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateMedication");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(brand.getText());
@@ -2371,10 +2585,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(description.getText());
 						out.println(effects.getText());
 						out.println(Integer.parseInt(dose.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("medicationUpdated")) {
 								getContentPane().add(searchMedicationForm());
+								// Get data from server
 								List<Medication> ls = new ArrayList<Medication>();
 								ls = (List<Medication>) inObject.readObject();
 								getContentPane().add(medicationsForm(ls));
@@ -2384,7 +2601,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: medicationsForm");
 					}
 				}
 			});
@@ -2393,19 +2610,22 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteMedication");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("medicationDeleted")) {
 								getContentPane().add(searchMedicationForm());
 							}
 							revalidate();
 							repaint();
 							pack();
-						}			
+						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: medicationsForm");
 					}
 				}
 			});
@@ -2425,11 +2645,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			medicationpanel.setOpaque(false);
 			return medicationpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: medicationsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search medications.
+	 * 
+	 * @return JPanel the panel for searching medications form
+	 */
 	private JPanel searchMedicationForm() {
 		JPanel medicationpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Medication with ID: ");
@@ -2440,23 +2665,27 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchMedication");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("medicationSearched")) {
 							getContentPane().add(searchMedicationForm());
 							@SuppressWarnings("unchecked")
+							// Get data from server
 							List<Medication> ls = (List<Medication>) inObject.readObject();
 							getContentPane().add(medicationsForm(ls));
 						}
 						revalidate();
 						repaint();
 						pack();
-					}					
+					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchMedicationForm");
 				}
 			}
 		});
@@ -2468,6 +2697,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return medicationpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new medication reactions.
+	 * 
+	 * @return JPanel the panel for adding medication reactions form
+	 */
 	private JPanel medicationReactionForm() {
 		JPanel reactionpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
@@ -2484,7 +2718,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(description);
 		JButton addReaction = new JButton("Add");
-
 		reactionpanel.add(lblpatientid);
 		reactionpanel.add(patientid);
 		reactionpanel.add(lblmedicationid);
@@ -2497,15 +2730,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addReaction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addReaction");
 					out.println(patientid.getText());
 					out.println(medicationid.getText());
 					out.println(type.getText());
 					out.println(description.getText());
-					System.out.println("TA ESTEILA!");
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("reactionAdded")) {
 							JLabel message = new JLabel("You have successfully added the reaction!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -2519,7 +2754,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: medicationReactionForm");
 				}
 			}
 		});
@@ -2529,6 +2764,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return reactionpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit medication
+	 * reactions.
+	 * 
+	 * @return JPanel the panel for editing medication reactions form
+	 */
 	private JPanel medicationReactionsForm(List<MedicationReaction> reaction) {
 		try {
 			JPanel reactionpanel = new JPanel();
@@ -2549,15 +2790,19 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateReaction");
 						out.println(patientid.getText());
 						out.println(Integer.parseInt(medicationid.getText()));
 						out.println(type.getText());
 						out.println(description.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("reactionUpdated")) {
 								getContentPane().add(searchMedicationReactionForm());
+								// Get data from server
 								List<MedicationReaction> ls = new ArrayList<MedicationReaction>();
 								ls = (List<MedicationReaction>) inObject.readObject();
 								getContentPane().add(medicationReactionsForm(ls));
@@ -2567,7 +2812,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: medicationReactionsForm");
 					}
 				}
 			});
@@ -2576,11 +2821,14 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteReaction");
 						out.println(patientid.getText());
 						out.println(Integer.parseInt(medicationid.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("reactionDeleted")) {
 								getContentPane().add(searchMedicationReactionForm());
 							}
@@ -2589,7 +2837,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: medicationReactionsForm");
 					}
 				}
 			});
@@ -2607,11 +2855,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			reactionpanel.setOpaque(false);
 			return reactionpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: medicationReactionsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search medication reactions.
+	 * 
+	 * @return JPanel the panel for searching medication reactions form
+	 */
 	private JPanel searchMedicationReactionForm() {
 		JPanel reactionpanel = new JPanel();
 		JLabel lblpid = new JLabel("Search Medication Reaction with Patient's Username: ");
@@ -2625,15 +2878,19 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchReaction");
 					out.println(pid.getText());
 					out.println(Integer.parseInt(mid.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("reactionSearched")) {
 							getContentPane().add(searchMedicationReactionForm());
 							@SuppressWarnings("unchecked")
+							// Get data from server
 							List<MedicationReaction> ls = (List<MedicationReaction>) inObject.readObject();
 							getContentPane().add(medicationReactionsForm(ls));
 						}
@@ -2642,7 +2899,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchMedicationReactionForm");
 				}
 			}
 		});
@@ -2655,7 +2912,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		reactionpanel.setOpaque(false);
 		return reactionpanel;
 	}
-	
+
+	/**
+	 * This function gives the opportunity to add new consultations.
+	 * 
+	 * @return JPanel the panel for adding consultations form
+	 */
 	private JPanel consultationForm() {
 		JPanel consultationpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
@@ -2682,7 +2944,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextField time = new JTextField(15);
 		JTextField treatmentid = new JTextField(15);
 		JButton addConsultation = new JButton("Add");
-
 		consultationpanel.add(lblpatientid);
 		consultationpanel.add(patientid);
 		consultationpanel.add(lblstaffid);
@@ -2701,6 +2962,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addConsultation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addConsultation");
 					out.println(patientid.getText());
 					out.println(staffid.getText());
@@ -2710,9 +2972,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					out.println(dateFormat.format(date.getDate()));
 					out.println(time.getText());
 					out.println(treatmentid.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("consultationAdded")) {
 							JLabel message = new JLabel("You have successfully added the consultation!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -2726,7 +2990,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: consultationForm");
 				}
 			}
 		});
@@ -2736,6 +3000,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return consultationpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to view and edit consultations.
+	 * 
+	 * @return JPanel the panel for editing consultations form
+	 */
 	private JPanel consultationsForm(List<Consultation> consultation) {
 		try {
 			JPanel consultationpanel = new JPanel();
@@ -2775,6 +3044,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateConsultation");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
@@ -2786,10 +3056,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(Integer.parseInt(attended.getText()));
 						out.println(Integer.parseInt(updated.getText()));
 						out.println(Integer.parseInt(treatmentid.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("consultationUpdated")) {
 								getContentPane().add(searchConsultationForm());
+								// Get data from server
 								List<Consultation> ls = new ArrayList<Consultation>();
 								ls = (List<Consultation>) inObject.readObject();
 								getContentPane().add(consultationsForm(ls));
@@ -2799,7 +3072,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: consultationsForm");
 					}
 				}
 			});
@@ -2808,20 +3081,23 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteConsultation");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("consultationDeleted")) {
 								getContentPane().add(searchConsultationForm());
 							}
 							revalidate();
 							repaint();
 							pack();
-						}		
+						}
 
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: consultationsForm");
 					}
 				}
 			});
@@ -2851,11 +3127,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			consultationpanel.setOpaque(false);
 			return consultationpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: consultationsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search consultations.
+	 * 
+	 * @return JPanel the panel for searching consultations form
+	 */
 	private JPanel searchConsultationForm() {
 		JPanel consultationpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Consultation with ID: ");
@@ -2866,23 +3147,27 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchConsultation");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("consultationSearched")) {
 							getContentPane().add(searchConsultationForm());
 							@SuppressWarnings("unchecked")
+							// Get data from server
 							List<Consultation> ls = (List<Consultation>) inObject.readObject();
 							getContentPane().add(consultationsForm(ls));
 						}
 						revalidate();
 						repaint();
 						pack();
-					}								
+					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchConsultationForm");
 				}
 			}
 		});
@@ -2894,6 +3179,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return consultationpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to add new comments.
+	 * 
+	 * @return JPanel the panel for adding comments form
+	 */
 	private JPanel commentForm() {
 		JPanel commentpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
@@ -2910,7 +3200,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextArea comment = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(comment);
 		JButton addComment = new JButton("Add");
-
 		commentpanel.add(lblpatientid);
 		commentpanel.add(patientid);
 		commentpanel.add(lblstaffid);
@@ -2923,14 +3212,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addComment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("addComment");
 					out.println(patientid.getText());
 					out.println(staffid.getText());
 					out.println(subject.getText());
 					out.println(comment.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("commentAdded")) {
 							JLabel message = new JLabel("You have successfully added the comment!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -2938,13 +3230,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							message.setBounds(380, 380, 350, 50);
 							getContentPane().add(commentForm());
 							getContentPane().add(message);
-						}			
-					revalidate();
-					repaint();
-					pack();
+						}
+						revalidate();
+						repaint();
+						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: commentForm");
 				}
 			}
 		});
@@ -2953,7 +3245,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		commentpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return commentpanel;
 	}
-	
+
+	/**
+	 * This function gives the opportunity to view and edit comments.
+	 * 
+	 * @return JPanel the panel for editing comments form
+	 */
 	private JPanel commentsForm(List<Comment> comment) {
 		try {
 			JPanel commentpanel = new JPanel();
@@ -2967,7 +3264,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblcomment = new JLabel("Comment");
 			lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id =  new JTextField(Integer.toString(comment.get(0).CommentID));
+			JTextField id = new JTextField(Integer.toString(comment.get(0).CommentID));
 			id.setEditable(false);
 			JTextField patientid = new JTextField(comment.get(0).PatientID);
 			JTextField staffid = new JTextField(comment.get(0).StaffID);
@@ -2978,16 +3275,20 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			update.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("updateComment");
 						out.println(Integer.parseInt(id.getText()));
 						out.println(patientid.getText());
 						out.println(staffid.getText());
 						out.println(subject.getText());
 						out.println(comm.getText());
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful update
 							if (messageFromServer.equals("commentUpdated")) {
 								getContentPane().add(searchCommentForm());
+								// Get data from server
 								List<Comment> ls = new ArrayList<Comment>();
 								ls = (List<Comment>) inObject.readObject();
 								getContentPane().add(commentsForm(ls));
@@ -2997,7 +3298,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							pack();
 						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: commentsForm");
 					}
 				}
 			});
@@ -3006,19 +3307,22 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			delete.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
+						// Send data to server
 						out.println("deleteComment");
 						out.println(Integer.parseInt(id.getText()));
+						// Get data from server
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
+							// Successful deletion
 							if (messageFromServer.equals("commentDeleted")) {
 								getContentPane().add(searchCommentForm());
 							}
 							revalidate();
 							repaint();
 							pack();
-						}								
+						}
 					} catch (Exception er) {
-						// Ignore the error and continues
+						System.out.println("Exception: commentsForm");
 					}
 				}
 			});
@@ -3038,11 +3342,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			commentpanel.setOpaque(false);
 			return commentpanel;
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: commentsForm");
 			return null;
 		}
 	}
 
+	/**
+	 * This function gives the opportunity to search comments.
+	 * 
+	 * @return JPanel the panel for searching comments form
+	 */
 	private JPanel searchCommentForm() {
 		JPanel commentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Comment with ID: ");
@@ -3053,23 +3362,27 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("searchComment");
 					out.println(Integer.parseInt(id.getText()));
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful search
 						if (messageFromServer.equals("commentSearched")) {
 							getContentPane().add(searchCommentForm());
+							// Get data from server
 							List<Comment> ls = (List<Comment>) inObject.readObject();
 							getContentPane().add(commentsForm(ls));
 						}
 						revalidate();
 						repaint();
 						pack();
-					}			
-					
+					}
+
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: searchCommentForm");
 				}
 			}
 		});
@@ -3081,6 +3394,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return commentpanel;
 	}
 
+	/**
+	 * This function gives the opportunity to inform relatives.
+	 * 
+	 * @return JPanel the panel for informing relatives form
+	 */
 	private JPanel informRelativesForm() {
 		JPanel informpanel = new JPanel();
 		JLabel lblpatientid = new JLabel("Patient's Username");
@@ -3097,7 +3415,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JTextArea msg = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(msg);
 		JButton addInform = new JButton("Inform");
-
 		informpanel.add(lblpatientid);
 		informpanel.add(patientid);
 		informpanel.add(lblstaffid);
@@ -3110,14 +3427,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addInform.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Send data to server
 					out.println("informRelatives");
 					out.println(patientid.getText());
 					out.println(staffid.getText());
 					out.println(subject.getText());
 					out.println(msg.getText());
+					// Get data from server
 					if ((messageFromServer = in.readLine()) != null) {
 						System.out.println(messageFromServer);
 						getContentPane().removeAll();
+						// Successful addition
 						if (messageFromServer.equals("relativesInformed")) {
 							JLabel message = new JLabel("You have successfully informed the relatives!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -3125,13 +3445,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							message.setBounds(380, 380, 350, 50);
 							getContentPane().add(informRelativesForm());
 							getContentPane().add(message);
-						}			
-					revalidate();
-					repaint();
-					pack();
+						}
+						revalidate();
+						repaint();
+						pack();
 					}
 				} catch (Exception er) {
-					// Ignore the error and continues
+					System.out.println("Exception: informRelativesForm");
 				}
 			}
 		});
@@ -3140,9 +3460,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		informpanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return informpanel;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private JScrollPane consultationReports(int attent,String daily) throws ClassNotFoundException {
+	private JScrollPane consultationReports(int attent, String daily) throws ClassNotFoundException {
 		out.println("consultationReport");
 		out.println(attent);
 		out.println(daily);
@@ -3174,7 +3494,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		return null;
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private JScrollPane consultationReportMedical(String daily) throws ClassNotFoundException {
 		out.println("consultationReportMedical");
@@ -3204,8 +3524,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
-	private JScrollPane patientReport(int option,String name) throws ClassNotFoundException {
+	private JScrollPane patientReport(int option, String name) throws ClassNotFoundException {
 		out.println("patientReport");
 		out.println(option);
 		out.println(name);
@@ -3234,6 +3555,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
 	private JScrollPane AttendanceReport() throws ClassNotFoundException {
 		out.println("attendanceReport");
@@ -3262,6 +3584,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
 	private JScrollPane ConditionReport() throws ClassNotFoundException {
 		out.println("conditionReport");
@@ -3290,6 +3613,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
 	private JScrollPane MedicationReport() throws ClassNotFoundException {
 		out.println("medicationReport");
@@ -3318,6 +3642,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
+
 	@SuppressWarnings("unchecked")
 	private JScrollPane medicationPrescription() throws ClassNotFoundException {
 		out.println("medicationPrescription");
@@ -3346,7 +3671,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
-	
+
 	private JPanel searchWarningLetters() {
 		JPanel namePanel = new JPanel();
 		JLabel lblname = new JLabel("Search: ");
@@ -3357,8 +3682,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					getContentPane().add(warningLetters(value.getText()));		
-					
+					getContentPane().add(warningLetters(value.getText()));
+
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
@@ -3375,7 +3700,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		namePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		return namePanel;
 	}
-	
+
 	private JScrollPane warningLetters(String id) throws ClassNotFoundException {
 		out.println("warningLetters");
 		out.println(id);
@@ -3405,7 +3730,6 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		}
 		return null;
 	}
-
 
 	public static void main(String[] args) throws IOException {
 		GUI frame = new GUI();
