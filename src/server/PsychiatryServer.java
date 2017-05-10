@@ -1,5 +1,13 @@
+/**
+ * This class implements the server that communicates with the client (GUI)
+ * and with the database through the JDBC class.
+ * 
+ * @author Sotia Gregoriou, Elena Matsi, Erasmia Shimitra
+ */
+
 package server;
 
+// Libraries
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.ResultSet;
@@ -14,7 +22,6 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import entities.Staff;
 import entities.AttendanceReport;
 import entities.Comment;
@@ -60,12 +67,15 @@ public class PsychiatryServer implements java.io.Serializable {
 	MedicationPrescription medicationPrescription;
 	WarningLetter letter;
 
-	/*
-	 * Server gets username, password and role from client,checks if user
-	 * exists, sends message accordingly role and writes in log file the action
-	 * and the datetime.
+	/**
+	 * This function gets username, password and role from client, checks if
+	 * user exists, sends message according to role and writes in log file the
+	 * action and the date/time.
+	 * 
+	 * @return void
 	 */
 	void login() throws Exception {
+		// Get data from client
 		System.out.println("mpika sto login");
 		String username = inFromClient.readLine();
 		System.out.println("diavasa username " + username);
@@ -74,67 +84,93 @@ public class PsychiatryServer implements java.io.Serializable {
 		String role = inFromClient.readLine();
 		System.out.println("diavasa role " + role);
 		try {
+			// Communicate with database
 			ResultSet rs = jdbc.login(username, password, role);
+			// Successful log in
 			if (rs.next()) {
+				// User is patient
 				if (role.equals("Patient")) {
+					// Write to log file
 					file.print(username + " log in as Patient... ");
 					file.println(dtf.format(now));
 					file.flush();
+					// Send data to client
 					outToClient.println("Patient");
 					outToClient.flush();
-				} else {
+				} else { // User is staff
 					String roleGUI = rs.getString("StaffType");
+					// User is doctor
 					if (roleGUI.equals("Doctor")) {
+						// Write to log file
 						file.print(username + " log in as Doctor... ");
 						file.println(dtf.format(now));
 						file.flush();
+						// Send data to client
 						outToClient.println("Doctor");
 						outToClient.flush();
+						// User is nurse or health visitor
 					} else if (roleGUI.equals("Nurse") || roleGUI.equals("Health Visitor")) {
+						// Write to log file
 						file.print(username + " log in as " + roleGUI + "... ");
 						file.println(dtf.format(now));
 						file.flush();
+						// Send data to client
 						outToClient.println("Nurse-HealthVisitor");
 						outToClient.flush();
+						// User is receptionist
 					} else if (roleGUI.equals("Receptionist")) {
+						// Write to log file
 						file.print(username + " log in as Receptionist... ");
 						file.println(dtf.format(now));
 						file.flush();
+						// Send data to client
 						outToClient.println("Receptionist");
 						outToClient.flush();
+						// User is medical records
 					} else if (roleGUI.equals("Medical Records")) {
+						// Write to log file
 						file.print(username + " log in as Medical Records... ");
 						file.println(dtf.format(now));
 						file.flush();
+						// Send data to client
 						outToClient.println("MedicalRecords");
 						outToClient.flush();
+						// User is management
 					} else if (roleGUI.equals("Management")) {
+						// Write to log file
 						file.print(username + " log in as Management... ");
 						file.println(dtf.format(now));
 						file.flush();
+						// Send data to client
 						outToClient.println("Management");
 						outToClient.flush();
 					}
 				}
+				// Unsuccessful log in
 			} else {
+				// Write to log file
 				file.print(username + " try to log in but failed... ");
 				file.println(dtf.format(now));
 				file.flush();
+				// Send data to client
 				outToClient.println("wrong");
 				outToClient.flush();
 			}
 
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: login");
 		}
 	}
 
-	/*
-	 * Server gets some fields from client, add the new user with those fields
-	 * in database, sends successful or not message and writes in log file the
-	 * action and the datetime.
+	/**
+	 * This function gets some fields from client, add the new user with those
+	 * fields in database, sends successful or not message and writes in log
+	 * file the action and the date/time.
+	 * 
+	 * @return void
 	 */
 	void signup() throws Exception {
+		// Get data from client
 		String username = inFromClient.readLine();
 		String password = inFromClient.readLine();
 		String name = inFromClient.readLine();
@@ -143,78 +179,100 @@ public class PsychiatryServer implements java.io.Serializable {
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
+		// Write to log file
 		file.print(name + " " + surname + " sign up with username " + username + "... ");
 		file.println(dtf.format(now));
 		file.flush();
-
 		try {
+			// Communicate with database
 			ResultSet rs = jdbc.checksignup(username);
+			// Successful sign up
 			if (!rs.next()) {
+				// Communicate with database
 				jdbc.signup(username, password, name, surname, role, phone, email, address);
+				// Send data to client
 				outToClient.println("success");
+				// Unsuccessful sign up
 			} else {
+				// Send data to client
 				outToClient.println("alreadyExists");
 			}
 			outToClient.flush();
 		} catch (Exception er) {
-			// Ignore the error and continues
+			System.out.println("Exception: signup");
 		}
 	}
 
-	/*
+	/**
 	 * When client log outs, server writes in log file that a user with
 	 * "username" have just log out at this time.
+	 * 
+	 * @return void
 	 */
 	void logout() {
 		try {
+			// Get data from client
 			String username = inFromClient.readLine();
+			// Write to log file
 			file.print(username + " log out... ");
 			file.println(dtf.format(now));
 			file.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Exception: logout");
 			e.printStackTrace();
 		}
 	}
 
-	/*
-	 * Server gets username, old password and new password from client, checks
-	 * if username exists, changes old password with new password and writes in
-	 * log file the action and the datetime.
+	/**
+	 * This function gets username, old password and new password from client,
+	 * checks if username exists, changes old password with new password and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
 	 */
 	void changePassword() throws IOException {
+		// Get data from client
 		String username = inFromClient.readLine();
 		String oldpassword = inFromClient.readLine();
 		String newpassword = inFromClient.readLine();
 		String role = inFromClient.readLine();
+		// Write to log file
 		file.print(username + " changed password... ");
 		file.println(dtf.format(now));
 		file.flush();
 		System.out.println(oldpassword + " " + username + " " + role);
-
 		try {
+			// Communicate with database
 			ResultSet rs = jdbc.login(username, oldpassword, role);
 			System.out.println("ekana login");
-
+			// Successful update
 			if (rs.next()) {
+				// Communicate with database
 				jdbc.changepassword(username, oldpassword, newpassword, role);
 				System.out.println("allaksa ton kwdiko");
-				outToClient.println("passwordChanged");// send to client the
-														// message password
-														// changed
+				// Send data to client
+				outToClient.println("passwordChanged");
 				outToClient.flush();
+				// Unsuccessful update
 			} else {
-				outToClient.println("wrongPassword");// send to client the
-														// message wrong
-														// password
+				// Send data to client
+				outToClient.println("wrongPassword");
 				outToClient.flush();
 			}
 		} catch (SQLException e) {
+			System.out.println("Exception: changePassword");
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * This function gets some fields from client, updates the profile and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateProfile() throws IOException, SQLException {
+		// Get data from client
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
 		String username = inFromClient.readLine();
@@ -223,38 +281,59 @@ public class PsychiatryServer implements java.io.Serializable {
 		String address = inFromClient.readLine();
 		String role = inFromClient.readLine();
 		System.out.println("update before");
+		// Communicate with database
 		jdbc.updateProfile(name, surname, username, phone, email, address, role);
 		System.out.println("update after");
-
+		// Write to log file
 		file.print("user with name " + name + " " + surname + " updated profile... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("profileUpdated");// updated patient
+		// Send data to client
+		outToClient.println("profileUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printProfile(username, role);
 		if (role.equals("Patient")) {
+			// Send data to client
 			List<Patient> ls = patient.convertRsToList(rs);
 			outObject.writeObject(ls);
 		} else {
+			// Send data to client
 			List<Staff> ls = staff.convertRsToList(rs);
 			outObject.writeObject(ls);
 		}
 	}
 
+	/**
+	 * This function gets some fields from client and prints the profile.
+	 * 
+	 * @return void
+	 */
 	void printProfile() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
 		String role = inFromClient.readLine();
+		// Communicate with database
 		ResultSet rs = jdbc.printProfile(username, role);
 		if (role.equals("Patient")) {
+			// Send data to client
 			List<Patient> ls = patient.convertRsToList(rs);
 			outObject.writeObject(ls);
 		} else {
+			// Send data to client
 			List<Staff> ls = staff.convertRsToList(rs);
 			outObject.writeObject(ls);
 		}
 	}
 
+	/**
+	 * This function gets some fields from client, add the patient and writes in
+	 * log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addPatient() throws IOException {
+		// Get data from client
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
 		String username = inFromClient.readLine();
@@ -262,16 +341,25 @@ public class PsychiatryServer implements java.io.Serializable {
 		int phone = Integer.parseInt(inFromClient.readLine());
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addPatient(name, surname, username, password, phone, email, address);
-
+		// Write to log file
 		file.print("patient " + name + " " + surname + " added with username " + username + "... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientAdded");// add patient
+		// Send data to client
+		outToClient.println("patientAdded");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, updates the patient and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updatePatient() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
@@ -279,84 +367,138 @@ public class PsychiatryServer implements java.io.Serializable {
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
 		System.out.println("update before");
+		// Communicate with database
 		jdbc.updatePatient(username, name, surname, phone, email, address);
 		System.out.println("update after");
-
+		// Write to log file
 		file.print("patient with name " + name + " " + surname + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientUpdated");// updated patient
+		// Send data to client
+		outToClient.println("patientUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printPatient(username);
+		// Send data to client
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
 
+	/**
+	 * This function gets some fields from client, updates the harm risk record
+	 * and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateHarmRisk() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
 		int self = Integer.parseInt(inFromClient.readLine());
 		int others = Integer.parseInt(inFromClient.readLine());
 		String status = inFromClient.readLine();
 		int dead = Integer.parseInt(inFromClient.readLine());
 		System.out.println("update before");
+		// Communicate with database
 		jdbc.updateHarmRisk(username, self, others, status, dead);
 		System.out.println("update after");
-
-		file.print("patient's harm risk with username " + username + " updated... ");
+		// Write to log file
+		file.print("patient's harm risk record with username " + username + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("harmRiskUpdated");// updated patient
+		// Send data to client
+		outToClient.println("harmRiskUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printPatient(username);
+		// Send data to client
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
+
+	/**
+	 * This function gets some fields from client, searched the patient and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchPatient() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
-		if(username.equals("null")){
-			username=null;
+		if (username.equals("null")) {
+			username = null;
+			// Write to log file
 			file.print("all patients printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}
-		else{
+		} else {
+			// Write to log file
 			file.print("patient with username " + username + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printPatient(username);
-		outToClient.println("patientSearched");// searched patient
+		// Send data to client
+		outToClient.println("patientSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
 
+	/**
+	 * This function gets some fields from client, searched the harm risk record
+	 * and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchHarmRisk() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
+		// Communicate with database
 		ResultSet rs = jdbc.printPatient(username);
+		// Write to log file
 		file.print("patient with username " + username + " searched... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("harmRiskSearched");// searched patient
+		// Send data to client
+		outToClient.println("harmRiskSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the patient and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deletePatient() throws IOException, SQLException {
+		// Get data from client
 		String username = inFromClient.readLine();
+		// Communicate with database
 		jdbc.deletePatient(username);
-
+		// Write to log file
 		file.print("patient with username " + username + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("patientDeleted");// deleted patient
+		// Send data to client
+		outToClient.println("patientDeleted");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, adds the relative and writes
+	 * in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addRelative() throws IOException {
+		// Get data from client
 		String patientusername = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String surname = inFromClient.readLine();
@@ -364,15 +506,25 @@ public class PsychiatryServer implements java.io.Serializable {
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
 		String relationship = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addRelative(patientusername, name, surname, phone, email, address, relationship);
+		// Write to log file
 		file.print(relationship + " of " + patientusername + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("success");// successfully added relative!
+		// Send data to client
+		outToClient.println("success");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, updates the relative and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateRelative() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		System.out.println("id: " + id);
 		String patientid = inFromClient.readLine();
@@ -382,160 +534,266 @@ public class PsychiatryServer implements java.io.Serializable {
 		String email = inFromClient.readLine();
 		String address = inFromClient.readLine();
 		String relationship = inFromClient.readLine();
+		// Communicate with database
 		jdbc.updateRelative(id, patientid, name, surname, phone, email, address, relationship);
+		// Write to log file
 		file.print(relationship + " of " + patientid + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("relativeUpdated");// updated relative
+		// Send data to client
+		outToClient.println("relativeUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printRelative(id);
+		// Send data to client
 		List<Relative> ls = relative.convertRsToRelatList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, searches the relative and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchRelative() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
+			// Write to log file
 			file.print("all relatives printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}
-		else{
+		} else {
+			// Write to log file
 			file.print("relative with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printRelative(id);
-		outToClient.println("relativeSearched");// searched relative
+		// Send data to client
+		outToClient.println("relativeSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Relative> ls = relative.convertRsToRelatList(rs);
 		outObject.writeObject(ls);
 		System.out.println("relative search after");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the relative and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteRelative() throws IOException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteRelative(id);
-
+		// Write to log file
 		file.print("relative with id " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("relativeDeleted");// deleted relative
+		// Send data to client
+		outToClient.println("relativeDeleted");
 		outToClient.flush();
 	}
-	
+
+	/**
+	 * This function gets some fields from client, informs the relatives and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void informRelatives() throws IOException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
 		String subject = inFromClient.readLine();
 		String message = inFromClient.readLine();
+		// Communicate with database
 		jdbc.informRelatives(patientid, staffid, subject, message);
+		// Write to log file
 		file.print("relatives of patient with username " + patientid + " informed...");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("relativesInformed");// informed relatives
+		// Send data to client
+		outToClient.println("relativesInformed");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, adds the incident and writes
+	 * in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addincident() throws IOException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		String type = inFromClient.readLine();
 		String shortDescription = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String date = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addIncident(patientid, type, shortDescription, description, date);
+		// Write to log file
 		file.print("Incident for " + patientid + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("success");// added incident
+		// Send data to client
+		outToClient.println("success");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, updates the incident and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateIncident() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
 		String type = inFromClient.readLine();
 		String shortDescription = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String date = inFromClient.readLine();
+		// Communicate with database
 		jdbc.updateIncident(id, patientid, type, shortDescription, description, date);
+		// Write to log file
 		file.print(patientid + "incident's " + id + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("incidentUpdated");// updated incident
+		// Send data to client
+		outToClient.println("incidentUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printIncident(id);
+		// Send data to client
 		List<Incident> ls = incident.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the incident and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteIncident() throws IOException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteIncident(id);
-
+		// Write to log file
 		file.print("incident with id " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("incidentDeleted");// deleted incident
+		// Send data to client
+		outToClient.println("incidentDeleted");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, searches the incident and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchIncident() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
+			// Write to log file
 			file.print("all incident printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
+		} else {
+			// Write to log file
 			file.print("incident with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printIncident(id);
-		outToClient.println("incidentSearched");// searched incident
+		// Send data to client
+		outToClient.println("incidentSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Incident> ls = incident.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("incident search after");
 	}
 
+	/**
+	 * This function gets some fields from client, adds the treatment and writes
+	 * in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addTreatment() throws IOException, SQLException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		String startDate = inFromClient.readLine();
 		String endDate = inFromClient.readLine();
 		String diagnosis = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addTreatment(patientid, startDate, endDate, diagnosis, description, staffid);
+		// Write to log file
 		file.print("Treatment for " + patientid + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentAdded");// added treatment
+		// Send data to client
+		outToClient.println("treatmentAdded");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.findTreatment(patientid, startDate, endDate, diagnosis, description, staffid);
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, adds medication to the
+	 * treatment and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addTreatmentMedication() throws IOException, SQLException {
+		// Get data from client
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
 		int dose = Integer.parseInt(inFromClient.readLine());
 		String description = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addTreatmentMedication(treatmentid, medicationid, dose, description);
 		file.print("Medication for treatment with id " + treatmentid + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentMedicationAdded");// added treatment
+		// Send data to client
+		outToClient.println("treatmentMedicationAdded");
 		outToClient.flush();
 		outToClient.println(jdbc.checkForWarning(treatmentid, medicationid));
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, updates the treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateTreatment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
 		String startDate = inFromClient.readLine();
@@ -543,85 +801,143 @@ public class PsychiatryServer implements java.io.Serializable {
 		String diagnosis = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
+		// Communicate with database
 		jdbc.updateTreatment(id, patientid, startDate, endDate, diagnosis, description, staffid);
+		// Write to log file
 		file.print(patientid + "treatment's " + id + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentUpdated");// updated treatment
+		// Send data to client
+		outToClient.println("treatmentUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printTreatment(id);
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteTreatment() throws IOException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteTreatment(id);
-
+		// Write to log file
 		file.print("treatment with id " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentDeleted");// deleted treatment
+		// Send data to client
+		outToClient.println("treatmentDeleted");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, deletes medication of
+	 * treatment and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteTreatmentMedication() throws IOException {
+		// Get data from client
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteTreatmentMedication(treatmentid, medicationid);
+		// Write to log file
 		file.print("treatment with id " + treatmentid + " and medication id " + medicationid + " record deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentMedicationDeleted");// deleted treatment
+		// Send data to client
+		outToClient.println("treatmentMedicationDeleted");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, renews the treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void renewTreatment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
 		String startDate = inFromClient.readLine();
 		String endDate = inFromClient.readLine();
 		String notes = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
+		// Communicate with database
 		jdbc.renewTreatment(id, patientid, startDate, endDate, notes, staffid);
-		file.print(patientid + "treatment's " + id + " updated... ");
+		// Write to log file
+		file.print(patientid + "treatment's " + id + " renewed... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("treatmentRenewed");// renewed treatment
+		// Send data to client
+		outToClient.println("treatmentRenewed");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printTreatment(id);
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, overrules the warning and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void overruleWarning() throws IOException, SQLException {
+		// Get data from client
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
 		int medicationid = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.overruleWarning(treatmentid, medicationid);
+		// Write to log file
 		file.print("warning overruled for treatment with id " + treatmentid + " and medication id " + medicationid
 				+ " updated ... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("overruledWarning");// overruled warning
+		// Send data to client
+		outToClient.println("overruledWarning");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, searches the treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchTreatment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		if(id==-1){
+			// Write to log file
 			file.print("all treatments printed... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}else{
+			// Write to log file
 			file.print("treatment with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printTreatment(id);
-		outToClient.println("treatmentSearched");// searched treatment
+		// Send data to client
+		outToClient.println("treatmentSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("incident search after");
@@ -653,46 +969,77 @@ public class PsychiatryServer implements java.io.Serializable {
 		System.out.println("incident search after");
 	}
 
+	/**
+	 * This function gets some fields from client, adds the medication and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addMedication() throws IOException {
+		// Get data from client
 		String brand = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String effects = inFromClient.readLine();
 		int dose = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.addMedication(brand, name, description, effects, dose);
+		// Write to log file
 		file.print("Medication with name " + name + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("medicationAdded");// added medication
+		// Send data to client
+		outToClient.println("medicationAdded");
 	}
 
+	/**
+	 * This function gets some fields from client, updates the medication and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateMedication() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String brand = inFromClient.readLine();
 		String name = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		String effects = inFromClient.readLine();
 		int dose = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.updateMedication(id, brand, name, description, effects, dose);
+		// Write to log file
 		file.print("Medication " + id + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("medicationUpdated");// updated medication
+		// Send data to client
+		outToClient.println("medicationUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printTreatment(id);
+		// Send data to client
 		List<Medication> ls = medication.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the medication and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteMedication() throws IOException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteMedication(id);
-
+		// Write to log file
 		file.print("medication with id " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("medicationDeleted");// deleted medication
+		// Send data to client
+		outToClient.println("medicationDeleted");
 		outToClient.flush();
 	}
 
@@ -715,7 +1062,14 @@ public class PsychiatryServer implements java.io.Serializable {
 		System.out.println("search after");
 	}
 
+	/**
+	 * This function gets some fields from client, adds the consultation and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addConsultation() throws IOException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
 		String subject = inFromClient.readLine();
@@ -723,14 +1077,24 @@ public class PsychiatryServer implements java.io.Serializable {
 		String date = inFromClient.readLine();
 		String time = inFromClient.readLine();
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.addConsultation(patientid, staffid, subject, dateBooked, date, time, treatmentid);
+		// Write to log file
 		file.print("Consultation for patient with username " + patientid + " with" + staffid + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("consultationAdded");// added consultation
+		// Send data to client
+		outToClient.println("consultationAdded");
 	}
 
+	/**
+	 * This function gets some fields from client, updates the consultation and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateConsultation() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
@@ -741,27 +1105,41 @@ public class PsychiatryServer implements java.io.Serializable {
 		int attended = Integer.parseInt(inFromClient.readLine());
 		int updated = Integer.parseInt(inFromClient.readLine());
 		int treatmentid = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.updateConsultation(id, patientid, staffid, subject, dateBooked, date, time, attended, updated,
 				treatmentid);
+		// Write to log file
 		file.print("Consultation " + id + " updated... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("consultationUpdated");// updated Consultation
+		// Send data to client
+		outToClient.println("consultationUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printConsultation(id);
+		// Send data to client
 		List<Consultation> ls = consultation.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("esteila kai to resultset");
-
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the consultation and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteConsultation() throws IOException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteConsultation(id);
+		// Write to log file
 		file.print("Consultation with id " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("consultationDeleted");// deleted medication
+		// Send data to client
+		outToClient.println("consultationDeleted");
 		outToClient.flush();
 
 	}
@@ -783,49 +1161,68 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Consultation> ls = consultation.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
+
 	}
 
+	/**
+	 * This function gets some fields from client, adds the medication reaction
+	 * and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addReaction() throws IOException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
 		String reactionType = inFromClient.readLine();
 		String description = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addMedicationReaction(patientid, medicationid, reactionType, description);
-
+		// Write to log file
 		file.print("reaction of patient with username " + patientid + " added with medication id " + medicationid
 				+ "... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("reactionAdded");// add patient
+		// Send data to client
+		outToClient.println("reactionAdded");
 		outToClient.flush();
 		System.out.println("telos");
 	}
 
+	/**
+	 * This function gets some fields from client, updates the medication
+	 * reaction and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateReaction() throws IOException, SQLException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
 		String reactionType = inFromClient.readLine();
 		String description = inFromClient.readLine();
 		System.out.println("update before");
+		// Communicate with database
 		jdbc.updateMedicationReaction(patientid, medicationid, reactionType, description);
 		System.out.println("update after");
-
+		// Write to log file
 		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
 				+ " updated ... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("reactionUpdated");// updated patient
+		// Send data to client
+		outToClient.println("reactionUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
+		// Send data to client
 		List<MedicationReaction> ls = reaction.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
 
 	void searchReaction() throws IOException, SQLException {
-		System.out.println("mpika mesa");
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
-		System.out.println("epiasa ts metavlites");
 		if(medicationid==-1){
 			file.print("all medication reactions printed... ");
 			file.println(dtf.format(now));
@@ -837,63 +1234,104 @@ public class PsychiatryServer implements java.io.Serializable {
 			file.flush();
 		}
 		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
-		outToClient.println("reactionSearched");// searched reaction
+		outToClient.println("reactionSearched");// searched patient
 		outToClient.flush();
 		List<MedicationReaction> ls = reaction.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the medication
+	 * reaction and writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteReaction() throws IOException, SQLException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteMedicationReaction(patientid, medicationid);
-
+		// Write to log file
 		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
 				+ " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("reactionDeleted");// deleted patient
+		// Send data to client
+		outToClient.println("reactionDeleted");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, adds the comment and writes
+	 * in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void addComment() throws IOException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
 		String subject = inFromClient.readLine();
 		String comment = inFromClient.readLine();
+		// Communicate with database
 		jdbc.addComment(patientid, staffid, subject, comment);
+		// Write to log file
 		file.print("comment for patient with username " + patientid + " added...");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("commentAdded");// add patient
+		// Send data to client
+		outToClient.println("commentAdded");
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, updates the comment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void updateComment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		String patientid = inFromClient.readLine();
 		String staffid = inFromClient.readLine();
 		String subject = inFromClient.readLine();
 		String comm = inFromClient.readLine();
+		// Communicate with database
 		jdbc.updateComment(id, patientid, staffid, subject, comm);
+		// Write to log file
 		file.print("comment for patient with username " + patientid + " updated ... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("commentUpdated");// updated patient
+		// Send data to client
+		outToClient.println("commentUpdated");
 		outToClient.flush();
+		// Communicate with database
 		ResultSet rs = jdbc.printComment(id);
+		// Send data to client
 		List<Comment> ls = comment.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
 
+	/**
+	 * This function gets some fields from client, deletes the comment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void deleteComment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		jdbc.deleteComment(id);
+		// Write to log file
 		file.print("comment " + id + " deleted... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("commentDeleted");// deleted patient
+		// Send data to client
+		outToClient.println("commentDeleted");
 		outToClient.flush();
 	}
 
@@ -949,10 +1387,11 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<ConsultationReport> ls = consultationReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	void patientReport() throws IOException, SQLException{
+
+	void patientReport() throws IOException, SQLException {
 		int option = Integer.parseInt(inFromClient.readLine());
 		String value = inFromClient.readLine();
-		ResultSet rs = jdbc.getPatientReport(option,value);
+		ResultSet rs = jdbc.getPatientReport(option, value);
 		file.print("Patient report printed... ");
 		file.println(dtf.format(now));
 		file.flush();
@@ -961,8 +1400,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
-	void AttendanceReport() throws IOException, SQLException{
+
+	void AttendanceReport() throws IOException, SQLException {
 		ResultSet rs = jdbc.getAttendanceReport();
 		file.print("Attendance report printed... ");
 		file.println(dtf.format(now));
@@ -972,8 +1411,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<AttendanceReport> ls = attendanceReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
-	void conditionReport() throws IOException, SQLException{
+
+	void conditionReport() throws IOException, SQLException {
 		ResultSet rs = jdbc.getConditionReport();
 		file.print("Condition report printed... ");
 		file.println(dtf.format(now));
@@ -983,8 +1422,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<ConditionReport> ls = conditionReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
-	void medicationReport() throws IOException, SQLException{
+
+	void medicationReport() throws IOException, SQLException {
 		ResultSet rs = jdbc.getMedicationReport();
 		file.print("Medication report printed... ");
 		file.println(dtf.format(now));
@@ -994,7 +1433,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<MedicationReport> ls = medicationReport.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	void medicationPrescription() throws IOException, SQLException{
+
+	void medicationPrescription() throws IOException, SQLException {
 		ResultSet rs = jdbc.getMedicationPrescriptionsSummary();
 		file.print("medication Prescription report printed... ");
 		file.println(dtf.format(now));
@@ -1004,7 +1444,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<MedicationPrescription> ls = medicationPrescription.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	void warningLetters() throws IOException, SQLException{
+
+	void warningLetters() throws IOException, SQLException {
 		String id = inFromClient.readLine();
 		if (id.equals("null"))
 			id = null;
