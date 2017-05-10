@@ -835,7 +835,7 @@ public class JDBC {
 			if (myDate != null)
 				query += "Select * From Consultation Where Date='" + myDate + "';";
 			else
-				query += "Select * From Consultation Order By Date;";
+				query += "Select * From Consultation Order By Date DESC;";
 			ResultSet rs = stmt.executeQuery(query);
 			return rs;
 		} catch (SQLException e) {
