@@ -110,8 +110,8 @@ public class GUIMenu {
 	}
 
 	/*
-	 * Patients Menu Element. Allows the user to add, view, search, edit,
-	 * delete, import or export patient records.
+	 * Patients Menu Element. Allows the user to add, view, search, edit or
+	 * delete patient records.
 	 */
 	private JMenu PatientsMenu() {
 		JMenu menu;
@@ -126,10 +126,10 @@ public class GUIMenu {
 		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
 		menuItem.addActionListener(al);
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Import/Export Patient Record");
-		menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
-		menuItem.addActionListener(al);
-		menu.add(menuItem);
+		// menuItem = new JMenuItem("Import/Export Patient Record");
+		// menuItem.setFont(new Font("Arial", Font.PLAIN, 14));
+		// menuItem.addActionListener(al);
+		// menu.add(menuItem);
 		return menu;
 	}
 
@@ -226,8 +226,9 @@ public class GUIMenu {
 	}
 
 	/*
-	 * Consultation Reports Menu Element. Allows the medical records user to see 
-	 * reports (daily or general) about consultation, appointments and treatments.
+	 * Consultation Reports Menu Element. Allows the medical records user to see
+	 * reports (daily or general) about consultation, appointments and
+	 * treatments.
 	 */
 	private JMenu ConsultationReportsMenu() {
 		JMenu menu;
@@ -262,9 +263,8 @@ public class GUIMenu {
 	}
 
 	/*
-	 * Patient Reports Menu Element. Allows the medical records user 
-	 * to see reports (daily or general) about patient records and 
-	 * information.
+	 * Patient Reports Menu Element. Allows the medical records user to see
+	 * reports (daily or general) about patient records and information.
 	 */
 	private JMenu PatientReportsMenu() {
 		JMenu menu;
@@ -285,9 +285,9 @@ public class GUIMenu {
 		menu.add(menuItem);
 		return menu;
 	}
-	
+
 	/*
-	 * General Reports Menu Element. Allows the health service management user 
+	 * General Reports Menu Element. Allows the health service management user
 	 * to see general reports.
 	 */
 	private JMenu GeneralReportsMenu() {
@@ -313,7 +313,7 @@ public class GUIMenu {
 		menu.add(menuItem);
 		return menu;
 	}
-	
+
 	/*
 	 * Menu for the Patient. This method generates the menu that a patient can
 	 * see. The patient can only see the user profile and change some data.
