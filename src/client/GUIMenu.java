@@ -1,12 +1,3 @@
-package client;
-
-import java.awt.Font;
-import java.awt.event.ActionListener;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-
 /**
  * This class is a utilities class for creating the Menu. This class is used by
  * the GUI class, which calls specific methods for creating the menu according
@@ -16,11 +7,19 @@ import javax.swing.JMenuItem;
  * menuForDoctor, menuForClinicalStaff, menuForReceptionist,
  * menuForMedicalRecords, menuForManagement.
  * 
- * @author sgrego02
- * @author ematsi02
- * @author erasmia
+ * @author Sotia Gregoriou, Elena Matsi, Erasmia Shimitra
  *
  */
+
+package client;
+
+// Libraries
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+
 public class GUIMenu {
 
 	private ActionListener al = null;
