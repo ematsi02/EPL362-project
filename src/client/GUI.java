@@ -3130,17 +3130,26 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		addInform.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					SADB.informRelatives(patientid.getText(), staffid.getText(), subject.getText(), msg.getText());
-					getContentPane().removeAll();
-					JLabel message = new JLabel("You have successfully informed the relatives!");
-					message.setFont(new Font("Arial", Font.PLAIN, 14));
-					message.setBounds(340, 470, 350, 50);
-					message.setForeground(Color.blue);
-					getContentPane().add(informRelativesForm());
-					getContentPane().add(message);
+					out.println("informRelatives");
+					out.println(patientid.getText());
+					out.println(staffid.getText());
+					out.println(subject.getText());
+					out.println(msg.getText());
+					if ((messageFromServer = in.readLine()) != null) {
+						System.out.println(messageFromServer);
+						getContentPane().removeAll();
+						if (messageFromServer.equals("relativesInformed")) {
+							JLabel message = new JLabel("You have successfully informed the relatives!");
+							message.setFont(new Font("Arial", Font.PLAIN, 14));
+							message.setForeground(Color.blue);
+							message.setBounds(380, 380, 350, 50);
+							getContentPane().add(informRelativesForm());
+							getContentPane().add(message);
+						}			
 					revalidate();
 					repaint();
 					pack();
+					}
 				} catch (Exception er) {
 					// Ignore the error and continues
 				}
