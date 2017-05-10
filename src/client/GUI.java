@@ -154,7 +154,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Patient")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchPatientForm());
+				try {
+					this.getContentPane().add(printAllPatients());
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -166,7 +171,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Relative")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchRelativeForm());
+			try {
+				this.getContentPane().add(printAllRelatives());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -185,7 +195,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Treatment")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchTreatmentForm());
+			try {
+				this.getContentPane().add(printAllTreatments());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -203,7 +218,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Medication")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchMedicationForm());
+			try {
+				this.getContentPane().add(printAllMedications());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -215,8 +235,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Medication Reaction")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchMedicationReactionForm());
-			this.revalidate();
+			try {
+				this.getContentPane().add(printAllMedicationReactions());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			this.revalidate();
 			this.repaint();
 			this.pack();
 		} else if (btnLabel.equals("Add New Incident")) {
@@ -227,7 +251,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Incident")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchIncidentForm());
+			try {
+				this.getContentPane().add(printAllIncidents());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -239,7 +268,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Consultation") || btnLabel.equals("View/Search Appointment")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchConsultationForm());
+			try {
+				this.getContentPane().add(printAllConsultations());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			this.revalidate();
 			this.repaint();
 			this.pack();
@@ -251,8 +285,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.pack();
 		} else if (btnLabel.equals("View/Search Comment")) {
 			this.getContentPane().removeAll();
-			this.getContentPane().add(searchCommentForm());
-			this.revalidate();
+			try {
+				this.getContentPane().add(printAllComments());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			this.revalidate();
 			this.repaint();
 			this.pack();
 		} else if (btnLabel.equals("Update Harm Risk Record")) {
@@ -261,7 +299,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Attended Daily Consultations")) {
+		}
+		 else if (btnLabel.equals("Attended Daily Consultations")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -271,18 +310,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						getContentPane().add(consultationReports(1, dateFormat.format(date.getDate())));
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					revalidate();
-					repaint();
-					pack();
-				}
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReports(1,dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -294,10 +333,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Attended General Consultations")) {
+			
+		}
+		else if (btnLabel.equals("Attended General Consultations")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(consultationReports(1, "null"));
+				this.getContentPane().add(consultationReports(1,"null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -305,7 +346,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Non Attended Daily Consultations")) {
+			}
+		
+		else if (btnLabel.equals("Non Attended Daily Consultations")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -315,18 +358,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						getContentPane().add(consultationReports(0, dateFormat.format(date.getDate())));
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					revalidate();
-					repaint();
-					pack();
-				}
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReports(0,dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -338,10 +381,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
+			
 		} else if (btnLabel.equals("Non Attended General Consultations")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(consultationReports(0, "null"));
+				this.getContentPane().add(consultationReports(0,"null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -349,7 +393,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Non Updated Daily Medical Records")) {
+		} 		
+		else if (btnLabel.equals("Non Updated Daily Medical Records")) {
 			this.getContentPane().removeAll();
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
@@ -359,18 +404,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						getContentPane().add(consultationReportMedical(dateFormat.format(date.getDate())));
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					revalidate();
-					repaint();
-					pack();
-				}
+			public void actionPerformed(ActionEvent e) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				getContentPane().add(consultationReportMedical(dateFormat.format(date.getDate())));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
 			});
 			datePanel.add(lbldate);
 			datePanel.add(date);
@@ -382,6 +427,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
+			
 		} else if (btnLabel.equals("Non Updated General Medical Records")) {
 			this.getContentPane().removeAll();
 			try {
@@ -396,7 +442,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		} else if (btnLabel.equals("Changes of Patient Profiles")) {
 			this.getContentPane().removeAll();
 			try {
-				this.getContentPane().add(patientReport(1, "null"));
+				this.getContentPane().add(patientReport(1,"null"));
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -404,7 +450,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Patients with specific Condition")) {
+		} 
+		else if (btnLabel.equals("Patients with specific Condition")) {
 			this.getContentPane().removeAll();
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Condition");
@@ -413,17 +460,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						getContentPane().add(patientReport(2, value.getText()));
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					revalidate();
-					repaint();
-					pack();
-				}
+			public void actionPerformed(ActionEvent e) {
+			try {
+				getContentPane().add(patientReport(2,value.getText()));
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
 			});
 			namePanel.add(lblname);
 			namePanel.add(value);
@@ -435,7 +482,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Patients with specific Treatment/Medication")) {
+		} 
+		else if (btnLabel.equals("Patients with specific Treatment/Medication")) {
 			this.getContentPane().removeAll();
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Treatment/Medication");
@@ -444,16 +492,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					try {
-						getContentPane().add(patientReport(3, value.getText()));
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
-					revalidate();
-					repaint();
-					pack();
-				}
+			public void actionPerformed(ActionEvent e) {
+			try {
+				getContentPane().add(patientReport(3,value.getText()));
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			revalidate();
+			repaint();
+			pack();
+			}
 			});
 			namePanel.add(lblname);
 			namePanel.add(value);
@@ -465,7 +513,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Number of Patients Attended")) {
+		} 
+		else if (btnLabel.equals("Number of Patients Attended")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(AttendanceReport());
@@ -476,7 +525,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Number of Patients by Condition")) {
+		}
+		else if (btnLabel.equals("Number of Patients by Condition")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(ConditionReport());
@@ -487,7 +537,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Number of Patients by Treatment/Medication")) {
+		}
+		else if (btnLabel.equals("Number of Patients by Treatment/Medication")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(MedicationReport());
@@ -498,7 +549,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("Medication Prescriptions Summary")) {
+		}
+		else if (btnLabel.equals("Medication Prescriptions Summary")) {
 			this.getContentPane().removeAll();
 			try {
 				this.getContentPane().add(medicationPrescription());
@@ -509,7 +561,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} else if (btnLabel.equals("View Warning Letters")) {
+		}
+		else if (btnLabel.equals("View Warning Letters")) {
 			try {
 				getContentPane().add(warningLetters("null"));
 			} catch (ClassNotFoundException e2) {
@@ -519,7 +572,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		}
+		} 
+		
 	}
 
 	/**
@@ -3714,6 +3768,249 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					try {
 						getContentPane().add(searchWarningLetters());
 						JTable results = new JTable(wl.buildTableModel(ls, wl.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllPatients() throws ClassNotFoundException {
+		
+		out.println("searchPatient");
+		out.println("null");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				
+				if (messageFromServer.equals("patientSearched")) {
+					List<Patient> ls = (List<Patient>) inObject.readObject();
+					Patient p = new Patient();
+					try {
+						getContentPane().add(searchPatientForm());
+						JTable results = new JTable(p.buildTableModel(ls, p.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllRelatives() throws ClassNotFoundException {	
+		out.println("searchRelative");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("relativeSearched")) {
+					List<Relative> ls = (List<Relative>) inObject.readObject();
+					Relative r = new Relative();
+					try {
+						getContentPane().add(searchRelativeForm());
+						JTable results = new JTable(r.buildTableModel(ls, r.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllIncidents() throws ClassNotFoundException {	
+		out.println("searchIncident");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("incidentSearched")) {
+					List<Incident> ls = (List<Incident>) inObject.readObject();
+					Incident i = new Incident();
+					try {
+						getContentPane().add(searchIncidentForm());
+						JTable results = new JTable(i.buildTableModel(ls, i.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllTreatments() throws ClassNotFoundException {	
+		out.println("searchTreatment");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("treatmentSearched")) {
+					List<Treatment> ls = (List<Treatment>) inObject.readObject();
+					Treatment i = new Treatment();
+					try {
+						getContentPane().add(searchTreatmentForm());
+						JTable results = new JTable(i.buildTableModel(ls, i.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllMedications() throws ClassNotFoundException {	
+		out.println("searchMedication");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("medicationSearched")) {
+					List<Medication> ls = (List<Medication>) inObject.readObject();
+					Medication m = new Medication();
+					try {
+						getContentPane().add(searchMedicationForm());
+						JTable results = new JTable(m.buildTableModel(ls, m.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllMedicationReactions() throws ClassNotFoundException {	
+		out.println("searchReaction");
+		out.println("null");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("reactionSearched")) {
+					List<MedicationReaction> ls = (List<MedicationReaction>) inObject.readObject();
+					MedicationReaction mr = new MedicationReaction();
+					try {
+						getContentPane().add(searchMedicationReactionForm());
+						JTable results = new JTable(mr.buildTableModel(ls, mr.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllConsultations() throws ClassNotFoundException {	
+		out.println("searchConsultation");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("consultationSearched")) {
+					List<Consultation> ls = (List<Consultation>) inObject.readObject();
+					Consultation con = new Consultation();
+					try {
+						getContentPane().add(searchConsultationForm());
+						JTable results = new JTable(con.buildTableModel(ls, con.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	@SuppressWarnings("unchecked")
+	private JScrollPane printAllComments() throws ClassNotFoundException {	
+		out.println("searchComment");
+		out.println("-1");
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("commentSearched")) {
+					List<Comment> ls = (List<Comment>) inObject.readObject();
+					Comment com = new Comment();
+					try {
+						getContentPane().add(searchCommentForm());
+						JTable results = new JTable(com.buildTableModel(ls, com.columnNames));
 						JScrollPane resultspanel = new JScrollPane(results);
 						resultspanel.setBounds(50, 250, 900, 300);
 						return resultspanel;
