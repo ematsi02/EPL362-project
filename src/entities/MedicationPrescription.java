@@ -38,7 +38,6 @@ public class MedicationPrescription implements java.io.Serializable {
 	public int MedicationID;
 	public String Brand;
 	public String Name;
-	public String MDescription;
 	public String KnownSideEffects;
 	public int MaxDose;
 	public static ArrayList<String> columnNames = fillColumnNames();
@@ -81,8 +80,6 @@ public class MedicationPrescription implements java.io.Serializable {
 		case 15:
 			return Name;
 		case 16:
-			return MDescription;
-		case 17:
 			return KnownSideEffects;
 		default:
 			return Integer.toString(MaxDose);
@@ -131,7 +128,6 @@ public class MedicationPrescription implements java.io.Serializable {
 			mp.MedicationID = rs.getInt("MedicationID");
 			mp.Brand = rs.getString("Brand");
 			mp.Name = rs.getString("Name");
-			mp.Description = rs.getString("Medication.Description");
 			mp.KnownSideEffects = rs.getString("KnownSideEffects");
 			mp.MaxDose = rs.getInt("MaxDose");
 
@@ -161,7 +157,6 @@ public class MedicationPrescription implements java.io.Serializable {
 		columnNames.add("MedicationID");
 		columnNames.add("Brand");
 		columnNames.add("Name");
-		columnNames.add("MDescription");
 		columnNames.add("KnownSideEffects");
 		columnNames.add("MaxDose");
 
