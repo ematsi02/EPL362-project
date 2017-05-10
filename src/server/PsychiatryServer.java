@@ -315,6 +315,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
+	
+	
 
 	void searchPatient() throws IOException, SQLException {
 		String username = inFromClient.readLine();
@@ -414,6 +416,19 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.println("relativeDeleted");// deleted relative
 		outToClient.flush();
 	}
+	
+	void informRelatives() throws IOException {
+		String patientid = inFromClient.readLine();
+		String staffid = inFromClient.readLine();
+		String subject = inFromClient.readLine();
+		String message = inFromClient.readLine();
+		jdbc.informRelatives(patientid, staffid, subject, message);
+		file.print("relatives of patient with username " + patientid + " informed...");
+		file.println(dtf.format(now));
+		file.flush();
+		outToClient.println("relativesInformed");// informed relatives
+		outToClient.flush();
+	}
 
 	void addincident() throws IOException {
 		String patientid = inFromClient.readLine();
@@ -425,7 +440,7 @@ public class PsychiatryServer implements java.io.Serializable {
 		file.print("Incident for " + patientid + " added... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("success");// add incident
+		outToClient.println("success");// added incident
 		outToClient.flush();
 	}
 
@@ -1025,6 +1040,8 @@ public class PsychiatryServer implements java.io.Serializable {
 						deleteRelative();
 					if (messageFromClient.equals("searchRelative"))
 						searchRelative();
+					if (messageFromClient.equals("informRelatives"))
+						informRelatives();
 					if (messageFromClient.equals("incidentForm"))
 						addincident();
 					if (messageFromClient.equals("updateIncident"))
