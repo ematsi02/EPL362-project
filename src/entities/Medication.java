@@ -37,7 +37,7 @@ public class Medication implements java.io.Serializable {
 		}
 	}
 
-	public static DefaultTableModel buildTableModel(List<Relative> list, ArrayList<String> columnNames)
+	public static DefaultTableModel buildTableModel(List<Medication> list, ArrayList<String> columnNames)
 			throws SQLException {
 		int columnCount = columnNames.size();
 		String[] columns = new String[columnCount];
@@ -47,7 +47,7 @@ public class Medication implements java.io.Serializable {
 		int i = 0;
 		String[][] data = new String[list.size()][columnCount];
 		while (i < list.size()) {
-			Relative t = list.get(i);
+			Medication t = list.get(i);
 			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
 				data[i][columnIndex] = t.getfield(columnIndex);
 			}
