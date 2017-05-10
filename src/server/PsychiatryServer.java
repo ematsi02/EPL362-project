@@ -961,6 +961,8 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 	void warningLetters() throws IOException, SQLException{
 		String id = inFromClient.readLine();
+		if (id.equals("null"))
+			id = null;
 		ResultSet rs = jdbc.viewWarningLetters(id);
 		file.print("Warning Letters printed... ");
 		file.println(dtf.format(now));
