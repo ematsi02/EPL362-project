@@ -36,24 +36,6 @@ public class JDBC {
 		}
 		return conn;
 	}
-	
-	public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
-		ResultSetMetaData metaData = rs.getMetaData();
-		Vector<String> columnNames = new Vector<String>();
-		int columnCount = metaData.getColumnCount();
-		for (int column = 1; column <= columnCount; column++) {
-			columnNames.add(metaData.getColumnName(column));
-		}
-		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-		while (rs.next()) {
-			Vector<Object> vector = new Vector<Object>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				vector.add(rs.getObject(columnIndex));
-			}
-			data.add(vector);
-		}
-		return new DefaultTableModel(data, columnNames);
-	}
 
 	public ResultSet login(String Username, String Password, String Role) {
 		try {
@@ -184,7 +166,7 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public void updateHarmRisk(String patientid, int self, int others, String status, int dead) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -217,7 +199,11 @@ public class JDBC {
 	public ResultSet printPatient(String username) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='" + username + "';");
+			ResultSet rs;
+			if (username == null)
+				rs = stmt.executeQuery("SELECT * FROM Patient;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Patient WHERE PatientID='" + username + "';");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -277,7 +263,11 @@ public class JDBC {
 	public ResultSet printRelative(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Relative WHERE RelativeID=" + id + ";");
+			ResultSet rs;
+			if (id == -1)
+				rs = stmt.executeQuery("SELECT * FROM Relative;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Relative WHERE RelativeID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -293,7 +283,7 @@ public class JDBC {
 					+ "');";
 			stmt.executeUpdate(query);
 			Statement stmt2 = conn.createStatement();
-			String query2 = "UPDATE Patient SET NumOfIncidents=NumOfIncidents+1 WHERE PatientID='"+ patientid + "';";
+			String query2 = "UPDATE Patient SET NumOfIncidents=NumOfIncidents+1 WHERE PatientID='" + patientid + "';";
 			stmt2.executeUpdate(query2);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -338,7 +328,11 @@ public class JDBC {
 	public ResultSet printIncident(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Incident WHERE IncidentID=" + id + ";");
+			ResultSet rs;
+			if (id == -1)
+				rs = stmt.executeQuery("SELECT * FROM Incident;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Incident WHERE IncidentID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -363,7 +357,7 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public void addTreatmentMedication(int treatmentid, int medicationid, int dose, String description) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -403,8 +397,8 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-		public String checkForWarning(int treatmentid, int medicationid) {
+
+	public String checkForWarning(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM TreatmentMedication WHERE TreatmentID=" + treatmentid
@@ -437,9 +431,9 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	public ResultSet findTreatment(String patientid, String startDate, String endDate, String diagnosis, String description,
-			String staffid) {
+
+	public ResultSet findTreatment(String patientid, String startDate, String endDate, String diagnosis,
+			String description, String staffid) {
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Treatment WHERE PatientID='" + patientid
@@ -455,7 +449,7 @@ public class JDBC {
 			return null;
 		}
 	}
-	
+
 	public ResultSet findPreviousTreatment(String patientid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -471,7 +465,7 @@ public class JDBC {
 			return null;
 		}
 	}
-	
+
 	public void renewTreatment(int treatmentid, String patientid, String startDate, String endDate, String notes,
 			String staffid) {
 		try {
@@ -502,7 +496,7 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public void deleteTreatmentMedication(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -517,7 +511,7 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public void overruleWarning(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -536,7 +530,11 @@ public class JDBC {
 	public ResultSet printTreatment(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Treatment WHERE TreatmentID=" + id + ";");
+			ResultSet rs;
+			if (id == -1)
+				rs = stmt.executeQuery("SELECT * FROM Treatment;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Treatment WHERE TreatmentID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -544,11 +542,11 @@ public class JDBC {
 		}
 	}
 
-	public void addMedication(String brand, String name, String description, String effects,int dose) {
+	public void addMedication(String brand, String name, String description, String effects, int dose) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Medication (Brand, Name, Description, KnownSideEffects,MaxDose) VALUES ('" + brand
-					+ "', '" + name + "', '" + description + "', '" + effects + "', "+dose+");";
+			String query = "INSERT INTO Medication (Brand, Name, Description, KnownSideEffects,MaxDose) VALUES ('"
+					+ brand + "', '" + name + "', '" + description + "', '" + effects + "', " + dose + ");";
 			stmt.executeUpdate(query);
 
 		} catch (SQLException e) {
@@ -560,12 +558,13 @@ public class JDBC {
 		}
 	}
 
-	public void updateMedication(int medicationid, String brand, String name, String description,
-			String effects,int dose) {
+	public void updateMedication(int medicationid, String brand, String name, String description, String effects,
+			int dose) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "UPDATE Medication SET Brand='" + brand + "', Name='" + name + "', Description='"
-					+ description + "', KnownSideEffects='" + effects + "', MaxDose=" + dose + " WHERE MedicationID=" + medicationid + ";";
+					+ description + "', KnownSideEffects='" + effects + "', MaxDose=" + dose + " WHERE MedicationID="
+					+ medicationid + ";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -593,14 +592,18 @@ public class JDBC {
 	public ResultSet printMedication(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Medication WHERE MedicationID=" + id + ";");
+			ResultSet rs;
+			if (id == -1)
+				rs = stmt.executeQuery("SELECT * FROM Medication;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Medication WHERE MedicationID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			return null;
 		}
 	}
-	
+
 	public void addMedicationReaction(String patientid, int medicationid, String type, String description) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -636,8 +639,8 @@ public class JDBC {
 	public void deleteMedicationReaction(String patientid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "DELETE FROM MedicationReaction WHERE PatientID='" + patientid
-					+ "' AND MedicationID=" + medicationid + ";";
+			String query = "DELETE FROM MedicationReaction WHERE PatientID='" + patientid + "' AND MedicationID="
+					+ medicationid + ";";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
@@ -651,8 +654,12 @@ public class JDBC {
 	public ResultSet printMedicationReaction(String patientid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM MedicationReaction WHERE PatientID='" + patientid
-					+ "' AND MedicationID=" + medicationid + ";");
+			ResultSet rs;
+			if (patientid == null || medicationid == -1)
+				rs = stmt.executeQuery("SELECT * FROM MedicationReaction ORDER BY PatientID;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM MedicationReaction WHERE PatientID='" + patientid
+						+ "' AND MedicationID=" + medicationid + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -713,7 +720,11 @@ public class JDBC {
 	public ResultSet printConsultation(int id) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Consultation WHERE ConsultationID=" + id + ";");
+			ResultSet rs;
+			if (id == -1)
+				rs = stmt.executeQuery("SELECT * FROM Consultation;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Consultation WHERE ConsultationID=" + id + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -724,8 +735,8 @@ public class JDBC {
 	public void addComment(String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Comments (PatientID, StaffID,Subject, Comment) VALUES ('" + patientid + "', '" + staffid
-					+ "', '" + subject + "', '" + comment + "');";
+			String query = "INSERT INTO Comments (PatientID, StaffID,Subject, Comment) VALUES ('" + patientid + "', '"
+					+ staffid + "', '" + subject + "', '" + comment + "');";
 			stmt.executeUpdate(query);
 
 		} catch (SQLException e) {
@@ -769,7 +780,11 @@ public class JDBC {
 	public ResultSet printComment(int commentid) {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Comments WHERE CommentID=" + commentid + ";");
+			ResultSet rs;
+			if (commentid == -1)
+				rs = stmt.executeQuery("SELECT * FROM Comments;");
+			else
+				rs = stmt.executeQuery("SELECT * FROM Comments WHERE CommentID=" + commentid + ";");
 			return rs;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
@@ -792,7 +807,7 @@ public class JDBC {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 	public ResultSet viewWarningLetters(String PatientID) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -815,7 +830,7 @@ public class JDBC {
 		}
 		return null;
 	}
-	
+
 	// REPORTS
 
 	/**
