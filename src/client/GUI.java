@@ -1216,6 +1216,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblothers.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblstatus = new JLabel("Risk Status");
 			lblstatus.setFont(new Font("Arial", Font.PLAIN, 14));
+			JLabel lbldead = new JLabel("Dead Read Only");
+			lbldead.setFont(new Font("Arial", Font.PLAIN, 14));
 			JTextField username = new JTextField(patients.get(0).PatientID);
 			username.setEditable(false);
 			JTextField name = new JTextField(patients.get(0).Name);
@@ -1227,6 +1229,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JTextField self = new JTextField(Integer.toString(patients.get(0).SelfHarmRisk));
 			JTextField others = new JTextField(Integer.toString(patients.get(0).OthersHarmRisk));
 			JTextField status = new JTextField(patients.get(0).RiskStatus);
+			JTextField dead = new JTextField(Integer.toString(patients.get(0).DeadReadOnly));
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -1238,6 +1241,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 						out.println(Integer.parseInt(self.getText()));
 						out.println(Integer.parseInt(others.getText()));
 						out.println(status.getText());
+						out.println(Integer.parseInt(dead.getText()));
 						if ((messageFromServer = in.readLine()) != null) {
 							getContentPane().removeAll();
 							if (messageFromServer.equals("harmRiskUpdated")) {
@@ -1269,6 +1273,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			patientpanel.add(others);
 			patientpanel.add(lblstatus);
 			patientpanel.add(status);
+			patientpanel.add(lbldead);
+			patientpanel.add(dead);
 			patientpanel.add(update);
 			patientpanel.setBounds(350, 300, 250, 250);
 			patientpanel.setOpaque(false);
@@ -1634,7 +1640,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 							JLabel message = new JLabel("You have successfully added the incident!");
 							message.setFont(new Font("Arial", Font.PLAIN, 14));
 							message.setForeground(Color.blue);
-							message.setBounds(340, 470, 350, 50);
+							message.setBounds(380, 380, 350, 50);
 							getContentPane().add(incidentForm());
 							getContentPane().add(message);
 						}
