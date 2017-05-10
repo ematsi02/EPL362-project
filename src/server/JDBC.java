@@ -816,11 +816,28 @@ public class JDBC {
 				query += "Select * From InformRelatives Where PatientID='" + PatientID + "';";
 			else
 				query += "Select * From InformRelatives";
-
 			ResultSet rs = stmt.executeQuery(query);
-
 			return rs;
+		} catch (SQLException e) {
+			System.out.print("Got error: ");
+			System.out.print(e.getErrorCode());
+			System.out.print("\nSQL State: ");
+			System.out.println(e.getSQLState());
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
 
+	public ResultSet viewTodaysAppointments(String myDate) {
+		try {
+			Statement stmt = conn.createStatement();
+			String query = "";
+			if (myDate != null)
+				query += "Select * From Consultation Where Date='" + myDate + "';";
+			else
+				query += "Select * From Consultation Order By Date;";
+			ResultSet rs = stmt.executeQuery(query);
+			return rs;
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
 			System.out.print(e.getErrorCode());
