@@ -168,7 +168,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	void logout() {
 		try {
 			String username = inFromClient.readLine();
-			file = new PrintWriter(new BufferedWriter(new FileWriter("log\\log.txt", true)));
+			file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
 			file.print(username + " log out... ");
 			file.println(dtf.format(now));
 			file.flush();
