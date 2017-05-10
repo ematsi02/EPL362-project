@@ -118,7 +118,7 @@ public class MedicationPrescription implements java.io.Serializable {
 			mp.StartDate = rs.getString("StartDate");
 			mp.EndDate = rs.getString("EndDate");
 			mp.Diagnosis = rs.getString("Diagnosis");
-			mp.Description = rs.getString("Description");
+			mp.Description = rs.getString("Treatment.Description");
 			mp.StaffID = rs.getString("StaffID");
 			// TreatmentMedication fields
 			mp.MTreatmentID = rs.getInt("TreatmentID");
@@ -131,7 +131,7 @@ public class MedicationPrescription implements java.io.Serializable {
 			mp.MedicationID = rs.getInt("MedicationID");
 			mp.Brand = rs.getString("Brand");
 			mp.Name = rs.getString("Name");
-			mp.Description = rs.getString("Description");
+			mp.Description = rs.getString("Medication.Description");
 			mp.KnownSideEffects = rs.getString("KnownSideEffects");
 			mp.MaxDose = rs.getInt("MaxDose");
 
