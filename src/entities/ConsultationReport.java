@@ -88,11 +88,11 @@ public class ConsultationReport implements java.io.Serializable {
 			cr.Consultation_Date = rs.getString("Date");
 			cr.Consultation_Time = rs.getString("Time");
 			cr.Patient_PatientID = rs.getString("PatientID");
-			cr.Patient_Name = rs.getString("Name");
-			cr.Patient_Surname = rs.getString("Surname");
+			cr.Patient_Name = rs.getString("Patient.Name");
+			cr.Patient_Surname = rs.getString("Patient.Surname");
 			cr.Staff_StaffID = rs.getString("StaffID");
-			cr.Staff_Name = rs.getString("Name");
-			cr.Staff_Surname = rs.getString("Surname");
+			cr.Staff_Name = rs.getString("Staff.Name");
+			cr.Staff_Surname = rs.getString("Staff.Surname");
 			cr.Consultation_MedicalRecordUpdated = rs.getInt("MedicalRecordUpdated");
 
 			ReportList.add(cr);
