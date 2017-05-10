@@ -3,10 +3,11 @@
 	<!-- Sets variables which can later be used. -->
 	<!-- The value of a property is accessed via ${} -->
 	<property name="jars.dir" location="jars" />
-	<property name="images.dir" location="images" />
+	<!-- <property name="images.dir" location="images" /> -->
 	<property name="log.dir" location="log" />
-	<property name="javadoc.dir" location="javadoc" />
-	<property name="dist.dir" location="dist" />
+	<property name="docs.dir" location="docs" />
+	<property name="javadoc.dir" location="docs\javadoc" />
+	<property name="testreport.dir" location="docs\testreport" />
 	<!-- Source file directories -->
 	<property name="src.dir" location="src" />
 	<property name="entities.dir" location="src\entities" />
@@ -19,20 +20,20 @@
 	<property name="clientbin.dir" location="bin\client" />
 	<property name="serverbin.dir" location="bin\server" />
 	<property name="testcodebin.dir" location="bin\testcode" />
-	
+
 	<!-- Deletes the existing directories -->
 	<target name="clean">
 		<delete dir="${log.dir}" />
-		<delete dir="${javadoc.dir}" />
-		<delete dir="${dist.dir}" />
+		<delete dir="${docs.dir}" />
 		<delete dir="${build.dir}" />
 	</target>
 
 	<!-- Creates the directories -->
 	<target name="makedir">
 		<mkdir dir="${log.dir}" />
+		<mkdir dir="${docs.dir}" />
 		<mkdir dir="${javadoc.dir}" />
-		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${testreport.dir}" />
 		<!-- Bin directories -->
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${entitiesbin.dir}" />
@@ -41,12 +42,49 @@
 		<mkdir dir="${testcodebin.dir}" />
 	</target>
 
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
+
 	<!-- Compiles the java code (including the usage of library for JUnit) -->
 	<target name="compile" depends="clean, makedir">
-		<javac srcdir="${server.dir}" destdir="${serverbin.dir}">
+
+		<javac srcdir="${entities.dir}" destdir="${build.dir}">
+			<classpath>
+				<pathelement path="jars/junit-4.12.jar" />
+				<pathelement path="hamcrest-core-1.3.jar" />
+				<pathelement path="jars/jcalendar-1.4.jar" />
+				<pathelement path="jars/mysql-connector-java.jar" />
+			</classpath>
 		</javac>
 
-		<!-- <javac srcdir="${src.dir}" destdir="${build.dir}">
+		<javac srcdir="${client.dir}" destdir="${build.dir}">
+			<classpath>
+				<pathelement path="jars/junit-4.12.jar" />
+				<pathelement path="hamcrest-core-1.3.jar" />
+				<pathelement path="jars/jcalendar-1.4.jar" />
+				<pathelement path="jars/mysql-connector-java.jar" />
+			</classpath>
+		</javac>
+		<javac srcdir="${server.dir}" destdir="${build.dir}">
+			<classpath>
+				<pathelement path="jars/junit-4.12.jar" />
+				<pathelement path="hamcrest-core-1.3.jar" />
+				<pathelement path="jars/jcalendar-1.4.jar" />
+				<pathelement path="jars/mysql-connector-java.jar" />
+			</classpath>
+		</javac>
+		<javac srcdir="${testcode.dir}" destdir="${build.dir}">
+			<classpath>
+				<pathelement path="jars/junit-4.12.jar" />
+				<pathelement path="hamcrest-core-1.3.jar" />
+				<pathelement path="jars/jcalendar-1.4.jar" />
+				<pathelement path="jars/mysql-connector-java.jar" />
+			</classpath>
+		</javac>
+
+		<!--
+		<javac srcdir="${src.dir}" destdir="${build.dir}">
 		</javac> -->
 
 	</target>
@@ -62,7 +100,21 @@
 		</javadoc>
 	</target>
 
-	<target name="main" depends="compile, javadoc">
+	<!-- Run the JUnit Tests -->
+	<!-- Output is XML, could also be plain-->
+	<target name="junit" depends="compile">
+		<junit printsummary="on" fork="true" haltonfailure="yes">
+			<classpath refid="jars.path" />
+			<formatter type="xml" />
+			<batchtest todir="${testreport.dir}">
+				<fileset dir="${src.dir}">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="main" depends="compile, javadoc, junit">
 		<description>Main target</description>
 	</target>
 
