@@ -2,42 +2,62 @@
 <project name="EPL362-ClientServer" default="main" basedir=".">
 	<!-- Sets variables which can later be used. -->
 	<!-- The value of a property is accessed via ${} -->
-	<property name="src.dir" location="src" />
+	<property name="jars.dir" location="jars" />
 	<property name="images.dir" location="images" />
-	<property name="build.dir" location="bin" />
 	<property name="log.dir" location="log" />
-	<property name="docs.dir" location="docs" />
+	<property name="javadoc.dir" location="javadoc" />
 	<property name="dist.dir" location="dist" />
-
-	<!-- Deletes the existing build & log directories-->
+	<!-- Source file directories -->
+	<property name="src.dir" location="src" />
+	<property name="entities.dir" location="src\entities" />
+	<property name="client.dir" location="src\client" />
+	<property name="server.dir" location="src\server" />
+	<property name="testcode.dir" location="src\testcode" />
+	<!-- Bin file directories -->
+	<property name="build.dir" location="bin" />
+	<property name="entitiesbin.dir" location="bin\entities" />
+	<property name="clientbin.dir" location="bin\client" />
+	<property name="serverbin.dir" location="bin\server" />
+	<property name="testcodebin.dir" location="bin\testcode" />
+	
+	<!-- Deletes the existing directories -->
 	<target name="clean">
-		<delete dir="${build.dir}" />
 		<delete dir="${log.dir}" />
-		<delete dir="${docs.dir}" />
+		<delete dir="${javadoc.dir}" />
 		<delete dir="${dist.dir}" />
+		<delete dir="${build.dir}" />
 	</target>
 
-	<!-- Creates the  build & log directories-->
+	<!-- Creates the directories -->
 	<target name="makedir">
-		<mkdir dir="${build.dir}" />
 		<mkdir dir="${log.dir}" />
-		<mkdir dir="${docs.dir}" />
+		<mkdir dir="${javadoc.dir}" />
 		<mkdir dir="${dist.dir}" />
+		<!-- Bin directories -->
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${entitiesbin.dir}" />
+		<mkdir dir="${clientbin.dir}" />
+		<mkdir dir="${serverbin.dir}" />
+		<mkdir dir="${testcodebin.dir}" />
 	</target>
 
 	<!-- Compiles the java code (including the usage of library for JUnit) -->
 	<target name="compile" depends="clean, makedir">
-		<javac srcdir="${src.dir}" destdir="${build.dir}">
+		<javac srcdir="${server.dir}" destdir="${serverbin.dir}">
 		</javac>
+
+		<!-- <javac srcdir="${src.dir}" destdir="${build.dir}">
+		</javac> -->
 
 	</target>
 
 	<!-- Creates Javadoc -->
-	<target name="docs" depends="compile">
-		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
-			<!-- Define which files / directory should get included (we include all) -->
+	<target name="javadoc" depends="compile">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${javadoc.dir}">
+			<!-- Define which files / directory should get included -->
 			<fileset dir="${src.dir}">
-				<include name="**" />
+				<!-- <include name="**" /> -->
+				<include name="server.PsychiatryServer" />
 			</fileset>
 		</javadoc>
 	</target>
@@ -46,10 +66,6 @@
 	<target name="jar" depends="compile">
 		<jar destfile="${dist.dir}\build.ant.jar" basedir="${build.dir}">
 			<manifest>
-				<!-- Server Classes  -->
-				<attribute name="JDBC" value="server.JDBC" />
-				<attribute name="PsychiatryServer" value="server.PsychiatryServer" />
-
 				<!-- Entities Classes  -->
 				<attribute name="AttendanceReport" value="entities.AttendanceReport" />
 				<attribute name="Comment" value="entities.Comment" />
@@ -71,6 +87,10 @@
 				<attribute name="MenuGUI" value="client.GUIMenu" />
 				<attribute name="ClientGUI" value="client.GUI" />
 
+				<!-- Server Classes  -->
+				<attribute name="JDBC" value="server.JDBC" />
+				<attribute name="PsychiatryServer" value="server.PsychiatryServer" />
+
 				<!-- TestCode Classes  -->
 				<attribute name="AllTests" value="test.AllTests" />
 				<attribute name="PatientTest" value="test.PatientTest" />
@@ -79,7 +99,7 @@
 		</jar>
 	</target>
 
-	<target name="main" depends="compile, jar, docs">
+	<target name="main" depends="compile, jar, javadoc">
 		<description>Main target</description>
 	</target>
 
