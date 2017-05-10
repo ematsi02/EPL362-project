@@ -62,44 +62,7 @@
 		</javadoc>
 	</target>
 
-	<!-- Creates the deployable jar file  -->
-	<target name="jar" depends="compile">
-		<jar destfile="${dist.dir}\build.ant.jar" basedir="${build.dir}">
-			<manifest>
-				<!-- Entities Classes  -->
-				<attribute name="AttendanceReport" value="entities.AttendanceReport" />
-				<attribute name="Comment" value="entities.Comment" />
-				<attribute name="ConditionReport" value="entities.ConditionReport" />
-				<attribute name="Consultation" value="entities.Consultation" />
-				<attribute name="ConsultationReport" value="entities.ConsultationReport" />
-				<attribute name="Incident" value="entities.Incident" />
-				<attribute name="Medication" value="entities.Medication" />
-				<attribute name="MedicationPrescription" value="entities.MedicationPrescription" />
-				<attribute name="MedicationReaction" value="entities.MedicationReaction" />
-				<attribute name="MedicationReport" value="entities.MedicationReport" />
-				<attribute name="Patient" value="entities.Patient" />
-				<attribute name="Relative" value="entities.Relative" />
-				<attribute name="Staff" value="entities.Staff" />
-				<attribute name="Treatment" value="entities.Treatment" />
-				<attribute name="WarningLetter" value="entities.WarningLetter" />
-
-				<!-- Client Classes  -->
-				<attribute name="MenuGUI" value="client.GUIMenu" />
-				<attribute name="ClientGUI" value="client.GUI" />
-
-				<!-- Server Classes  -->
-				<attribute name="JDBC" value="server.JDBC" />
-				<attribute name="PsychiatryServer" value="server.PsychiatryServer" />
-
-				<!-- TestCode Classes  -->
-				<attribute name="AllTests" value="test.AllTests" />
-				<attribute name="PatientTest" value="test.PatientTest" />
-				<attribute name="StaffTest" value="test.StaffTest" />
-			</manifest>
-		</jar>
-	</target>
-
-	<target name="main" depends="compile, jar, javadoc">
+	<target name="main" depends="compile, javadoc">
 		<description>Main target</description>
 	</target>
 
