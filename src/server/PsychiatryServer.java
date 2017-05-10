@@ -416,7 +416,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/**
-	 * This function gets some fields from client, searched the patient and
+	 * This function gets some fields from client, searches the patient and
 	 * writes in log file the action and the date/time.
 	 * 
 	 * @return void
@@ -448,7 +448,7 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/**
-	 * This function gets some fields from client, searched the harm risk record
+	 * This function gets some fields from client, searches the harm risk record
 	 * and writes in log file the action and the date/time.
 	 * 
 	 * @return void
@@ -943,27 +943,49 @@ public class PsychiatryServer implements java.io.Serializable {
 		System.out.println("incident search after");
 	}
 
+	/**
+	 * This function gets some fields from client, searches the previous treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchPreviousTreatment() throws IOException, SQLException {
+		// Get data from client
 		String id = inFromClient.readLine();
+		// Communicate with database
 		ResultSet rs = jdbc.findPreviousTreatment(id);
+		// Write to log file
 		file.print("treatment with patient's username " + id + " searched... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("previousTreatmentSearched");// searched treatment
+		// Send data to client
+		outToClient.println("previousTreatmentSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("previous treatment search after");
 	}
 
+	/**
+	 * This function gets some fields from client, searches the renewed treatment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchRenewTreatment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
+		// Communicate with database
 		ResultSet rs = jdbc.printTreatment(id);
+		// Write to log file
 		file.print("treatment with id " + id + " searched... ");
 		file.println(dtf.format(now));
 		file.flush();
-		outToClient.println("renewTreatmentSearched");// searched treatment
+		// Send data to client
+		outToClient.println("renewTreatmentSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Treatment> ls = treatment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("incident search after");
@@ -1043,20 +1065,32 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, searches the medication and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchMedication() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		if(id==-1){
+			// Write to log file
 			file.print("all medications printed... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}else{
+			// Write to log file
 			file.print("Medication with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printMedication(id);
-		outToClient.println("medicationSearched");// searched medication
+		// Send data to client
+		outToClient.println("medicationSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Medication> ls = medication.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
@@ -1144,20 +1178,32 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	}
 
+	/**
+	 * This function gets some fields from client, searches the consultation and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchConsultation() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		if(id==-1){
+			// Write to log file
 			file.print("All consultation printed... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}else{
+			// Write to log file 
 			file.print("Consultation with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printConsultation(id);
-		outToClient.println("consultationSearched");// searched Consultation
+		// Send data to client
+		outToClient.println("consultationSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Consultation> ls = consultation.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
@@ -1220,22 +1266,34 @@ public class PsychiatryServer implements java.io.Serializable {
 		outObject.writeObject(ls);
 	}
 
+	/**
+	 * This function gets some fields from client, searches the medication reaction and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchReaction() throws IOException, SQLException {
+		// Get data from client
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
 		if(medicationid==-1){
+			// Write to log file
 			file.print("all medication reactions printed... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}else{
+			// Write to log file
 			file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
 					+ " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
-		outToClient.println("reactionSearched");// searched patient
+		// Send data to client
+		outToClient.println("reactionSearched");
 		outToClient.flush();
+		// Send data to client
 		List<MedicationReaction> ls = reaction.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
@@ -1335,20 +1393,32 @@ public class PsychiatryServer implements java.io.Serializable {
 		outToClient.flush();
 	}
 
+	/**
+	 * This function gets some fields from client, searches the comment and
+	 * writes in log file the action and the date/time.
+	 * 
+	 * @return void
+	 */
 	void searchComment() throws IOException, SQLException {
+		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
 		if(id==-1){
+			// Write to log file
 			file.print("All comments printed... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}else{
+			// Write to log file
 			file.print("Comment with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
 		}
+		// Communicate with database
 		ResultSet rs = jdbc.printComment(id);
-		outToClient.println("commentSearched");// searched medication
+		// Send data to client
+		outToClient.println("commentSearched");
 		outToClient.flush();
+		// Send data to client
 		List<Comment> ls = comment.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
