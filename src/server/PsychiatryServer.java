@@ -921,12 +921,12 @@ public class PsychiatryServer implements java.io.Serializable {
 	void searchTreatment() throws IOException, SQLException {
 		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
 			// Write to log file
 			file.print("all treatments printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
+		} else {
 			// Write to log file
 			file.print("treatment with id " + id + " searched... ");
 			file.println(dtf.format(now));
@@ -944,8 +944,8 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/**
-	 * This function gets some fields from client, searches the previous treatment and
-	 * writes in log file the action and the date/time.
+	 * This function gets some fields from client, searches the previous
+	 * treatment and writes in log file the action and the date/time.
 	 * 
 	 * @return void
 	 */
@@ -968,8 +968,8 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/**
-	 * This function gets some fields from client, searches the renewed treatment and
-	 * writes in log file the action and the date/time.
+	 * This function gets some fields from client, searches the renewed
+	 * treatment and writes in log file the action and the date/time.
 	 * 
 	 * @return void
 	 */
@@ -1074,12 +1074,12 @@ public class PsychiatryServer implements java.io.Serializable {
 	void searchMedication() throws IOException, SQLException {
 		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
 			// Write to log file
 			file.print("all medications printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
+		} else {
 			// Write to log file
 			file.print("Medication with id " + id + " searched... ");
 			file.println(dtf.format(now));
@@ -1187,13 +1187,13 @@ public class PsychiatryServer implements java.io.Serializable {
 	void searchConsultation() throws IOException, SQLException {
 		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
 			// Write to log file
 			file.print("All consultation printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
-			// Write to log file 
+		} else {
+			// Write to log file
 			file.print("Consultation with id " + id + " searched... ");
 			file.println(dtf.format(now));
 			file.flush();
@@ -1267,8 +1267,8 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	/**
-	 * This function gets some fields from client, searches the medication reaction and
-	 * writes in log file the action and the date/time.
+	 * This function gets some fields from client, searches the medication
+	 * reaction and writes in log file the action and the date/time.
 	 * 
 	 * @return void
 	 */
@@ -1276,12 +1276,12 @@ public class PsychiatryServer implements java.io.Serializable {
 		// Get data from client
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
-		if(medicationid==-1){
+		if (medicationid == -1) {
 			// Write to log file
 			file.print("all medication reactions printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
+		} else {
 			// Write to log file
 			file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
 					+ " searched... ");
@@ -1402,12 +1402,12 @@ public class PsychiatryServer implements java.io.Serializable {
 	void searchComment() throws IOException, SQLException {
 		// Get data from client
 		int id = Integer.parseInt(inFromClient.readLine());
-		if(id==-1){
+		if (id == -1) {
 			// Write to log file
 			file.print("All comments printed... ");
 			file.println(dtf.format(now));
 			file.flush();
-		}else{
+		} else {
 			// Write to log file
 			file.print("Comment with id " + id + " searched... ");
 			file.println(dtf.format(now));
@@ -1528,7 +1528,8 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<WarningLetter> ls = letter.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	void todaysAppointments() throws IOException, SQLException{
+
+	void todaysAppointments() throws IOException, SQLException {
 		String date = inFromClient.readLine();
 		if (date.equals("null"))
 			date = null;
@@ -1565,8 +1566,8 @@ public class PsychiatryServer implements java.io.Serializable {
 				reaction = new MedicationReaction();
 				comment = new Comment();
 				staff = new Staff();
-				consultationReport=new ConsultationReport();
-				attendanceReport=new AttendanceReport();
+				consultationReport = new ConsultationReport();
+				attendanceReport = new AttendanceReport();
 				conditionReport = new ConditionReport();
 				medicationReport = new MedicationReport();
 				medicationPrescription = new MedicationPrescription();
