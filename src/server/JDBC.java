@@ -185,11 +185,11 @@ public class JDBC {
 		}
 	}
 	
-	public void updateHarmRisk(String patientid, int self, int others, String status) {
+	public void updateHarmRisk(String patientid, int self, int others, String status, int dead) {
 		try {
 			Statement stmt = conn.createStatement();
 			String query = "UPDATE Patient SET SelfHarmRisk=" + self + ", OthersHarmRisk=" + others + ", RiskStatus='"
-					+ status + "' WHERE PatientID='" + patientid + "';";
+					+ status + "', DeadReadOnly=" + dead + " WHERE PatientID='" + patientid + "';";
 			stmt.executeUpdate(query);
 		} catch (SQLException e) {
 			System.out.print("Got error: ");
