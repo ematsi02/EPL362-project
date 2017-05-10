@@ -1,15 +1,27 @@
+/**
+ * This class implements the connection with the database and the SQL queries
+ * that return the result sets needed.
+ * 
+ * @author Sotia Gregoriou, Elena Matsi, Erasmia Shimitra
+ */
+
 package server;
 
+//Libraries
 import java.io.*;
 import java.sql.*;
-import java.util.*;
-import javax.swing.table.DefaultTableModel;
 
 public class JDBC {
 	public static boolean dbDriverLoaded = false;
 	public static Connection conn = null;
 	public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
+	/**
+	 * This function connects the system with the database. Username:
+	 * EPL362project, Password: GzMV6jFrWTLnB6Pp
+	 * 
+	 * @return Connection the connection with the database
+	 */
 	public Connection getDBConnection() {
 		String url = "jdbc:mysql://studentdb.in.cs.ucy.ac.cy:3306/EPL362project";
 		String username = "EPL362project";
@@ -37,6 +49,17 @@ public class JDBC {
 		return conn;
 	}
 
+	/**
+	 * This function implements the query for the log in action.
+	 * 
+	 * @param Username
+	 *            the username of the user
+	 * @param Password
+	 *            the password of the user
+	 * @param Role
+	 *            the role of the user (Staff or Patient)
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet login(String Username, String Password, String Role) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -53,6 +76,28 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the sign up action.
+	 * 
+	 * @param username
+	 *            the username of the user
+	 * @param password
+	 *            the password of the user
+	 * @param name
+	 *            the name of the user
+	 * @param surname
+	 *            the surname of the user
+	 * @param role
+	 *            the role of the user (Doctor, Nurser, Health Visitor,
+	 *            Receptionist, Medical Records, Management)
+	 * @param phone
+	 *            the phone of the user
+	 * @param email
+	 *            the email of the user
+	 * @param address
+	 *            the address of the user
+	 * @return void
+	 */
 	public void signup(String username, String password, String name, String surname, String role, int phone,
 			String email, String address) {
 		try {
@@ -70,6 +115,19 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the changing password action.
+	 * 
+	 * @param username
+	 *            the username of the user
+	 * @param oldpassword
+	 *            the old password of the user
+	 * @param newpassword
+	 *            the new password of the user
+	 * @param role
+	 *            the role of the user
+	 * @return void
+	 */
 	public void changepassword(String username, String oldpassword, String newpassword, String role) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -86,6 +144,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the checking sign up action.
+	 * 
+	 * @param Username
+	 *            the username of the user
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet checksignup(String Username) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -98,6 +163,25 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating profile action.
+	 * 
+	 * @param name
+	 *            the name of the user
+	 * @param surname
+	 *            the surname of the user
+	 * @param username
+	 *            the username of the user
+	 * @param phone
+	 *            the phone of the user
+	 * @param email
+	 *            the email of the user
+	 * @param address
+	 *            the address of the user
+	 * @param role
+	 *            the role of the user
+	 * @return void
+	 */
 	public void updateProfile(String name, String surname, String username, int phone, String email, String address,
 			String role) {
 		try {
@@ -119,6 +203,15 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing profile action.
+	 * 
+	 * @param username
+	 *            the username of the user
+	 * @param role
+	 *            the role of the user
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printProfile(String username, String role) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -134,6 +227,25 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding patient action.
+	 * 
+	 * @param name
+	 *            the name of the patient
+	 * @param surname
+	 *            the surname of the patient
+	 * @param username
+	 *            the username of the patient
+	 * @param password
+	 *            the password of the patient
+	 * @param phone
+	 *            the phone of the patient
+	 * @param email
+	 *            the email of the patient
+	 * @param address
+	 *            the address of the patient
+	 * @return void
+	 */
 	public void addPatient(String name, String surname, String username, String password, int phone, String email,
 			String address) {
 		try {
@@ -152,6 +264,23 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating patient action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param name
+	 *            the name of the patient
+	 * @param surname
+	 *            the surname of the patient
+	 * @param phone
+	 *            the phone of the patient
+	 * @param email
+	 *            the email of the patient
+	 * @param address
+	 *            the address of the patient
+	 * @return void
+	 */
 	public void updatePatient(String patientid, String name, String surname, int phone, String email, String address) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -167,6 +296,22 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating harm risk record
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param self
+	 *            the self harm risk possibility of the patient
+	 * @param others
+	 *            the others harm risk possibility of the patient
+	 * @param status
+	 *            the risk status of the patient
+	 * @param dead
+	 *            if patient dies then his/her records become readable only
+	 * @return void
+	 */
 	public void updateHarmRisk(String patientid, int self, int others, String status, int dead) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -182,6 +327,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting patient action.
+	 * 
+	 * @param username
+	 *            the username of the patient
+	 * @return void
+	 */
 	public void deletePatient(String username) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -196,6 +348,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing patient action.
+	 * 
+	 * @param username
+	 *            the username of the patient
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printPatient(String username) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -211,6 +370,25 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding relative action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param name
+	 *            the name of the relative
+	 * @param surname
+	 *            the surname of the relative
+	 * @param phone
+	 *            the phone of the relative
+	 * @param email
+	 *            the email of the relative
+	 * @param address
+	 *            the address of the relative
+	 * @param relationship
+	 *            the relationship between patient and relative
+	 * @return void
+	 */
 	public void addRelative(String patientid, String name, String surname, int phone, String email, String address,
 			String relationship) {
 		try {
@@ -229,6 +407,27 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating relative action.
+	 * 
+	 * @param relativeid
+	 *            the ID of the relative
+	 * @param patientid
+	 *            the username of the patient
+	 * @param name
+	 *            the name of the relative
+	 * @param surname
+	 *            the surname of the relative
+	 * @param phone
+	 *            the phone of the relative
+	 * @param email
+	 *            the email of the relative
+	 * @param address
+	 *            the address of the relative
+	 * @param relationship
+	 *            the relationship between patient and relative
+	 * @return void
+	 */
 	public void updateRelative(int relativeid, String patientid, String name, String surname, int phone, String email,
 			String address, String relationship) {
 		try {
@@ -246,6 +445,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting relative action.
+	 * 
+	 * @param relativeid
+	 *            the ID of the relative
+	 * @return void
+	 */
 	public void deleteRelative(int relativeid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -260,6 +466,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing relative action.
+	 * 
+	 * @param id
+	 *            the ID of the relative
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printRelative(int id) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -275,6 +488,22 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding incident action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param type
+	 *            the type of the incident (Accidental Treatment Incident,
+	 *            Deliberate Incident, Threat)
+	 * @param shortDescription
+	 *            a short description of the incident
+	 * @param description
+	 *            a description of the incident
+	 * @param date
+	 *            the date of the incident
+	 * @return void
+	 */
 	public void addIncident(String patientid, String type, String shortDescription, String description, String date) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -294,6 +523,24 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating incident action.
+	 * 
+	 * @param incidentid
+	 *            the ID of the incident
+	 * @param patientid
+	 *            the username of the incident
+	 * @param type
+	 *            the type of the incident (Accidental Treatment Incident,
+	 *            Deliberate Incident, Threat)
+	 * @param shortDescription
+	 *            a short description of the incident
+	 * @param description
+	 *            a description of the incident
+	 * @param date
+	 *            the date of the incident
+	 * @return void
+	 */
 	public void updateIncident(int incidentid, String patientid, String type, String shortDescription,
 			String description, String date) {
 		try {
@@ -311,6 +558,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting incident action.
+	 * 
+	 * @param incidentid
+	 *            the ID of the incident
+	 * @return void
+	 */
 	public void deleteIncident(int incidentid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -325,6 +579,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing incident action.
+	 * 
+	 * @param id
+	 *            the ID of the incident
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printIncident(int id) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -340,6 +601,23 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding treatment action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param startDate
+	 *            the starting date of the treatment
+	 * @param endDate
+	 *            the ending date of the treatment
+	 * @param diagnosis
+	 *            the diagnosis of the treatment
+	 * @param description
+	 *            the description of the treatment
+	 * @param staffid
+	 *            the username of the staff
+	 * @return void
+	 */
 	public void addTreatment(String patientid, String startDate, String endDate, String diagnosis, String description,
 			String staffid) {
 		try {
@@ -358,6 +636,20 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding treatment's medication
+	 * action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @param dose
+	 *            the maximum dose of the medication
+	 * @param description
+	 *            the description of the medication
+	 * @return void
+	 */
 	public void addTreatmentMedication(int treatmentid, int medicationid, int dose, String description) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -398,6 +690,15 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the checking for warning action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return void
+	 */
 	public String checkForWarning(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -415,6 +716,25 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating treatment action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param patientid
+	 *            the username of the patient
+	 * @param startDate
+	 *            the starting date of the treatment
+	 * @param endDate
+	 *            the ending date of the treatment
+	 * @param diagnosis
+	 *            the diagnosis of the treatment
+	 * @param description
+	 *            the description of the treatment
+	 * @param staffid
+	 *            the username of the staff
+	 * @return void
+	 */
 	public void updateTreatment(int treatmentid, String patientid, String startDate, String endDate, String diagnosis,
 			String description, String staffid) {
 		try {
@@ -432,6 +752,23 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the finding treatment action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param startDate
+	 *            the starting date of the treatment
+	 * @param endDate
+	 *            the ending date of the treatment
+	 * @param diagnosis
+	 *            the diagnosis of the treatment
+	 * @param description
+	 *            the description of the treatment
+	 * @param staffid
+	 *            the username of the staff
+	 * @return
+	 */
 	public ResultSet findTreatment(String patientid, String startDate, String endDate, String diagnosis,
 			String description, String staffid) {
 		try {
@@ -450,6 +787,14 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the finding previous treatment
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet findPreviousTreatment(String patientid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -466,6 +811,23 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the renewing treatment action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param patientid
+	 *            the username of the patient
+	 * @param startDate
+	 *            the starting date of the treatment
+	 * @param endDate
+	 *            the ending date of the treatment
+	 * @param notes
+	 *            the notes of the treatment
+	 * @param staffid
+	 *            the username of staff
+	 * @return void
+	 */
 	public void renewTreatment(int treatmentid, String patientid, String startDate, String endDate, String notes,
 			String staffid) {
 		try {
@@ -483,6 +845,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting treatment action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @return void
+	 */
 	public void deleteTreatment(int treatmentid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -497,6 +866,16 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting treatment's
+	 * medication action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return void
+	 */
 	public void deleteTreatmentMedication(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -512,6 +891,15 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the overruling warning action.
+	 * 
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return void
+	 */
 	public void overruleWarning(int treatmentid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -527,6 +915,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing treatment action.
+	 * 
+	 * @param id
+	 *            the ID of the treatment
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printTreatment(int id) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -542,6 +937,21 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding medication action.
+	 * 
+	 * @param brand
+	 *            the brand of the medication
+	 * @param name
+	 *            the name of the medication
+	 * @param description
+	 *            the description of the medication
+	 * @param effects
+	 *            the known side effects of the medication
+	 * @param dose
+	 *            the dose of the medication
+	 * @return void
+	 */
 	public void addMedication(String brand, String name, String description, String effects, int dose) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -558,6 +968,23 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating medication action.
+	 * 
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @param brand
+	 *            the brand of the medication
+	 * @param name
+	 *            the name of the medication
+	 * @param description
+	 *            the description of the medication
+	 * @param effects
+	 *            the known side effects of the medication
+	 * @param dose
+	 *            the dose of the medication
+	 * @return void
+	 */
 	public void updateMedication(int medicationid, String brand, String name, String description, String effects,
 			int dose) {
 		try {
@@ -575,6 +1002,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting medication action.
+	 * 
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return void
+	 */
 	public void deleteMedication(int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -589,6 +1023,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing medication action.
+	 * 
+	 * @param id
+	 *            the ID of the medication
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printMedication(int id) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -604,6 +1045,20 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding medication reaction
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @param type
+	 *            the type of the medication reaction
+	 * @param description
+	 *            the description of the medication reaction
+	 * @return void
+	 */
 	public void addMedicationReaction(String patientid, int medicationid, String type, String description) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -620,6 +1075,20 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating medication reaction
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @param type
+	 *            the type of the medication reaction
+	 * @param description
+	 *            the description of the medication reaction
+	 * @return void
+	 */
 	public void updateMedicationReaction(String patientid, int medicationid, String type, String description) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -636,6 +1105,16 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting medication reaction
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return void
+	 */
 	public void deleteMedicationReaction(String patientid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -651,6 +1130,16 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing medication reaction
+	 * action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param medicationid
+	 *            the ID of the medication
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printMedicationReaction(String patientid, int medicationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -667,6 +1156,25 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding consultation action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param staffid
+	 *            the username of the staff
+	 * @param subject
+	 *            the subject of the consultation
+	 * @param dateBooked
+	 *            the date that the consultation was booked
+	 * @param date
+	 *            the date of the consultation
+	 * @param time
+	 *            the time of the consultation
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @return void
+	 */
 	public void addConsultation(String patientid, String staffid, String subject, String dateBooked, String date,
 			String time, int treatmentid) {
 		try {
@@ -685,6 +1193,31 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating consultation action.
+	 * 
+	 * @param consultationid
+	 *            the ID of the consultation
+	 * @param patientid
+	 *            the username of the patient
+	 * @param staffid
+	 *            the username of the staff
+	 * @param subject
+	 *            the subject of the consultation
+	 * @param dateBooked
+	 *            the date that the consultation was booked
+	 * @param date
+	 *            the date of the consultation
+	 * @param time
+	 *            the time of the consultation
+	 * @param attended
+	 *            1 if patient attended the consultation, 0 otherwise
+	 * @param updated
+	 *            1 if changed by medical record staff, 0 otherwise
+	 * @param treatmentid
+	 *            the ID of the treatment
+	 * @return void
+	 */
 	public void updateConsultation(int consultationid, String patientid, String staffid, String subject,
 			String dateBooked, String date, String time, int attended, int updated, int treatmentid) {
 		try {
@@ -703,6 +1236,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting consultation action.
+	 * 
+	 * @param consultationid
+	 *            the ID of the consultation
+	 * @return void
+	 */
 	public void deleteConsultation(int consultationid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -717,6 +1257,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing consultation action.
+	 * 
+	 * @param id
+	 *            the ID of the consultation
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printConsultation(int id) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -732,6 +1279,19 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the adding comment action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param staffid
+	 *            the username of the staff
+	 * @param subject
+	 *            the subject of the comment
+	 * @param comment
+	 *            the message of the comment
+	 * @return
+	 */
 	public void addComment(String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -748,6 +1308,21 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the updating comment action.
+	 * 
+	 * @param commentid
+	 *            the ID of the comment
+	 * @param patientid
+	 *            the username of the patient
+	 * @param staffid
+	 *            the username of the staff
+	 * @param subject
+	 *            the subject of the comment
+	 * @param comment
+	 *            the message of the comment
+	 * @return
+	 */
 	public void updateComment(int commentid, String patientid, String staffid, String subject, String comment) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -763,6 +1338,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the deleting comment action.
+	 * 
+	 * @param commentid
+	 *            the ID of the comment
+	 * @return void
+	 */
 	public void deleteComment(int commentid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -777,6 +1359,13 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the printing comment action.
+	 * 
+	 * @param commentid
+	 *            the ID of the comment
+	 * @return ResultSet the result of the query
+	 */
 	public ResultSet printComment(int commentid) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -792,6 +1381,19 @@ public class JDBC {
 		}
 	}
 
+	/**
+	 * This function implements the query for the informing relatives action.
+	 * 
+	 * @param patientid
+	 *            the username of the patient
+	 * @param staffid
+	 *            the username of the staff
+	 * @param subject
+	 *            the subject of the email
+	 * @param message
+	 *            the message of the email
+	 * @return void
+	 */
 	public void informRelatives(String patientid, String staffid, String subject, String message) {
 		try {
 			Statement stmt = conn.createStatement();
