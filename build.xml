@@ -1,54 +1,86 @@
 <?xml version="1.0"?>
-<project name="Ant-Test" default="main" basedir=".">
-    <!-- Sets variables which can later be used. -->
-    <!-- The value of a property is accessed via ${} -->
-    <property name="src.dir" location="src" />
-    <property name="build.dir" location="bin" />
-    <property name="dist.dir" location="dist" />
-    <property name="docs.dir" location="docs" />
+<project name="EPL362-ClientServer" default="main" basedir=".">
+	<!-- Sets variables which can later be used. -->
+	<!-- The value of a property is accessed via ${} -->
+	<property name="src.dir" location="src" />
+	<property name="images.dir" location="images" />
+	<property name="build.dir" location="bin" />
+	<property name="log.dir" location="log" />
+	<property name="docs.dir" location="docs" />
+	<property name="dist.dir" location="dist" />
 
-    <!-- Deletes the existing build, docs and dist directory-->
-    <target name="clean">
-        <delete dir="${build.dir}" />
-        <delete dir="${docs.dir}" />
-        <delete dir="${dist.dir}" />
-    </target>
+	<!-- Deletes the existing build & log directories-->
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${log.dir}" />
+		<delete dir="${docs.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
 
-    <!-- Creates the  build, docs and dist directory-->
-    <target name="makedir">
-        <mkdir dir="${build.dir}" />
-        <mkdir dir="${docs.dir}" />
-        <mkdir dir="${dist.dir}" />
-    </target>
+	<!-- Creates the  build & log directories-->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${log.dir}" />
+		<mkdir dir="${docs.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
 
-    <!-- Compiles the java code (including the usage of library for JUnit -->
-    <target name="compile" depends="clean, makedir">
-        <javac srcdir="${src.dir}" destdir="${build.dir}">
-        </javac>
+	<!-- Compiles the java code (including the usage of library for JUnit) -->
+	<target name="compile" depends="clean, makedir">
+		<javac srcdir="${src.dir}" destdir="${build.dir}">
+		</javac>
 
-    </target>
+	</target>
 
-    <!-- Creates Javadoc -->
-    <target name="docs" depends="compile">
-        <javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
-            <!-- Define which files / directory should get included, we include all -->
-             <fileset dir="${src.dir}">
-                <include name="**" />
-             </fileset>
-        </javadoc>
-    </target>
+	<!-- Creates Javadoc -->
+	<target name="docs" depends="compile">
+		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${docs.dir}">
+			<!-- Define which files / directory should get included (we include all) -->
+			<fileset dir="${src.dir}">
+				<include name="**" />
+			</fileset>
+		</javadoc>
+	</target>
 
-    <!--Creates the deployable jar file  -->
-    <target name="jar" depends="compile">
-        <jar destfile="${dist.dir}\de.vogella.build.test.ant.jar" basedir="${build.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="test.Main" />
-            </manifest>
-        </jar>
-    </target>
+	<!-- Creates the deployable jar file  -->
+	<target name="jar" depends="compile">
+		<jar destfile="${dist.dir}\build.ant.jar" basedir="${build.dir}">
+			<manifest>
+				<!-- Server Classes  -->
+				<attribute name="JDBC" value="server.JDBC" />
+				<attribute name="PsychiatryServer" value="server.PsychiatryServer" />
 
-    <target name="main" depends="compile, jar, docs">
-        <description>Main target</description>
-    </target>
+				<!-- Entities Classes  -->
+				<attribute name="AttendanceReport" value="entities.AttendanceReport" />
+				<attribute name="Comment" value="entities.Comment" />
+				<attribute name="ConditionReport" value="entities.ConditionReport" />
+				<attribute name="Consultation" value="entities.Consultation" />
+				<attribute name="ConsultationReport" value="entities.ConsultationReport" />
+				<attribute name="Incident" value="entities.Incident" />
+				<attribute name="Medication" value="entities.Medication" />
+				<attribute name="MedicationPrescription" value="entities.MedicationPrescription" />
+				<attribute name="MedicationReaction" value="entities.MedicationReaction" />
+				<attribute name="MedicationReport" value="entities.MedicationReport" />
+				<attribute name="Patient" value="entities.Patient" />
+				<attribute name="Relative" value="entities.Relative" />
+				<attribute name="Staff" value="entities.Staff" />
+				<attribute name="Treatment" value="entities.Treatment" />
+				<attribute name="WarningLetter" value="entities.WarningLetter" />
+
+				<!-- Client Classes  -->
+				<attribute name="MenuGUI" value="client.GUIMenu" />
+				<attribute name="ClientGUI" value="client.GUI" />
+
+				<!-- TestCode Classes  -->
+				<attribute name="AllTests" value="test.AllTests" />
+				<attribute name="PatientTest" value="test.PatientTest" />
+				<attribute name="StaffTest" value="test.StaffTest" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="main" depends="compile, jar, docs">
+		<description>Main target</description>
+	</target>
 
 </project>
