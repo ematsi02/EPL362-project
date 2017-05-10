@@ -22,7 +22,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -4124,12 +4123,4 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		System.out.println("WELCOME TO Regional Health Authority JDBC program ! \n\n");
 
 	} // end of Main
-
 }
-
-/*
- * try { if (!SADB.conn.isClosed()) { System.out.print(
- * "\nDisconnecting from database..."); SADB.conn.close(); System.out.println(
- * "Done\n\nBye !"); } } catch (Exception e) { // Ignore the error and continues
- * }
- */
