@@ -572,7 +572,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			this.revalidate();
 			this.repaint();
 			this.pack();
-		} 
+		}  else if (btnLabel.equals("View Today's Appointments")) {
+			try {
+				getContentPane().add(todaysAppointments("null"));
+			} catch (ClassNotFoundException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			this.revalidate();
+			this.repaint();
+			this.pack();
+		} 		
 		
 	}
 
@@ -4011,6 +4021,68 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 					try {
 						getContentPane().add(searchCommentForm());
 						JTable results = new JTable(com.buildTableModel(ls, com.columnNames));
+						JScrollPane resultspanel = new JScrollPane(results);
+						resultspanel.setBounds(50, 250, 900, 300);
+						return resultspanel;
+
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private JPanel searchTodaysAppointment() {
+		JPanel datePanel = new JPanel();
+		JLabel lbldate = new JLabel("Date");
+		lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
+		JDateChooser date = new JDateChooser();
+		date.setDateFormatString("yyyy-MM-dd");
+		JButton search = new JButton("Search");
+		search.setFont(new Font("Arial", Font.PLAIN, 14));
+		search.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			getContentPane().add(todaysAppointments(dateFormat.format(date.getDate())));
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		revalidate();
+		repaint();
+		pack();
+		}
+		});
+		datePanel.add(lbldate);
+		datePanel.add(date);
+		datePanel.add(search);
+		datePanel.setBounds(350, 130, 250, 100);
+		datePanel.setOpaque(false);		
+		return datePanel;
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private JScrollPane todaysAppointments(String date) throws ClassNotFoundException {
+		out.println("todaysAppointments");
+		out.println(date);
+		try {
+			if ((messageFromServer = in.readLine()) != null) {
+				System.out.println(messageFromServer);
+				getContentPane().removeAll();
+				if (messageFromServer.equals("todaysAppointments")) {
+					List<Consultation> ls = (List<Consultation>) inObject.readObject();
+					Consultation con = new Consultation();
+					try {
+						getContentPane().add(searchTodaysAppointment());
+						JTable results = new JTable(con.buildTableModel(ls, con.columnNames));
 						JScrollPane resultspanel = new JScrollPane(results);
 						resultspanel.setBounds(50, 250, 900, 300);
 						return resultspanel;
