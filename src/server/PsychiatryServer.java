@@ -168,7 +168,6 @@ public class PsychiatryServer implements java.io.Serializable {
 	void logout() {
 		try {
 			String username = inFromClient.readLine();
-			file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
 			file.print(username + " log out... ");
 			file.println(dtf.format(now));
 			file.flush();
@@ -312,15 +311,20 @@ public class PsychiatryServer implements java.io.Serializable {
 		List<Patient> ls = patient.convertRsToList(rs);
 		outObject.writeObject(ls);
 	}
-	
-	
-
 	void searchPatient() throws IOException, SQLException {
 		String username = inFromClient.readLine();
+		if(username.equals("null")){
+			username=null;
+			file.print("all patients printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
+		else{
+			file.print("patient with username " + username + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printPatient(username);
-		file.print("patient with username " + username + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("patientSearched");// searched patient
 		outToClient.flush();
 		List<Patient> ls = patient.convertRsToList(rs);
@@ -392,10 +396,17 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchRelative() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("all relatives printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
+		else{
+			file.print("relative with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printRelative(id);
-		file.print("relative with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("relativeSearched");// searched relative
 		outToClient.flush();
 		List<Relative> ls = relative.convertRsToRelatList(rs);
@@ -473,10 +484,16 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchIncident() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("all incident printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("incident with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printIncident(id);
-		file.print("incident with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("incidentSearched");// searched incident
 		outToClient.flush();
 		List<Incident> ls = incident.convertRsToList(rs);
@@ -593,10 +610,16 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchTreatment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("all treatments printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("treatment with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printTreatment(id);
-		file.print("treatment with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("treatmentSearched");// searched treatment
 		outToClient.flush();
 		List<Treatment> ls = treatment.convertRsToList(rs);
@@ -675,10 +698,16 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchMedication() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("all medications printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("Medication with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printMedication(id);
-		file.print("Medication with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("medicationSearched");// searched medication
 		outToClient.flush();
 		List<Medication> ls = medication.convertRsToList(rs);
@@ -739,16 +768,21 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchConsultation() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("All consultation printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("Consultation with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printConsultation(id);
-		file.print("Consultation with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("consultationSearched");// searched Consultation
 		outToClient.flush();
 		List<Consultation> ls = consultation.convertRsToList(rs);
 		outObject.writeObject(ls);
 		System.out.println("search after");
-
 	}
 
 	void addReaction() throws IOException {
@@ -788,14 +822,22 @@ public class PsychiatryServer implements java.io.Serializable {
 	}
 
 	void searchReaction() throws IOException, SQLException {
+		System.out.println("mpika mesa");
 		String patientid = inFromClient.readLine();
 		int medicationid = Integer.parseInt(inFromClient.readLine());
+		System.out.println("epiasa ts metavlites");
+		if(medicationid==-1){
+			file.print("all medication reactions printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
+					+ " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printMedicationReaction(patientid, medicationid);
-		file.print("reaction of patient with username " + patientid + " and medication id " + medicationid
-				+ " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
-		outToClient.println("reactionSearched");// searched patient
+		outToClient.println("reactionSearched");// searched reaction
 		outToClient.flush();
 		List<MedicationReaction> ls = reaction.convertRsToList(rs);
 		outObject.writeObject(ls);
@@ -857,10 +899,16 @@ public class PsychiatryServer implements java.io.Serializable {
 
 	void searchComment() throws IOException, SQLException {
 		int id = Integer.parseInt(inFromClient.readLine());
+		if(id==-1){
+			file.print("All comments printed... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}else{
+			file.print("Comment with id " + id + " searched... ");
+			file.println(dtf.format(now));
+			file.flush();
+		}
 		ResultSet rs = jdbc.printComment(id);
-		file.print("Comment with id " + id + " searched... ");
-		file.println(dtf.format(now));
-		file.flush();
 		outToClient.println("commentSearched");// searched medication
 		outToClient.flush();
 		List<Comment> ls = comment.convertRsToList(rs);
@@ -983,7 +1031,7 @@ public class PsychiatryServer implements java.io.Serializable {
 				inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				outToClient = new PrintWriter(socket.getOutputStream(), true);
 				outObject = new ObjectOutputStream(socket.getOutputStream());
-				file = new PrintWriter(new BufferedWriter(new FileWriter("log.txt", true)));
+				file = new PrintWriter(new BufferedWriter(new FileWriter("log\\log.txt", true)));
 				patient = new Patient();
 				relative = new Relative();
 				incident = new Incident();
