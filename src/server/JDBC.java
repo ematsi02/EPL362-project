@@ -189,7 +189,7 @@ public class JDBC {
 			String query;
 			if (role.equals("Patient"))
 				query = "UPDATE Patient SET Name='" + name + "', Surname='" + surname + "', Phone=" + phone
-						+ ", Email='" + email + "', Address='" + address + "' WHERE PatientID='" + username + "';";
+						+ ", Email='" + email + "', Address='" + address + "', ChangedByPatient=1 WHERE PatientID='" + username + "';";
 			else
 				query = "UPDATE Staff SET Name='" + name + "', Surname='" + surname + "', Phone=" + phone + ", Email='"
 						+ email + "', Address='" + address + "' WHERE StaffID='" + username + "';";
