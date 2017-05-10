@@ -1679,8 +1679,8 @@ public class JDBC {
 					+ "Treatment.StaffID, TreatmentMedication.TreatmentID, TreatmentMedication."
 					+ "MedicationID, TreatmentMedication.Dose, TreatmentMedication.DoseDescription, "
 					+ "TreatmentMedication.OverruledWarning, TreatmentMedication.WarningMessage, "
-					+ "Medication.MedicationID, Medication.Brand, Medication.Name, Medication."
-					+ "Description, Medication.KnownSideEffects, Medication.MaxDose From Treatment, "
+					+ "Medication.MedicationID, Medication.Brand, Medication.Name, "
+					+ "Medication.KnownSideEffects, Medication.MaxDose From Treatment, "
 					+ "TreatmentMedication, Medication Where Treatment.TreatmentID="
 					+ "TreatmentMedication.TreatmentID AND TreatmentMedication.MedicationID"
 					+ "=Medication.MedicationID;";
