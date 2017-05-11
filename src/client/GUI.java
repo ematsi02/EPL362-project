@@ -279,7 +279,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
 			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-			JDateChooser date = new JDateChooser();
+			final JDateChooser date = new JDateChooser();
 			date.setDateFormatString("yyyy-MM-dd");
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -326,7 +326,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
 			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-			JDateChooser date = new JDateChooser();
+			final JDateChooser date = new JDateChooser();
 			date.setDateFormatString("yyyy-MM-dd");
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -371,7 +371,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JPanel datePanel = new JPanel();
 			JLabel lbldate = new JLabel("Date");
 			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-			JDateChooser date = new JDateChooser();
+			final JDateChooser date = new JDateChooser();
 			date.setDateFormatString("yyyy-MM-dd");
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -424,7 +424,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Condition");
 			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField value = new JTextField(15);
+			final JTextField value = new JTextField(15);
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
@@ -455,7 +455,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			JPanel namePanel = new JPanel();
 			JLabel lblname = new JLabel("Treatment/Medication");
 			lblname.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField value = new JTextField(15);
+			final JTextField value = new JTextField(15);
 			JButton search = new JButton("Search");
 			search.setFont(new Font("Arial", Font.PLAIN, 14));
 			search.addActionListener(new ActionListener() {
@@ -598,9 +598,9 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblpassword.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblrole = new JLabel("     Role");
 		lblrole.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField username = new JTextField(15);
-		JTextField password = new JPasswordField(15);
-		JComboBox role = new JComboBox(roles);
+		final JTextField username = new JTextField(15);
+		final JTextField password = new JPasswordField(15);
+		final JComboBox role = new JComboBox(roles);
 		JButton login = new JButton("Log In");
 		login.setFont(new Font("Arial", Font.PLAIN, 14));
 		login.addActionListener(new ActionListener() {
@@ -707,15 +707,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbladdress = new JLabel("Address");
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField name = new JTextField(patients.get(0).Name);
-			JTextField surname = new JTextField(patients.get(0).Surname);
-			JTextField username = new JTextField(patients.get(0).PatientID);
+			final JTextField name = new JTextField(patients.get(0).Name);
+			final JTextField surname = new JTextField(patients.get(0).Surname);
+			final JTextField username = new JTextField(patients.get(0).PatientID);
 			username.setEditable(false);
 			JTextField password = new JPasswordField(patients.get(0).Password);
 			password.setEditable(false);
-			JTextField phone = new JTextField(Integer.toString(patients.get(0).Phone));
-			JTextField email = new JTextField(patients.get(0).Email);
-			JTextField address = new JTextField(patients.get(0).Address);
+			final JTextField phone = new JTextField(Integer.toString(patients.get(0).Phone));
+			final JTextField email = new JTextField(patients.get(0).Email);
+			final JTextField address = new JTextField(patients.get(0).Address);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -801,15 +801,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbladdress = new JLabel("Address");
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField name = new JTextField(staff.get(0).Name);
-			JTextField surname = new JTextField(staff.get(0).Surname);
-			JTextField username = new JTextField(staff.get(0).StaffID);
+			final JTextField name = new JTextField(staff.get(0).Name);
+			final JTextField surname = new JTextField(staff.get(0).Surname);
+			final JTextField username = new JTextField(staff.get(0).StaffID);
 			username.setEditable(false);
-			JTextField password = new JPasswordField(staff.get(0).Password);
+			final JTextField password = new JPasswordField(staff.get(0).Password);
 			password.setEditable(false);
-			JTextField phone = new JTextField(Integer.toString(staff.get(0).Phone));
-			JTextField email = new JTextField(staff.get(0).Email);
-			JTextField address = new JTextField(staff.get(0).Address);
+			final JTextField phone = new JTextField(Integer.toString(staff.get(0).Phone));
+			final JTextField email = new JTextField(staff.get(0).Email);
+			final JTextField address = new JTextField(staff.get(0).Address);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -884,8 +884,8 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbloldpassword.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblnewpassword = new JLabel("New Password");
 		lblnewpassword.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField oldpassword = new JPasswordField(15);
-		JTextField newpassword = new JPasswordField(15);
+		final JTextField oldpassword = new JPasswordField(15);
+		final JTextField newpassword = new JPasswordField(15);
 		JButton changepassword = new JButton("Change Password");
 		changepassword.setFont(new Font("Arial", Font.PLAIN, 14));
 		changepassword.addActionListener(new ActionListener() {
@@ -974,14 +974,14 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbladdress = new JLabel("  Address");
 		lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField username = new JTextField(15);
-		JTextField password = new JPasswordField(15);
-		JTextField name = new JTextField(15);
-		JTextField surname = new JTextField(15);
-		JComboBox role = new JComboBox(roles);
-		JTextField phone = new JTextField(15);
-		JTextField email = new JTextField(15);
-		JTextField address = new JTextField(15);
+		final JTextField username = new JTextField(15);
+		final JTextField password = new JPasswordField(15);
+		final JTextField name = new JTextField(15);
+		final JTextField surname = new JTextField(15);
+		final JComboBox role = new JComboBox(roles);
+		final JTextField phone = new JTextField(15);
+		final JTextField email = new JTextField(15);
+		final JTextField address = new JTextField(15);
 		JButton signup = new JButton("Sign Up");
 		signup.setFont(new Font("Arial", Font.PLAIN, 14));
 		signup.addActionListener(new ActionListener() {
@@ -1075,13 +1075,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbladdress = new JLabel("  Address");
 		lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField name = new JTextField(15);
-		JTextField surname = new JTextField(15);
-		JTextField username = new JTextField(15);
-		JTextField password = new JPasswordField(15);
-		JTextField phone = new JTextField(15);
-		JTextField email = new JTextField(15);
-		JTextField address = new JTextField(15);
+		final JTextField name = new JTextField(15);
+		final JTextField surname = new JTextField(15);
+		final JTextField username = new JTextField(15);
+		final JTextField password = new JPasswordField(15);
+		final JTextField phone = new JTextField(15);
+		final JTextField email = new JTextField(15);
+		final JTextField address = new JTextField(15);
 		JButton addPatient = new JButton("Add");
 		patientpanel.add(lblname);
 		patientpanel.add(name);
@@ -1159,16 +1159,16 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbladdress = new JLabel("Address");
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField name = new JTextField(patients.get(0).Name);
-			JTextField surname = new JTextField(patients.get(0).Surname);
-			JTextField username = new JTextField(patients.get(0).PatientID);
+			final JTextField name = new JTextField(patients.get(0).Name);
+			final JTextField surname = new JTextField(patients.get(0).Surname);
+			final JTextField username = new JTextField(patients.get(0).PatientID);
 			username.setEditable(false);
-			JTextField password = new JPasswordField(patients.get(0).Password);
+			final JTextField password = new JPasswordField(patients.get(0).Password);
 			password.setEditable(false);
-			JTextField phone = new JTextField(Integer.toString(patients.get(0).Phone));
+			final JTextField phone = new JTextField(Integer.toString(patients.get(0).Phone));
 			System.out.println(phone.getText());
-			JTextField email = new JTextField(patients.get(0).Email);
-			JTextField address = new JTextField(patients.get(0).Address);
+			final JTextField email = new JTextField(patients.get(0).Email);
+			final JTextField address = new JTextField(patients.get(0).Address);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -1277,18 +1277,18 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblstatus.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldead = new JLabel("Dead Read Only");
 			lbldead.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField username = new JTextField(patients.get(0).PatientID);
+			final JTextField username = new JTextField(patients.get(0).PatientID);
 			username.setEditable(false);
-			JTextField name = new JTextField(patients.get(0).Name);
+			final JTextField name = new JTextField(patients.get(0).Name);
 			name.setEditable(false);
-			JTextField surname = new JTextField(patients.get(0).Surname);
+			final JTextField surname = new JTextField(patients.get(0).Surname);
 			surname.setEditable(false);
-			JTextField incidents = new JTextField(Integer.toString(patients.get(0).NumOfIncidents));
+			final JTextField incidents = new JTextField(Integer.toString(patients.get(0).NumOfIncidents));
 			incidents.setEditable(false);
-			JTextField self = new JTextField(Integer.toString(patients.get(0).SelfHarmRisk));
-			JTextField others = new JTextField(Integer.toString(patients.get(0).OthersHarmRisk));
-			JTextField status = new JTextField(patients.get(0).RiskStatus);
-			JTextField dead = new JTextField(Integer.toString(patients.get(0).DeadReadOnly));
+			final JTextField self = new JTextField(Integer.toString(patients.get(0).SelfHarmRisk));
+			final JTextField others = new JTextField(Integer.toString(patients.get(0).OthersHarmRisk));
+			final JTextField status = new JTextField(patients.get(0).RiskStatus);
+			final JTextField dead = new JTextField(Integer.toString(patients.get(0).DeadReadOnly));
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -1357,7 +1357,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel patientpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Patient with Username: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -1403,7 +1403,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel patientpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Patient with Username: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -1461,13 +1461,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblemail.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbladdress = new JLabel("                 Address");
 		lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientusername = new JTextField(15);
-		JTextField relationship = new JTextField(15);
-		JTextField name = new JTextField(15);
-		JTextField surname = new JTextField(15);
-		JTextField phone = new JTextField(15);
-		JTextField email = new JTextField(15);
-		JTextField address = new JTextField(15);
+		final JTextField patientusername = new JTextField(15);
+		final JTextField relationship = new JTextField(15);
+		final JTextField name = new JTextField(15);
+		final JTextField surname = new JTextField(15);
+		final JTextField phone = new JTextField(15);
+		final JTextField email = new JTextField(15);
+		final JTextField address = new JTextField(15);
 		JButton addRelative = new JButton("Add");
 		relativepanel.add(lblpatientusername);
 		relativepanel.add(patientusername);
@@ -1548,15 +1548,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbladdress.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblrelationship = new JLabel("Relationship");
 			lblrelationship.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(relatives.get(0).RelativeID));
+			final JTextField id = new JTextField(Integer.toString(relatives.get(0).RelativeID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(relatives.get(0).PatientID);
-			JTextField name = new JTextField(relatives.get(0).Name);
-			JTextField surname = new JTextField(relatives.get(0).Surname);
-			JTextField phone = new JTextField(Integer.toString(relatives.get(0).Phone));
-			JTextField email = new JTextField(relatives.get(0).Email);
-			JTextField address = new JTextField(relatives.get(0).Address);
-			JTextField relationship = new JTextField(relatives.get(0).Relationship);
+			final JTextField patientid = new JTextField(relatives.get(0).PatientID);
+			final JTextField name = new JTextField(relatives.get(0).Name);
+			final JTextField surname = new JTextField(relatives.get(0).Surname);
+			final JTextField phone = new JTextField(Integer.toString(relatives.get(0).Phone));
+			final JTextField email = new JTextField(relatives.get(0).Email);
+			final JTextField address = new JTextField(relatives.get(0).Address);
+			final JTextField relationship = new JTextField(relatives.get(0).Relationship);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -1654,7 +1654,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel relativepanel = new JPanel();
 		JLabel lblid = new JLabel("Search Relative with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -1713,12 +1713,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JLabel lblspace = new JLabel("                          ");
 		JLabel lblspace2 = new JLabel("               ");
 		lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JComboBox type = new JComboBox(types);
-		JTextField shortDescription = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
+		final JTextField patientid = new JTextField(15);
+		final JComboBox type = new JComboBox(types);
+		final JTextField shortDescription = new JTextField(15);
+		final JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(description);
-		JDateChooser date = new JDateChooser();
+		final JDateChooser date = new JDateChooser();
 		date.setDateFormatString("yyyy-MM-dd");
 		JButton addIncident = new JButton("Add");
 		incidentpanel.add(lblpatientid);
@@ -1793,13 +1793,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldate = new JLabel("Date");
 			lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(incident.get(0).IncidentID));
+			final JTextField id = new JTextField(Integer.toString(incident.get(0).IncidentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(incident.get(0).PatientID);
-			JTextField type = new JTextField(incident.get(0).IncidentType);
-			JTextField shortDescription = new JTextField(incident.get(0).ShortDescription);
-			JTextField description = new JTextField(incident.get(0).Description);
-			JTextField date = new JTextField(incident.get(0).Date);
+			final JTextField patientid = new JTextField(incident.get(0).PatientID);
+			final JTextField type = new JTextField(incident.get(0).IncidentType);
+			final JTextField shortDescription = new JTextField(incident.get(0).ShortDescription);
+			final JTextField description = new JTextField(incident.get(0).Description);
+			final JTextField date = new JTextField(incident.get(0).Date);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -1890,7 +1890,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel incidentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Incident with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -1947,15 +1947,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblstaffid = new JLabel("   Staff's Username");
 		lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JDateChooser startDate = new JDateChooser();
+		final JTextField patientid = new JTextField(15);
+		final JDateChooser startDate = new JDateChooser();
 		startDate.setDateFormatString("yyyy-MM-dd");
-		JDateChooser endDate = new JDateChooser();
+		final JDateChooser endDate = new JDateChooser();
 		endDate.setDateFormatString("yyyy-MM-dd");
-		JTextField diagnosis = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
+		final JTextField diagnosis = new JTextField(15);
+		final JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(description);
-		JTextField staffid = new JTextField(15);
+		final JTextField staffid = new JTextField(15);
 		JButton addTreatment = new JButton("Add");
 		treatmentpanel.add(lblpatientid);
 		treatmentpanel.add(patientid);
@@ -2018,7 +2018,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 	 * 
 	 * @return JPanel the panel for adding medications form
 	 */
-	private JPanel treatmentMedicationForm(List<Treatment> treatment) {
+	private JPanel treatmentMedicationForm(final List<Treatment> treatment) {
 		JPanel treatmentpanel = new JPanel();
 		JLabel lbltreatmentid = new JLabel("               Treatment's ID          ");
 		lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -2028,11 +2028,11 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbldose.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldescription = new JLabel("Dose Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField treatmentid = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+		final JTextField treatmentid = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
 		treatmentid.setEditable(false);
-		JTextField medicationid = new JTextField(15);
-		JTextField dose = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
+		final JTextField medicationid = new JTextField(15);
+		final JTextField dose = new JTextField(15);
+		final JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(description);
 		JButton addTreatment = new JButton("Add");
 		treatmentpanel.add(lbltreatmentid);
@@ -2124,14 +2124,14 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblstaffid = new JLabel("Staff ID");
 			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+			final JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(treatment.get(0).PatientID);
-			JTextField startDate = new JTextField(treatment.get(0).StartDate);
-			JTextField endDate = new JTextField(treatment.get(0).EndDate);
-			JTextField diagnosis = new JTextField(treatment.get(0).Diagnosis);
-			JTextField description = new JTextField(treatment.get(0).Description);
-			JTextField staffid = new JTextField(treatment.get(0).StaffID);
+			final JTextField patientid = new JTextField(treatment.get(0).PatientID);
+			final JTextField startDate = new JTextField(treatment.get(0).StartDate);
+			final JTextField endDate = new JTextField(treatment.get(0).EndDate);
+			final JTextField diagnosis = new JTextField(treatment.get(0).Diagnosis);
+			final JTextField description = new JTextField(treatment.get(0).Description);
+			final JTextField staffid = new JTextField(treatment.get(0).StaffID);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -2283,7 +2283,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Treatment with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -2329,7 +2329,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Previous Treatment with Patient's Username: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -2387,15 +2387,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblnotes.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblstaffid = new JLabel("Staff ID");
 			lblstaffid.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
+			final JTextField id = new JTextField(Integer.toString(treatment.get(0).TreatmentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(treatment.get(0).PatientID);
+			final JTextField patientid = new JTextField(treatment.get(0).PatientID);
 			patientid.setEditable(false);
-			JTextField startDate = new JTextField(treatment.get(0).StartDate);
-			JTextField endDate = new JTextField(treatment.get(0).EndDate);
-			JTextArea notes = new JTextArea(5, 20);
+			final JTextField startDate = new JTextField(treatment.get(0).StartDate);
+			final JTextField endDate = new JTextField(treatment.get(0).EndDate);
+			final JTextArea notes = new JTextArea(5, 20);
 			JScrollPane scrollPane = new JScrollPane(notes);
-			JTextField staffid = new JTextField(treatment.get(0).StaffID);
+			final JTextField staffid = new JTextField(treatment.get(0).StaffID);
 			JButton renew = new JButton("Renew");
 			renew.setFont(new Font("Arial", Font.PLAIN, 14));
 			renew.addActionListener(new ActionListener() {
@@ -2460,7 +2460,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel treatmentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Treatment with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -2514,13 +2514,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbleffects.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldose = new JLabel("                     Max Dose");
 		lbldose.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField brand = new JTextField(15);
-		JTextField name = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
+		final JTextField brand = new JTextField(15);
+		final JTextField name = new JTextField(15);
+		final JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane1 = new JScrollPane(description);
-		JTextArea effects = new JTextArea(5, 20);
+		final JTextArea effects = new JTextArea(5, 20);
 		JScrollPane scrollPane2 = new JScrollPane(effects);
-		JTextField dose = new JTextField(15);
+		final JTextField dose = new JTextField(15);
 		JButton addMedication = new JButton("Add");
 		medicationpanel.add(lblbrand);
 		medicationpanel.add(brand);
@@ -2591,13 +2591,13 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbleffects.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldose = new JLabel("                 Max Dose");
 			lbldose.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(medication.get(0).MedicationID));
+			final JTextField id = new JTextField(Integer.toString(medication.get(0).MedicationID));
 			id.setEditable(false);
-			JTextField brand = new JTextField(medication.get(0).Brand);
-			JTextField name = new JTextField(medication.get(0).Name);
-			JTextField description = new JTextField(medication.get(0).Description);
-			JTextField effects = new JTextField(medication.get(0).KnownSideEffects);
-			JTextField dose = new JTextField(Integer.toString(medication.get(0).MaxDose));
+			final JTextField brand = new JTextField(medication.get(0).Brand);
+			final JTextField name = new JTextField(medication.get(0).Name);
+			final JTextField description = new JTextField(medication.get(0).Description);
+			final JTextField effects = new JTextField(medication.get(0).KnownSideEffects);
+			final JTextField dose = new JTextField(Integer.toString(medication.get(0).MaxDose));
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -2685,7 +2685,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel medicationpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Medication with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -2738,10 +2738,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbltype.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbldescription = new JLabel("Description");
 		lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JTextField medicationid = new JTextField(15);
-		JTextField type = new JTextField(15);
-		JTextArea description = new JTextArea(5, 20);
+		final JTextField patientid = new JTextField(15);
+		final JTextField medicationid = new JTextField(15);
+		final JTextField type = new JTextField(15);
+		final JTextArea description = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(description);
 		JButton addReaction = new JButton("Add");
 		reactionpanel.add(lblpatientid);
@@ -2807,10 +2807,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lbltype.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lbldescription = new JLabel("Description");
 			lbldescription.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField patientid = new JTextField(reaction.get(0).PatientID);
-			JTextField medicationid = new JTextField(Integer.toString(reaction.get(0).MedicationID));
-			JTextField type = new JTextField(reaction.get(0).ReactionType);
-			JTextField description = new JTextField(reaction.get(0).Description);
+			final JTextField patientid = new JTextField(reaction.get(0).PatientID);
+			final JTextField medicationid = new JTextField(Integer.toString(reaction.get(0).MedicationID));
+			final JTextField type = new JTextField(reaction.get(0).ReactionType);
+			final JTextField description = new JTextField(reaction.get(0).Description);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -2895,10 +2895,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel reactionpanel = new JPanel();
 		JLabel lblpid = new JLabel("Search Medication Reaction with Patient's Username: ");
 		lblpid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField pid = new JTextField(15);
+		final JTextField pid = new JTextField(15);
 		JLabel lblmid = new JLabel("and Medication ID: ");
 		lblmid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField mid = new JTextField(15);
+		final JTextField mid = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -2960,15 +2960,15 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lbltime.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lbltreatmentid = new JLabel("         Treatment ID");
 		lbltreatmentid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JTextField staffid = new JTextField(15);
-		JTextField subject = new JTextField(15);
-		JDateChooser dateBooked = new JDateChooser();
+		final JTextField patientid = new JTextField(15);
+		final JTextField staffid = new JTextField(15);
+		final JTextField subject = new JTextField(15);
+		final JDateChooser dateBooked = new JDateChooser();
 		dateBooked.setDateFormatString("yyyy-MM-dd");
-		JDateChooser date = new JDateChooser();
+		final JDateChooser date = new JDateChooser();
 		date.setDateFormatString("yyyy-MM-dd");
-		JTextField time = new JTextField(15);
-		JTextField treatmentid = new JTextField(15);
+		final JTextField time = new JTextField(15);
+		final JTextField treatmentid = new JTextField(15);
 		JButton addConsultation = new JButton("Add");
 		consultationpanel.add(lblpatientid);
 		consultationpanel.add(patientid);
@@ -3054,17 +3054,17 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblattended.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblupdated = new JLabel("Medical Record Updated");
 			lblupdated.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(consultation.get(0).ConsultationID));
+			final JTextField id = new JTextField(Integer.toString(consultation.get(0).ConsultationID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(consultation.get(0).PatientID);
-			JTextField staffid = new JTextField(consultation.get(0).StaffID);
-			JTextField subject = new JTextField(consultation.get(0).Subject);
-			JTextField dateBooked = new JTextField(consultation.get(0).DateBooked);
-			JTextField date = new JTextField(consultation.get(0).Date);
-			JTextField time = new JTextField(consultation.get(0).Time);
-			JTextField attended = new JTextField(Integer.toString(consultation.get(0).Attended));
-			JTextField updated = new JTextField(Integer.toString(consultation.get(0).MedicalRecordUpdated));
-			JTextField treatmentid = new JTextField(Integer.toString(consultation.get(0).TreatmentID));
+			final JTextField patientid = new JTextField(consultation.get(0).PatientID);
+			final JTextField staffid = new JTextField(consultation.get(0).StaffID);
+			final JTextField subject = new JTextField(consultation.get(0).Subject);
+			final JTextField dateBooked = new JTextField(consultation.get(0).DateBooked);
+			final JTextField date = new JTextField(consultation.get(0).Date);
+			final JTextField time = new JTextField(consultation.get(0).Time);
+			final JTextField attended = new JTextField(Integer.toString(consultation.get(0).Attended));
+			final JTextField updated = new JTextField(Integer.toString(consultation.get(0).MedicalRecordUpdated));
+			final JTextField treatmentid = new JTextField(Integer.toString(consultation.get(0).TreatmentID));
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -3167,7 +3167,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel consultationpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Consultation with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -3220,10 +3220,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblcomment = new JLabel("        Comment");
 		lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JTextField staffid = new JTextField(15);
-		JTextField subject = new JTextField(15);
-		JTextArea comment = new JTextArea(5, 20);
+		final JTextField patientid = new JTextField(15);
+		final JTextField staffid = new JTextField(15);
+		final JTextField subject = new JTextField(15);
+		final JTextArea comment = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(comment);
 		JButton addComment = new JButton("Add");
 		commentpanel.add(lblpatientid);
@@ -3290,12 +3290,12 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 			lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
 			JLabel lblcomment = new JLabel("Comment");
 			lblcomment.setFont(new Font("Arial", Font.PLAIN, 14));
-			JTextField id = new JTextField(Integer.toString(comment.get(0).CommentID));
+			final JTextField id = new JTextField(Integer.toString(comment.get(0).CommentID));
 			id.setEditable(false);
-			JTextField patientid = new JTextField(comment.get(0).PatientID);
-			JTextField staffid = new JTextField(comment.get(0).StaffID);
-			JTextField subject = new JTextField(comment.get(0).Subject);
-			JTextField comm = new JTextField(comment.get(0).Comment);
+			final JTextField patientid = new JTextField(comment.get(0).PatientID);
+			final JTextField staffid = new JTextField(comment.get(0).StaffID);
+			final JTextField subject = new JTextField(comment.get(0).Subject);
+			final JTextField comm = new JTextField(comment.get(0).Comment);
 			JButton update = new JButton("Update");
 			update.setFont(new Font("Arial", Font.PLAIN, 14));
 			update.addActionListener(new ActionListener() {
@@ -3382,7 +3382,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel commentpanel = new JPanel();
 		JLabel lblid = new JLabel("Search Comment with ID: ");
 		lblid.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField id = new JTextField(15);
+		final JTextField id = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -3435,10 +3435,10 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		lblsubject.setFont(new Font("Arial", Font.PLAIN, 14));
 		JLabel lblmessage = new JLabel("Message");
 		lblmessage.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField patientid = new JTextField(15);
-		JTextField staffid = new JTextField(15);
-		JTextField subject = new JTextField(15);
-		JTextArea msg = new JTextArea(5, 20);
+		final JTextField patientid = new JTextField(15);
+		final JTextField staffid = new JTextField(15);
+		final JTextField subject = new JTextField(15);
+		final JTextArea msg = new JTextArea(5, 20);
 		JScrollPane scrollPane = new JScrollPane(msg);
 		JButton addInform = new JButton("Inform");
 		informpanel.add(lblpatientid);
@@ -3758,7 +3758,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel namePanel = new JPanel();
 		JLabel lblname = new JLabel("Search: ");
 		lblname.setFont(new Font("Arial", Font.PLAIN, 14));
-		JTextField value = new JTextField(15);
+		final JTextField value = new JTextField(15);
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
 		search.addActionListener(new ActionListener() {
@@ -4127,7 +4127,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 		JPanel datePanel = new JPanel();
 		JLabel lbldate = new JLabel("Date");
 		lbldate.setFont(new Font("Arial", Font.PLAIN, 14));
-		JDateChooser date = new JDateChooser();
+		final JDateChooser date = new JDateChooser();
 		date.setDateFormatString("yyyy-MM-dd");
 		JButton search = new JButton("Search");
 		search.setFont(new Font("Arial", Font.PLAIN, 14));
@@ -4192,7 +4192,7 @@ public class GUI extends JFrame implements ActionListener, java.io.Serializable 
 	}
 
 	public static void main(String[] args) throws IOException {
-		GUI frame = new GUI();
+		final GUI frame = new GUI();
 		frame.connectToServer();
 		frame.contentPane.setLayout(null);
 		frame.setLocationByPlatform(true);
