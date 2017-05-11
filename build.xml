@@ -46,56 +46,47 @@
 		<javac includeantruntime="false" />
 	</presetdef>
 
+	<path id="jars.path">
+		<pathelement location="${jars.dir}" />
+		<pathelement path="jars/junit-4.12.jar" />
+		<pathelement path="hamcrest-core-1.3.jar" />
+		<pathelement path="jars/jcalendar-1.4.jar" />
+		<pathelement path="jars/mysql-connector-java.jar" />
+	</path>
+
 	<!-- Compiles the java code (including the usage of external jars) -->
 	<target name="compile" depends="clean, makedir">
 
 		<javac srcdir="${entities.dir}" destdir="${build.dir}">
-			<classpath>
-				<pathelement path="jars/junit-4.12.jar" />
-				<pathelement path="hamcrest-core-1.3.jar" />
-				<pathelement path="jars/jcalendar-1.4.jar" />
-				<pathelement path="jars/mysql-connector-java.jar" />
-			</classpath>
-		</javac>
-
-		<javac srcdir="${client.dir}" destdir="${build.dir}">
-			<classpath>
-				<pathelement path="jars/junit-4.12.jar" />
-				<pathelement path="hamcrest-core-1.3.jar" />
-				<pathelement path="jars/jcalendar-1.4.jar" />
-				<pathelement path="jars/mysql-connector-java.jar" />
-			</classpath>
+			<classpath refid="jars.path" />
 		</javac>
 		<javac srcdir="${server.dir}" destdir="${build.dir}">
-			<classpath>
-				<pathelement path="jars/junit-4.12.jar" />
-				<pathelement path="hamcrest-core-1.3.jar" />
-				<pathelement path="jars/jcalendar-1.4.jar" />
-				<pathelement path="jars/mysql-connector-java.jar" />
-			</classpath>
+			<classpath refid="jars.path" />
+		</javac>
+		<javac srcdir="${client.dir}" destdir="${build.dir}">
+			<classpath refid="jars.path" />
 		</javac>
 		<javac srcdir="${testcode.dir}" destdir="${build.dir}">
-			<classpath>
-				<pathelement path="jars/junit-4.12.jar" />
-				<pathelement path="hamcrest-core-1.3.jar" />
-				<pathelement path="jars/jcalendar-1.4.jar" />
-				<pathelement path="jars/mysql-connector-java.jar" />
-			</classpath>
+			<classpath refid="jars.path" />
 		</javac>
-
-		<!--
-		<javac srcdir="${src.dir}" destdir="${build.dir}">
-		</javac> -->
 
 	</target>
 
+	<path id="source.path">
+		<pathelement location="${src.dir}" />
+		<pathelement path="${entities.dir}/" />
+		<pathelement path="${client.dir}" />
+		<pathelement path="${server.dir}" />
+		<pathelement path="${testcode.dir}" />
+	</path>
+
 	<!-- Creates Javadoc -->
 	<target name="javadoc" depends="compile">
-		<javadoc packagenames="src" sourcepath="${src.dir}" destdir="${javadoc.dir}">
+		<javadoc packagenames="src" destdir="${javadoc.dir}">
+			<classpath refid="source.path" />
 			<!-- Define which files / directory should get included -->
 			<fileset dir="${src.dir}">
-				<!-- <include name="**" /> -->
-				<include name="server.PsychiatryServer" />
+				<include name="**" />
 			</fileset>
 		</javadoc>
 	</target>
